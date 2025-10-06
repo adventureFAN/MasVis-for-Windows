@@ -85,6 +85,7 @@ class MasVisGtk(Adw.Application):
     pref_dpi_image = GObject.Property(type=int, default=200)
     pref_comparison_plot_width = GObject.Property(type=int, default=606)
     pref_animation_duration = GObject.Property(type=int, default=3000)
+    pref_processing_with_gst = GObject.Property(type=bool, default=False)
 
     settings = None # holds Gio.Settings for schema
 
@@ -124,6 +125,7 @@ class MasVisGtk(Adw.Application):
         self.pref_dpi_image = self.settings.get_int('dpi-image')
         self.pref_comparison_plot_width = self.settings.get_int('comparison-plot-width')
         self.pref_animation_duration = self.settings.get_int('animation-duration')
+        self.pref_processing_with_gst = self.settings.get_boolean('processing-with-gst')
 
         # app-style, save-format are not bound
         self.settings.bind('language-locale', self, 'pref_language_locale', Gio.SettingsBindFlags.DEFAULT)
@@ -137,6 +139,7 @@ class MasVisGtk(Adw.Application):
         self.settings.bind('dpi-image', self, 'pref_dpi_image', Gio.SettingsBindFlags.DEFAULT)
         self.settings.bind('comparison-plot-width', self, 'pref_comparison_plot_width', Gio.SettingsBindFlags.DEFAULT)
         self.settings.bind('animation-duration', self, 'pref_animation_duration', Gio.SettingsBindFlags.DEFAULT)
+        self.settings.bind('processing-with-gst', self, 'pref_processing_with_gst', Gio.SettingsBindFlags.DEFAULT)
 
         # Debug information.
         log.debug(f'schema language-locale: { self.pref_language_locale }')
@@ -152,6 +155,7 @@ class MasVisGtk(Adw.Application):
         log.debug(f'schema dpi-image: { self.pref_dpi_image }')
         log.debug(f'schema comparison-plot-width: { self.pref_comparison_plot_width }')
         log.debug(f'schema animation-duration: { self.pref_animation_duration }')
+        log.debug(f'schema processing-with-gst: { self.pref_processing_with_gst }')
 
         # Set custom application language/locale.
         try:
@@ -808,6 +812,9 @@ class MasVisGtk(Adw.Application):
         obj.get_object('animation_duration').set_value(self.pref_animation_duration)
         obj.get_object('animation_duration').get_adjustment().connect('value-changed', self.on_schema_changed_animation_duration)
 
+        obj.get_object('processing_with_gst').set_active(self.pref_processing_with_gst)
+        obj.get_object('processing_with_gst').connect('notify::active', self.on_schema_changed_processing_with_gst)
+
     def on_schema_changed_language_locale(self, gtk_dropdown, param):
         value = self.language_dict[gtk_dropdown.get_selected_item().get_string()]
         self.settings.set_string('language-locale', value)
@@ -874,6 +881,11 @@ class MasVisGtk(Adw.Application):
         self.settings.set_int('animation-duration', value)
         self.pref_animation_duration = value
 
+    def on_schema_changed_processing_with_gst(self, adw_switchrow, param):
+        value = adw_switchrow.get_active()
+        self.settings.set_boolean('processing-with-gst', value)
+        self.pref_processing_with_gst = value
+
     def rgba_to_text(self, rgba):
         r = int(rgba.red * 255)
         g = int(rgba.green * 255)
@@ -918,7 +930,11 @@ class MasVisGtk(Adw.Application):
     def on_error_dialog_present(self, heading, body):
         dialog_err = Adw.AlertDialog()
         dialog_err.set_heading(heading)
-        dialog_err.set_body(body)
+        #dialog_err.set_body(body)
+        err_text = Gtk.Label() # to copy message text
+        err_text.set_selectable(True)
+        err_text.set_text(body)
+        dialog_err.set_extra_child(err_text)
         dialog_err.add_response('cancel',  _('Close'))
         dialog_err.present(self.win)
 
@@ -1011,7 +1027,10 @@ class MasVisGtk(Adw.Application):
             log.warning(_('Unable to open input ') + audio_file.file_path)
             self.on_error_dialog(_('Cannot Open File'), audio_file.file_path)
             return
-        track = loader(*loader_args)
+        track = loader(
+            *loader_args,
+            processing_with_gst=self.pref_processing_with_gst,
+        )
 
         if type(track) is int:
             return

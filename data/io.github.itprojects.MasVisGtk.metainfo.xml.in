@@ -60,6 +60,12 @@
   <developer_name translate="no">ITProjects</developer_name>
   <translation type="gettext">masvisgtk</translation>
   <releases>
+    <release version="6.0.0" date="2025-10-06">
+      <description translate="no">
+        <p>Support for processing with GStreamer (if user-enabled).</p>
+        <p>Error dialog now has Gtk.Widget that can copy text.</p>
+      </description>
+    </release>
     <release version="5.0.0" date="2025-10-02">
       <description translate="no">
         <p>Added and edited svg icons.</p>

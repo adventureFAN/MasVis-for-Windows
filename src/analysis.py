@@ -386,6 +386,8 @@ def analyze(track, callback=None):
     with Timer('Calculating checksum...', Steps.calc_csum, callback):
         checksum = energy_checksum(raw_data)
 
+    del raw_data # clean
+
     # Analysis Product
     return {
         'crest_db': crest_db,
@@ -398,8 +400,8 @@ def analyze(track, callback=None):
         's_max': s_max,
         'ns_max': ns_max,
         'norm_spec': norm_spec,
-        # FIXME: frames and n_1s are used interchangeably to represent 1s segments of
-        #        samples which might not always be true and depends on what is analyzed
+        # Note: frames and n_1s are used interchangeably to represent 1s segments of
+        #       samples which might not always be true and depends on what is analyzed
         'frames': ns // fs,
         'n_1s': ns // fs,
         'ap_freqs': ap_freqs,

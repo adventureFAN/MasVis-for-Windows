@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: masvisgtk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-02 13:36+0300\n"
-"PO-Revision-Date: 2025-10-02 13:59+0300\n"
+"POT-Creation-Date: 2025-10-06 20:09+0300\n"
+"PO-Revision-Date: 2025-10-06 20:15+0300\n"
 "Last-Translator: johnpeter19 <johnppetersa@gmail.com>\n"
 "Language-Team: none\n"
 "Language: es\n"
@@ -202,7 +202,7 @@ msgstr "Acciones de pestaña"
 
 #: src/gtk/help-overlay.ui:80 src/main_gtk_window.py:448
 #: src/gtk/help-overlay.ui:85 src/main_gtk_window.py:468
-#: src/main_gtk_window.py:827
+#: src/main_gtk_window.py:827 src/main_gtk_window.py:831
 msgid "Compare Tabs"
 msgstr "Comparar pestañas"
 
@@ -274,15 +274,15 @@ msgstr "DPI de archivos guardados"
 msgid "One audio plot width in comparison window"
 msgstr "Un ancho de trama de audio en la ventana de comparación"
 
-#: src/main.py:157 src/main.py:161
+#: src/main.py:157 src/main.py:161 src/main.py:169 src/main.py:165
 msgid "Cannot set locale "
 msgstr "No se puede establecer un local"
 
-#: src/main.py:159 src/main.py:163
+#: src/main.py:159 src/main.py:163 src/main.py:171 src/main.py:167
 msgid "FILES/FOLDERS"
 msgstr "Archivos/carpetas"
 
-#: src/main.py:161 src/main.py:165
+#: src/main.py:161 src/main.py:165 src/main.py:173 src/main.py:169
 msgid ""
 "  FILE(S) and/or FOLDER(S) paths to process inside the application\n"
 "\n"
@@ -292,7 +292,7 @@ msgstr ""
 "\n"
 "  MASVISGTK es una aplicación de análisis de archivos de audio."
 
-#: src/main.py:164 src/main.py:168
+#: src/main.py:164 src/main.py:168 src/main.py:176 src/main.py:172
 msgid ""
 "The original python module is also available with this package.\n"
 "The command line options are different from the original.\n"
@@ -302,23 +302,23 @@ msgstr ""
 "Las opciones de línea de comando son diferentes de la original.\n"
 "El archivo grande siempre es lento para renderizar."
 
-#: src/main.py:173 src/main.py:177
+#: src/main.py:173 src/main.py:177 src/main.py:185 src/main.py:181
 msgid "Version of MasVisGtk."
 msgstr "Versión de Mavis GTK."
 
-#: src/main.py:182 src/main.py:186
+#: src/main.py:182 src/main.py:186 src/main.py:194 src/main.py:190
 msgid "Show Verbose Messages."
 msgstr "Mostrar mensajes detallados."
 
-#: src/main.py:191 src/main.py:195
+#: src/main.py:191 src/main.py:195 src/main.py:203 src/main.py:199
 msgid "Show Debug Messages."
 msgstr "Mostrar mensajes de depuración."
 
-#: src/main.py:200 src/main.py:204
+#: src/main.py:200 src/main.py:204 src/main.py:212 src/main.py:208
 msgid "Show Supported Formats."
 msgstr "Mostrar formatos compatibles."
 
-#: src/main.py:209 src/main.py:213
+#: src/main.py:209 src/main.py:213 src/main.py:221 src/main.py:217
 #, fuzzy
 msgid ""
 "Use [LU], instead of [LUFS], when displaying R128 values, (default: LUFS)."
@@ -326,7 +326,7 @@ msgstr ""
 "Use [Lu], en lugar de [LUFS], al mostrar los valores R128, (predeterminado: "
 "LUFS). "
 
-#: src/main.py:218 src/main.py:222
+#: src/main.py:218 src/main.py:222 src/main.py:230 src/main.py:226
 msgid ""
 "flat, generate one overview tab for all, or dir, for one tab for folders, "
 "(default: flat)."
@@ -334,102 +334,125 @@ msgstr ""
 "Flat, genere una pestaña Descripción general para todos, o dir, para una "
 "pestaña para carpetas, (predeterminado: plano)."
 
-#: src/main.py:227 src/main.py:231
+#: src/main.py:227 src/main.py:231 src/main.py:239 src/main.py:235
 msgid "If input is a folder, process subfolders, too."
 msgstr "Si la entrada es una carpeta, también procese subcarpetas."
 
-#: src/main.py:236 src/main.py:240
+#: src/main.py:236 src/main.py:240 src/main.py:248 src/main.py:244
 msgid "FILE(S) or FOLDER(S)"
 msgstr "Archivos) o carpetas)"
 
-#: src/main.py:350 src/main.py:359 src/main.py:366
+#: src/main.py:350 src/main.py:359 src/main.py:366 src/main.py:374
+#: src/main.py:370
 msgid "MasVisGtk Version "
 msgstr "Versión MasVisGtk "
 
-#: src/main.py:358 src/main.py:367 src/main.py:374
+#: src/main.py:358 src/main.py:367 src/main.py:374 src/main.py:382
+#: src/main.py:378
 msgid "Supported Formats: "
 msgstr "Formatos compatibles: "
 
-#: src/main.py:369 src/main.py:378 src/main.py:385
+#: src/main.py:369 src/main.py:378 src/main.py:385 src/main.py:393
+#: src/main.py:389
 msgid "is not possible with option -o. Try dir or flat."
 msgstr "No es posible con la opción -o. Intenta con dir o flat."
 
-#: src/main.py:390 src/main.py:399 src/main.py:406
+#: src/main.py:390 src/main.py:399 src/main.py:406 src/main.py:414
+#: src/main.py:410
 msgid "No input files or folders supplied."
 msgstr "No se suministran archivos o carpetas de entrada."
 
-#: src/main.py:404 src/main.py:413 src/main.py:420
+#: src/main.py:404 src/main.py:413 src/main.py:420 src/main.py:428
+#: src/main.py:424
 msgid "Bad permisions for file. "
 msgstr "Malos permisos para el archivo. "
 
-#: src/main.py:422 src/main.py:431 src/main.py:438
+#: src/main.py:422 src/main.py:431 src/main.py:438 src/main.py:446
+#: src/main.py:442
 msgid "Bad input: "
 msgstr "Mala entrada: "
 
-#: src/main.py:425 src/main.py:434 src/main.py:441
+#: src/main.py:425 src/main.py:434 src/main.py:441 src/main.py:449
+#: src/main.py:445
 msgid "Error processing files: "
 msgstr "Archivos de procesamiento de errores: "
 
-#: src/main.py:432 src/main.py:441 src/main.py:448
+#: src/main.py:432 src/main.py:441 src/main.py:448 src/main.py:456
+#: src/main.py:452
 msgid "Bad input files: "
 msgstr "Archivos de entrada malas: "
 
-#: src/main.py:434 src/main.py:443 src/main.py:450
+#: src/main.py:434 src/main.py:443 src/main.py:450 src/main.py:458
+#: src/main.py:454
 msgid "Problem Files"
 msgstr "Archivos de problemas"
 
-#: src/main.py:434 src/main.py:443 src/main.py:450
+#: src/main.py:434 src/main.py:443 src/main.py:450 src/main.py:458
+#: src/main.py:454
 msgid "Ignoring bad input files:"
 msgstr "Ignorando archivos de entrada malos:"
 
-#: src/main.py:438 src/main.py:447 src/main.py:454
+#: src/main.py:438 src/main.py:447 src/main.py:454 src/main.py:462
+#: src/main.py:458
 msgid "No Files"
 msgstr "Sin archivos"
 
-#: src/main.py:438 src/main.py:447 src/main.py:454
+#: src/main.py:438 src/main.py:447 src/main.py:454 src/main.py:462
+#: src/main.py:458
 msgid "No valid files found!"
 msgstr "¡No se encontraron archivos válidos!"
 
-#: src/main.py:465 src/main.py:474 src/main.py:481
+#: src/main.py:465 src/main.py:474 src/main.py:481 src/main.py:489
+#: src/main.py:485
 msgid "Unsupported MimeType"
 msgstr "Mimetipo no compatible"
 
-#: src/main.py:465 src/main.py:474 src/main.py:481
+#: src/main.py:465 src/main.py:474 src/main.py:481 src/main.py:489
+#: src/main.py:485
 msgid "Skipping file: "
 msgstr "Archivo de omisión: "
 
 #: src/main.py:472 src/main.py:481 src/main.py:488
+#: src/gtk/preferences-overlay.ui:273 src/main.py:496 src/main.py:492
 msgid "Processing"
 msgstr "Tratamiento"
 
-#: src/main.py:504 src/main.py:513 src/main.py:520
+#: src/main.py:504 src/main.py:513 src/main.py:520 src/main.py:528
+#: src/main.py:524
 msgid "AsyncWorkerError"
 msgstr "Error del trabajador asíncrono"
 
-#: src/main.py:532 src/main.py:541 src/main.py:548
+#: src/main.py:532 src/main.py:541 src/main.py:548 src/main.py:556
+#: src/main.py:552
 msgid "Duplicate path: "
 msgstr "Ruta duplicada: "
 
-#: src/main.py:538 src/main.py:547 src/main.py:554
+#: src/main.py:538 src/main.py:547 src/main.py:554 src/main.py:562
+#: src/main.py:558
 msgid "Error in Opening"
 msgstr "Error en la apertura"
 
 #: src/main.py:554 src/main.py:590 src/main.py:563 src/main.py:599
-#: src/main.py:570 src/main.py:606
+#: src/main.py:570 src/main.py:606 src/main.py:578 src/main.py:614
+#: src/main.py:574 src/main.py:610
 msgid "Cannot detect save file format, defaulting to png."
 msgstr "No se puede detectar el formato de archivo Guardar, por defecto a PNG."
 
 #: src/main.py:561 src/main.py:570 src/main.py:699 src/main.py:577
-#: src/main.py:706
+#: src/main.py:706 src/main.py:585 src/main.py:714 src/main.py:581
+#: src/main.py:710
 msgid "is not writeable."
 msgstr "no es escrito."
 
 #: src/main.py:563 src/main.py:599 src/main.py:572 src/main.py:608
 #: src/main.py:701 src/main.py:579 src/main.py:615 src/main.py:708
+#: src/main.py:587 src/main.py:623 src/main.py:716 src/main.py:583
+#: src/main.py:619 src/main.py:712
 msgid "Permissions"
 msgstr "Permisos"
 
-#: src/main.py:597 src/main.py:606 src/main.py:613
+#: src/main.py:597 src/main.py:606 src/main.py:613 src/main.py:621
+#: src/main.py:617
 msgid " is not writeable."
 msgstr "no es escrito."
 
@@ -437,38 +460,46 @@ msgstr "no es escrito."
 #: src/main_gtk_window.py:634 src/main.py:915 src/main_gtk_window.py:456
 #: src/main_gtk_window.py:806 src/main_gtk_window.py:816 src/main.py:922
 #: src/main_gtk_window.py:815 src/main_gtk_window.py:1191
-#: src/main_gtk_window.py:1201
+#: src/main_gtk_window.py:1201 src/main.py:950 src/main_gtk_window.py:819
+#: src/main_gtk_window.py:1195 src/main_gtk_window.py:1205 src/main.py:938
 msgid "Close"
 msgstr "Cerca"
 
-#: src/main.py:935 src/main.py:985 src/main.py:993
+#: src/main.py:935 src/main.py:985 src/main.py:993 src/main.py:1021
+#: src/main.py:1009
 msgid "Opening File Error"
 msgstr "Error de archivo de apertura"
 
-#: src/main.py:937 src/main.py:987 src/main.py:995
+#: src/main.py:937 src/main.py:987 src/main.py:995 src/main.py:1023
+#: src/main.py:1011
 msgid "Errors in Processing!"
 msgstr "¡Errores en el procesamiento!"
 
 #: src/main.py:953 src/main.py:964 src/main.py:1003 src/main.py:1014
-#: src/main.py:1011 src/main.py:1022
+#: src/main.py:1011 src/main.py:1022 src/main.py:1039 src/main.py:1054
+#: src/main.py:1027 src/main.py:1041
 msgid "Unable to open input "
 msgstr "No se puede abrir la entrada "
 
-#: src/main.py:954 src/main.py:1004 src/main.py:1012
+#: src/main.py:954 src/main.py:1004 src/main.py:1012 src/main.py:1040
+#: src/main.py:1028
 msgid "Cannot Open File"
 msgstr "No se puede abrir el archivo"
 
-#: src/main.py:963 src/main.py:1013 src/main.py:1021
+#: src/main.py:963 src/main.py:1013 src/main.py:1021 src/main.py:1053
+#: src/main.py:1040
 msgid "The minimum file duration is 3 seconds."
 msgstr "La duración mínima del archivo es de 3 segundos."
 
-#: src/main.py:965 src/main.py:1015 src/main.py:1023
+#: src/main.py:965 src/main.py:1015 src/main.py:1023 src/main.py:1055
+#: src/main.py:1042
 msgid "File Error"
 msgstr "Error de archivo"
 
 #: src/main_gtk_window.py:127 src/main_gtk_window.py:422
 #: src/main_gtk_window.py:133 src/main_gtk_window.py:442
 #: src/main_gtk_window.py:153 src/main_gtk_window.py:797
+#: src/main_gtk_window.py:801
 msgid "File Information"
 msgstr "Información de archivo"
 
@@ -511,13 +542,15 @@ msgstr "Acerca de"
 #: src/main_gtk_window.py:215 src/main_gtk_window.py:157
 #: src/main_gtk_window.py:217 src/main_gtk_window.py:222
 #: src/main_gtk_window.py:179 src/main_gtk_window.py:550
-#: src/main_gtk_window.py:555
+#: src/main_gtk_window.py:555 src/main_gtk_window.py:180
+#: src/main_gtk_window.py:554 src/main_gtk_window.py:559
 msgid "Open Files"
 msgstr "Archivos abiertos"
 
 #: src/main_gtk_window.py:155 src/main_gtk_window.py:225
 #: src/main_gtk_window.py:162 src/main_gtk_window.py:232
 #: src/main_gtk_window.py:188 src/main_gtk_window.py:565
+#: src/main_gtk_window.py:190 src/main_gtk_window.py:569
 msgid "Advanced Open"
 msgstr "Abierto avanzado"
 
@@ -526,77 +559,79 @@ msgstr "Abierto avanzado"
 #: src/main_gtk_window.py:346 src/main_gtk_window.py:368
 #: src/main_gtk_window.py:427 src/main_gtk_window.py:195
 #: src/main_gtk_window.py:701 src/main_gtk_window.py:723
-#: src/main_gtk_window.py:782
+#: src/main_gtk_window.py:782 src/main_gtk_window.py:198
+#: src/main_gtk_window.py:705 src/main_gtk_window.py:727
+#: src/main_gtk_window.py:786
 msgid "Save"
 msgstr "Ahorrar"
 
 #: src/main_gtk_window.py:160 src/main_gtk_window.py:167
-#: src/main_gtk_window.py:197
+#: src/main_gtk_window.py:197 src/main_gtk_window.py:200
 msgid "Save Tab"
 msgstr "Guardar pestaña"
 
 #: src/main_gtk_window.py:218 src/main_gtk_window.py:225
-#: src/main_gtk_window.py:558
+#: src/main_gtk_window.py:558 src/main_gtk_window.py:562
 msgid "Open Folders"
 msgstr "Abre carpetas"
 
 #: src/main_gtk_window.py:231 src/main_gtk_window.py:238
-#: src/main_gtk_window.py:572
+#: src/main_gtk_window.py:572 src/main_gtk_window.py:576
 msgid "Add Files"
 msgstr "Agregar archivos"
 
 #: src/main_gtk_window.py:231 src/main_gtk_window.py:238
-#: src/main_gtk_window.py:574
+#: src/main_gtk_window.py:574 src/main_gtk_window.py:578
 msgid "Add files for processing"
 msgstr "Agregar archivos para procesar"
 
 #: src/main_gtk_window.py:233 src/main_gtk_window.py:240
-#: src/main_gtk_window.py:578
+#: src/main_gtk_window.py:578 src/main_gtk_window.py:582
 msgid "Add Folders"
 msgstr "Agregar carpetas"
 
 #: src/main_gtk_window.py:233 src/main_gtk_window.py:240
-#: src/main_gtk_window.py:580
+#: src/main_gtk_window.py:580 src/main_gtk_window.py:584
 msgid "Add folders for processing"
 msgstr "Agregar carpetas para procesar"
 
 #: src/main_gtk_window.py:242 src/main_gtk_window.py:249
-#: src/main_gtk_window.py:590
+#: src/main_gtk_window.py:590 src/main_gtk_window.py:594
 msgid "use LUFS units"
 msgstr "utilizar unidades LUFS"
 
 #: src/main_gtk_window.py:246 src/main_gtk_window.py:253
-#: src/main_gtk_window.py:594
+#: src/main_gtk_window.py:594 src/main_gtk_window.py:598
 msgid "recursive (search sub-folders)"
 msgstr "recursivo (search sub-pleas)"
 
 #: src/main_gtk_window.py:252 src/main_gtk_window.py:259
-#: src/main_gtk_window.py:600
+#: src/main_gtk_window.py:600 src/main_gtk_window.py:604
 msgid "overview mode"
 msgstr "modo de descripción general"
 
 #: src/main_gtk_window.py:283 src/main_gtk_window.py:290
-#: src/main_gtk_window.py:632
+#: src/main_gtk_window.py:632 src/main_gtk_window.py:636
 msgid "Start"
 msgstr "Comenzar"
 
 #: src/main_gtk_window.py:283 src/main_gtk_window.py:290
-#: src/main_gtk_window.py:633
+#: src/main_gtk_window.py:633 src/main_gtk_window.py:637
 msgid "Begin audio analysis"
 msgstr "Comenzar el análisis de audio"
 
 #: src/main_gtk_window.py:308 src/main_gtk_window.py:315
-#: src/main_gtk_window.py:660
+#: src/main_gtk_window.py:660 src/main_gtk_window.py:664
 msgid "Failed Open"
 msgstr "Fracasado abierto"
 
 #: src/main_gtk_window.py:340 src/main_gtk_window.py:347
-#: src/main_gtk_window.py:702
+#: src/main_gtk_window.py:702 src/main_gtk_window.py:706
 msgid "Save in Folder"
 msgstr "Guardar en la carpeta"
 
 #: src/main_gtk_window.py:362 src/main_gtk_window.py:369
-#: src/main_gtk_window.py:724
+#: src/main_gtk_window.py:724 src/main_gtk_window.py:728
 msgid "Save All in Folder"
 msgstr "Guardar todo en la carpeta"
 
@@ -604,12 +639,13 @@ msgstr "Guardar todo en la carpeta"
 #: src/main_gtk_window.py:536 src/main_gtk_window.py:462
 #: src/main_gtk_window.py:485 src/main_gtk_window.py:556
 #: src/main_gtk_window.py:821 src/main_gtk_window.py:844
-#: src/main_gtk_window.py:931
+#: src/main_gtk_window.py:931 src/main_gtk_window.py:825
+#: src/main_gtk_window.py:848 src/main_gtk_window.py:935
 msgid "Cannot Compare"
 msgstr "No se puede comparar"
 
 #: src/main_gtk_window.py:442 src/main_gtk_window.py:462
-#: src/main_gtk_window.py:821
+#: src/main_gtk_window.py:821 src/main_gtk_window.py:825
 msgid "No tabs."
 msgstr "No hay pestañas."
 
@@ -619,47 +655,51 @@ msgstr "No hay pestañas."
 #: src/main_gtk_window.py:697 src/main_gtk_window.py:844
 #: src/main_gtk_window.py:931 src/main_gtk_window.py:1001
 #: src/main_gtk_window.py:1024 src/main_gtk_window.py:1078
+#: src/main_gtk_window.py:848 src/main_gtk_window.py:935
+#: src/main_gtk_window.py:1005 src/main_gtk_window.py:1028
+#: src/main_gtk_window.py:1082
 msgid "Too few tabs."
 msgstr "Muy pocas pestañas."
 
 #: src/main_gtk_window.py:478 src/main_gtk_window.py:498
-#: src/main_gtk_window.py:858
+#: src/main_gtk_window.py:858 src/main_gtk_window.py:862
 msgid "Go!"
 msgstr "¡Ir!"
 
 #: src/main_gtk_window.py:478 src/main_gtk_window.py:498
-#: src/main_gtk_window.py:859
+#: src/main_gtk_window.py:859 src/main_gtk_window.py:863
 msgid "Compare tabs in separate window"
 msgstr "Compare pestañas en una ventana separada"
 
 #: src/main_gtk_window.py:482 src/main_gtk_window.py:502
 #: src/main_gtk_window.py:666 src/main_gtk_window.py:865
-#: src/main_gtk_window.py:1045
+#: src/main_gtk_window.py:1045 src/main_gtk_window.py:869
+#: src/main_gtk_window.py:1049
 msgid "☑ All!"
 msgstr "☑ ¡Todos!"
 
 #: src/main_gtk_window.py:482 src/main_gtk_window.py:502
-#: src/main_gtk_window.py:866
+#: src/main_gtk_window.py:866 src/main_gtk_window.py:870
 msgid "Compare ALL tabs in separate window"
 msgstr "Compare TODAS las pestañas en una ventana separada"
 
 #: src/main_gtk_window.py:545 src/main_gtk_window.py:565
-#: src/main_gtk_window.py:940
+#: src/main_gtk_window.py:940 src/main_gtk_window.py:944
 msgid "Comparison #"
 msgstr "Comparación #"
 
 #: src/main_gtk_window.py:622 src/main_gtk_window.py:804
-#: src/main_gtk_window.py:1189
+#: src/main_gtk_window.py:1189 src/main_gtk_window.py:1193
 msgid "Supported Formats"
 msgstr "Formatos compatibles"
 
 #: src/main_gtk_window.py:653 src/main_gtk_window.py:835
-#: src/main_gtk_window.py:1220
+#: src/main_gtk_window.py:1220 src/main_gtk_window.py:1224
 msgid "Original PyMasVis module development."
 msgstr "Desarrollo original del módulo de PyMasVis."
 
 #: src/main_gtk_window.py:655 src/main_gtk_window.py:837
-#: src/main_gtk_window.py:1222
+#: src/main_gtk_window.py:1222 src/main_gtk_window.py:1226
 msgid "GTK application, originally based on PyMasVis commit #657196."
 msgstr "Aplicación GTK, originalmente basada en PyMasVis Commit #657196."
 
@@ -751,15 +791,18 @@ msgid "Short term PLR"
 msgstr "PLR a corto plazo"
 
 #: src/output_gtk.py:725 src/output_gtk.py:800 src/main_gtk_window.py:256
+#: src/main_gtk_window.py:260
 msgid "Scale to Window Width"
 msgstr "Escala al ancho de la ventana"
 
 #: src/output_gtk.py:779 src/output_gtk.py:859 src/main_gtk_window.py:402
+#: src/main_gtk_window.py:406
 msgid "Unknown Dynamic Range"
 msgstr "Rango dinámico desconocido"
 
 #: src/output_gtk.py:783 src/output_gtk.py:863 src/main_gtk_window.py:205
-#: src/main_gtk_window.py:405
+#: src/main_gtk_window.py:405 src/main_gtk_window.py:209
+#: src/main_gtk_window.py:409
 msgid "Dynamic Range"
 msgstr "Rango dinámico"
 
@@ -780,7 +823,7 @@ msgid "{} [{}, {} channels, {} bits, {:0.1f} kHz, {} kbps]"
 msgstr "{} [{}, {} canales, {} bits, {:0.1f} kHz, {} kbps]"
 
 #: src/main_gtk_window.py:192 src/main_gtk_window.py:199
-#: src/main_gtk_window.py:331
+#: src/main_gtk_window.py:331 src/main_gtk_window.py:335
 msgid "Overview"
 msgstr "Resumen"
 
@@ -958,7 +1001,7 @@ msgstr "Duración de animación en milisegundos."
 
 #: src/gtk/help-overlay.ui:79 src/main_gtk_window.py:134
 #: src/main_gtk_window.py:632 src/main_gtk_window.py:154
-#: src/main_gtk_window.py:1007
+#: src/main_gtk_window.py:1007 src/main_gtk_window.py:1011
 msgid "Animate Tabs"
 msgstr "Pestañas animadas"
 
@@ -967,48 +1010,60 @@ msgid "Set animation duration [ms]"
 msgstr "Establecer la duración de la animación [MS]"
 
 #: src/main_gtk_window.py:428 src/main_gtk_window.py:783
+#: src/main_gtk_window.py:787
 msgid "Save Animation"
 msgstr "Guardar animación"
 
 #: src/main_gtk_window.py:626 src/main_gtk_window.py:649
 #: src/main_gtk_window.py:697 src/main_gtk_window.py:1001
 #: src/main_gtk_window.py:1024 src/main_gtk_window.py:1078
+#: src/main_gtk_window.py:1005 src/main_gtk_window.py:1028
+#: src/main_gtk_window.py:1082
 msgid "Cannot Animate"
 msgstr "No se puede animar"
 
 #: src/main_gtk_window.py:662 src/main_gtk_window.py:1038
+#: src/main_gtk_window.py:1042
 msgid "Animate"
 msgstr "Animar"
 
 #: src/main_gtk_window.py:662 src/main_gtk_window.py:1039
+#: src/main_gtk_window.py:1043
 msgid "Animate tabs in separate window"
 msgstr "Pestañas animadas en una ventana separada"
 
 #: src/main_gtk_window.py:666 src/main_gtk_window.py:1046
+#: src/main_gtk_window.py:1050
 msgid "Animate ALL tabs in separate window"
 msgstr "Animar TODAS las pestañas en una ventana separada"
 
 #: src/main_gtk_window.py:707 src/main_gtk_window.py:1088
+#: src/main_gtk_window.py:1092
 msgid "Animation #"
 msgstr "Animación #"
 
 #: src/main_gtk_window.py:722 src/main_gtk_window.py:1103
+#: src/main_gtk_window.py:1107
 msgid "Save tabs to animated gif image"
 msgstr "Guardar pestañas a la imagen animada de gif"
 
 #: src/main_gtk_window.py:765 src/main_gtk_window.py:1150
+#: src/main_gtk_window.py:1154
 msgid "Processing images."
 msgstr "Procesamiento de imágenes."
 
 #: src/main_gtk_window.py:772 src/main_gtk_window.py:1157
+#: src/main_gtk_window.py:1161
 msgid "Animated image ready for saving."
 msgstr "Imagen animada lista para guardar."
 
 #: src/main_gtk_window.py:775 src/main_gtk_window.py:1160
+#: src/main_gtk_window.py:1164
 msgid "Animation Error"
 msgstr "Error de animación"
 
 #: src/main_gtk_window.py:776 src/main_gtk_window.py:1161
+#: src/main_gtk_window.py:1165
 msgid ""
 "Cannot create animation.\n"
 "Plotting canvas cannot be made into image.\n"
@@ -1048,7 +1103,7 @@ msgstr ""
 msgid "Save the figure"
 msgstr "Guardar la figura"
 
-#: src/output_gtk.py:789 src/main_gtk_window.py:272
+#: src/output_gtk.py:789 src/main_gtk_window.py:272 src/main_gtk_window.py:276
 msgid "Zoom Level [px]"
 msgstr "Nivel de zoom [PX]"
 
@@ -1520,25 +1575,39 @@ msgstr ""
 "mostrando si algunos niveles de muestra son más comunes que otros.\n"
 
 #: src/main_gtk_window.py:218 src/main_gtk_window.py:502
+#: src/main_gtk_window.py:221 src/main_gtk_window.py:506
 msgid "Dynamic Range Chart"
 msgstr "Gráfico de rango dinámico"
 
-#: src/main_gtk_window.py:234
+#: src/main_gtk_window.py:234 src/main_gtk_window.py:238
 msgid "Zoom in"
 msgstr "Ampliar en"
 
-#: src/main_gtk_window.py:242
+#: src/main_gtk_window.py:242 src/main_gtk_window.py:246
 msgid "Restore original dimensions"
 msgstr "Restaurar dimensiones originales"
 
-#: src/main_gtk_window.py:264
+#: src/main_gtk_window.py:264 src/main_gtk_window.py:268
 msgid "Zoom out"
 msgstr "Ampliar hacia fuera"
 
-#: src/main_gtk_window.py:525
+#: src/main_gtk_window.py:525 src/main_gtk_window.py:529
 msgid "Dynamic Range of Channels"
 msgstr "A una gama dinámica de canales"
 
-#: src/main_gtk_window.py:532
+#: src/main_gtk_window.py:532 src/main_gtk_window.py:536
 msgid "Channel #"
 msgstr "Canal #"
+
+#: data/io.github.itprojects.MasVisGtk.gschema.xml:91
+#: src/gtk/preferences-overlay.ui:276
+msgid "Use GStreamer for processing, instead of FFMPEG."
+msgstr "Utilícese GStreamer para el procesamiento, en lugar de FFMPEG."
+
+#: data/io.github.itprojects.MasVisGtk.gschema.xml:92
+msgid ""
+"FFMPEG is the default audio file processing software. Gstreamer can be used "
+"to process audio files."
+msgstr ""
+"FFMPEG es el software predeterminado de procesamiento de archivos de audio. "
+"GStreamer se puede utilizar para procesar archivos de audio."

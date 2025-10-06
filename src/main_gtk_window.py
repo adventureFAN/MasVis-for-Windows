@@ -170,6 +170,7 @@ class PyPlotWindow(Adw.ApplicationWindow):
         self.menu_button = Gtk.MenuButton()
         self.menu_button.set_popover(popover)
         self.menu_button.set_icon_name('open-menu-symbolic')
+        self.menu_button.set_valign(Gtk.Align.CENTER)
 
         header.pack_end(self.menu_button)
 
@@ -180,6 +181,7 @@ class PyPlotWindow(Adw.ApplicationWindow):
         )
         self.btn_open_files.set_name('btn_open_files')
         self.btn_open_files.connect('clicked', self.on_open_dialog, None, True)
+        self.btn_open_files.set_valign(Gtk.Align.CENTER)
         header.pack_start(self.btn_open_files)
 
         # MasVis advanced open, or overview.
@@ -188,6 +190,7 @@ class PyPlotWindow(Adw.ApplicationWindow):
             tooltip_text=_('Advanced Open')
         )
         self.btn_open_folders.connect('clicked', self.on_open_advanced_dialog)
+        self.btn_open_folders.set_valign(Gtk.Align.CENTER)
         header.pack_start(self.btn_open_folders)
 
         # MasVis save tab to image.
@@ -197,6 +200,7 @@ class PyPlotWindow(Adw.ApplicationWindow):
             tooltip_text=_('Save Tab')
         )
         self.btn_save.connect('clicked', self.on_save_dialog)
+        self.btn_save.set_valign(Gtk.Align.CENTER)
         header.pack_start(self.btn_save)
 
         # Dynamic Range indicator widget.
@@ -205,7 +209,6 @@ class PyPlotWindow(Adw.ApplicationWindow):
             tooltip_text=_('Dynamic Range')
         )
         self.btn_dr.set_name('btn_dr_dark')
-        self.btn_dr.set_halign(Gtk.Align.START)
         self.btn_dr.set_valign(Gtk.Align.CENTER)
         self.btn_dr.set_hexpand(True)
         self.btn_dr.connect('clicked', self.on_show_dynamic_range_channels)
@@ -218,6 +221,7 @@ class PyPlotWindow(Adw.ApplicationWindow):
             tooltip_text=_('Dynamic Range Chart')
         )
         btn_dr_chart.connect('clicked', self.on_show_dynamic_range_chart)
+        btn_dr_chart.set_valign(Gtk.Align.CENTER)
         header.pack_end(btn_dr_chart)
 
         self.box_view_buttons = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)

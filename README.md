@@ -101,7 +101,9 @@ Save your detailed analysis results in multiple industry-standard formats for do
 - **CPU:** 2 physical cores, 4 threads
 - **RAM:** 8 GB minimum
 - **Storage:** ~200 MB for Flatpak installation
-- **Dependencies:** FFMPEG and FFPROBE (locally installed)
+- **Dependencies:**
+    * Locally installed FFMPEG and FFPROBE, or,
+    * Locally installed GStreamer python module (enable in preferences)
 
 ### **Recommended for Large Files**
 - **RAM:** 16 GB or more for files ≥20 minutes
@@ -153,25 +155,25 @@ flatpak run io.github.itprojects.MasVisGtk
 #### **Basic Usage**
 ```bash
 # Open single file
-flatpak run io.github.itprojects.MasVisGtk /path/to/audio.wav
+flatpak run io.github.itprojects.MasVisGtk '/path/to/audio.wav'
 
 # Open multiple files
-flatpak run io.github.itprojects.MasVisGtk /path/to/file1.wav '/path/to/file 2.mp3'
+flatpak run io.github.itprojects.MasVisGtk '/path/to/file1.wav' '/path/to/file 2.mp3'
 
 # Open files and folders
-flatpak run io.github.itprojects.MasVisGtk /path/to/file.mp3 '/path/to/music/folder'
+flatpak run io.github.itprojects.MasVisGtk '/path/to/file.mp3' '/path/to/music/folder'
 ```
 
 #### **Advanced Options**
 ```bash
 # Recursive folder processing
-flatpak run io.github.itprojects.MasVisGtk -r /path/to/music/library
+flatpak run io.github.itprojects.MasVisGtk -r '/path/to/music/library'
 
 # Overview files and/or folders
-flatpak run io.github.itprojects.MasVisGtk /path/to/file.mp3 '/path/to/folder where/other file.ogg'
+flatpak run io.github.itprojects.MasVisGtk '/path/to/file.mp3' '/path/to/folder where/other file.ogg'
 
 # Recursive processing for overview (flat mode)
-flatpak run io.github.itprojects.MasVisGtk -r -o flat /path/to/file.mp3 '/path/to/folder'
+flatpak run io.github.itprojects.MasVisGtk -r -o flat '/path/to/file.mp3' '/path/to/folder'
 
 # Show help
 flatpak run io.github.itprojects.MasVisGtk --help
@@ -221,19 +223,19 @@ The original `pymasvis` Python module is bundled for command-line analysis:
 ### **Detailed Analysis**
 ```bash
 # Single file analysis
-flatpak run io.github.itprojects.MasVisGtk --pymasvis --destdir /output/path /path/to/audio.wav
+flatpak run io.github.itprojects.MasVisGtk --pymasvis --destdir '/output/path' '/path/to/audio.wav'
 
 # Batch folder analysis
-flatpak run io.github.itprojects.MasVisGtk --pymasvis -r --destdir /output/path '/path/to/folder'
+flatpak run io.github.itprojects.MasVisGtk --pymasvis -r --destdir '/output/path' '/path/to/folder'
 ```
 
 ### **Overview Generation**
 ```bash
 # File overview
-flatpak run io.github.itprojects.MasVisGtk --pymasvis --overview --destdir /output/path /path/to/file.wav
+flatpak run io.github.itprojects.MasVisGtk --pymasvis --overview --destdir '/output/path' '/path/to/file.wav'
 
 # Folder overview (flat mode)
-flatpak run io.github.itprojects.MasVisGtk --pymasvis --overview --overview-mode flat --destdir /output/path '/path/to/folder'
+flatpak run io.github.itprojects.MasVisGtk --pymasvis --overview --overview-mode flat --destdir '/output/path' '/path/to/folder'
 ```
 
 ### **PyMasVis Help**
@@ -367,7 +369,7 @@ Dynamic Range measures the difference between the loudest and quietest parts of 
 
 ### **Core Dependencies**
 - **Python Libraries:** `numpy`, `scipy`, `matplotlib`
-- **Audio Processing:** FFMPEG/FFPROBE
+- **Audio Processing:** FFMPEG/FFPROBE, or, GStreamer (python)
 - **GUI Framework:** GTK for GNOME
 - **Packaging:** Flatpak with bundled dependencies
 

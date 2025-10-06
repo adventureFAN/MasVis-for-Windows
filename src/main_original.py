@@ -82,7 +82,10 @@ def run(
     else:
         log.warning("Unable to open input %s", infile)
         return
-    track = loader(*loader_args)
+    track = loader(
+        *loader_args,
+        processing_with_gst=False
+    )
     if type(track) is int:
         return
     # Minimum track duration => 3 seconds.

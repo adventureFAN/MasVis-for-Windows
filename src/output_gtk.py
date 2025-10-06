@@ -228,7 +228,7 @@ def render(
                 c_layout,
                 track['bitdepth'],
                 fs,
-                int(round(track['metadata']['bps'] / 1000.0)),
+                int(round(track['metadata']['bps'] / 1000.0)) if track['metadata']['bps'] != 0 else '~', # ~ is variable bitrate
                 time.strftime('%M:%S', time.gmtime(track['duration'])),
                 track['metadata']['size'] / (1024 * 1024), # MB file size
             )

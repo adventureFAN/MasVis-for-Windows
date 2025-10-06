@@ -86,5 +86,11 @@
       <summary>Animation duration in milliseconds.</summary>
     </key>
 
+    <key name="processing-with-gst" type="b">
+      <default>false</default>
+      <summary>Use GStreamer for processing, instead of FFMPEG.</summary>
+      <description>FFMPEG is the default audio file processing software. Gstreamer can be used to process audio files.</description>
+    </key>
+
   </schema>
 </schemalist>

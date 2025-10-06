@@ -268,6 +268,16 @@
             </child>
           </object>
         </child>
+        <child>
+          <object class="AdwPreferencesGroup">
+            <property name="title" translatable="yes">Processing</property>
+            <child>
+              <object class="AdwSwitchRow" id="processing_with_gst">
+                <property name="title" translatable="yes">Use GStreamer for processing, instead of FFMPEG.</property>
+              </object>
+            </child>
+          </object>
+        </child>
       </object>
     </child>
   </object>
