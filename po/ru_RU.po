@@ -1,15 +1,15 @@
 # Russian translations for masvisgtk package.
-# Copyright (C) 2024 THE masvisgtk'S COPYRIGHT HOLDER
+# Copyright (C) 2025 THE masvisgtk'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the masvisgtk package.
-# Automatically generated, 2024.
+# Automatically generated, 2025.
 #
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: masvisgtk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-06 20:09+0300\n"
-"PO-Revision-Date: 2024-08-29 21:08+0300\n"
+"POT-Creation-Date: 2025-10-11 17:47+0300\n"
+"PO-Revision-Date: 2025-10-11 19:24+0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: ru\n"
@@ -18,805 +18,834 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Poedit 3.7\n"
 
-#: data/io.github.itprojects.MasVisGtk.desktop.in:3 src/main.py:57
-#: data/io.github.itprojects.MasVisGtk.desktop.in:2
+#: data/io.github.itprojects.MasVisGtk.desktop.in:2 src/main.py:57
 msgid "MasVisGtk"
-msgstr ""
+msgstr "МасВисГтк"
 
-#: data/io.github.itprojects.MasVisGtk.desktop.in:9
 #: data/io.github.itprojects.MasVisGtk.desktop.in:8
 msgid "Audio analysis"
-msgstr ""
+msgstr "Аудиоанализ"
 
-#: data/io.github.itprojects.MasVisGtk.desktop.in:10
-#: data/io.github.itprojects.MasVisGtk.metainfo.xml.in:7
 #: data/io.github.itprojects.MasVisGtk.desktop.in:9
+#: data/io.github.itprojects.MasVisGtk.metainfo.xml.in:7
 msgid "Audio analysis tool for your music"
-msgstr ""
+msgstr "Инструмент анализа аудио для вашей музыки"
 
-#: data/io.github.itprojects.MasVisGtk.desktop.in:12
 #: data/io.github.itprojects.MasVisGtk.desktop.in:11
 msgid "Audio;Loudness;Analysis;Music;Media;"
-msgstr ""
+msgstr "Звук;Громкость;Анализ;Музыка;Медиа;"
 
 #: data/io.github.itprojects.MasVisGtk.metainfo.xml.in:9
 msgid ""
 "Detect audio mastering defects. Based on pymasvis app/module, using numpy, "
 "scipy, pyplot (matplotlib)."
 msgstr ""
+"Детектн-атекторы мастеринга. Основанный на приложении / модуле паймасвиса, с "
+"использованием нумпай, сайпай, пайплот (матплотлиб)."
 
 #: data/io.github.itprojects.MasVisGtk.metainfo.xml.in:11
 msgid "Waveform plotting"
-msgstr ""
+msgstr "Построение формы сигнала"
 
 #: data/io.github.itprojects.MasVisGtk.metainfo.xml.in:12
 msgid "Overview of files (by-folder support)"
-msgstr ""
+msgstr "Обзор файлов (по папкам возможно)"
 
 #: data/io.github.itprojects.MasVisGtk.metainfo.xml.in:13
 msgid "Frequency plot"
-msgstr ""
+msgstr "График частоты"
 
 #: data/io.github.itprojects.MasVisGtk.metainfo.xml.in:14
 msgid "Dynamic Range estimation"
-msgstr ""
+msgstr "Оценка Динамического Диапазона"
 
 #: data/io.github.itprojects.MasVisGtk.metainfo.xml.in:15
 msgid "Peak estimation"
-msgstr ""
+msgstr "Оценка Пиков"
 
 #: data/io.github.itprojects.MasVisGtk.metainfo.xml.in:16
 msgid "Crest Factor estimation"
-msgstr ""
+msgstr "Оценка крест-фактора"
 
 #: data/io.github.itprojects.MasVisGtk.metainfo.xml.in:17
 msgid "Histogram plot"
-msgstr ""
+msgstr "График Гистограммы"
 
 #: data/io.github.itprojects.MasVisGtk.metainfo.xml.in:18
 msgid "Peak vs. RMS plot"
-msgstr ""
+msgstr "График Среднеквадратичные (RMS) и пиковые (амплитудные) значения"
 
 #: data/io.github.itprojects.MasVisGtk.metainfo.xml.in:19
 msgid "Loudness analysis, EBU R128 plot"
-msgstr ""
+msgstr "Анализ громкости, EBU R128 график"
 
 #: data/io.github.itprojects.MasVisGtk.metainfo.xml.in:20
 msgid "Multi-channel audio support"
-msgstr ""
+msgstr "Поддержка многоканального звука"
 
 #: data/io.github.itprojects.MasVisGtk.gschema.xml:24
 msgid "Language of the application."
-msgstr ""
+msgstr "Язык приложения."
 
 #: data/io.github.itprojects.MasVisGtk.gschema.xml:25
 msgid "The language of the application, if the translation exists."
-msgstr ""
+msgstr "Язык приложения, если перевод существует."
 
 #: data/io.github.itprojects.MasVisGtk.gschema.xml:38
 msgid "Application style."
-msgstr ""
+msgstr "Стиль приложения."
 
 #: data/io.github.itprojects.MasVisGtk.gschema.xml:39
 msgid "Application style, follow system 0, light 1, dark 2."
-msgstr ""
+msgstr "Стиль приложения, системной 0, светлая 1, темная 2."
 
 #: data/io.github.itprojects.MasVisGtk.gschema.xml:44
 msgid "Matplotlib style."
-msgstr ""
+msgstr "Стиль Матплотлиб."
 
 #: data/io.github.itprojects.MasVisGtk.gschema.xml:45
 msgid ""
 "Matplotlib visual style. 'Solarize_Light2', 'bmh', 'classic', "
 "'dark_background', 'fast', 'fivethirtyeight', 'ggplot', 'grayscale'"
 msgstr ""
+"Видимый стиль Матплотлиб. 'Solarize_Light2', 'bmh', 'classic', "
+"'dark_background', 'fast', 'fivethirtyeight', 'ggplot', 'grayscale'"
 
 #: data/io.github.itprojects.MasVisGtk.gschema.xml:54
 msgid "Custom font."
-msgstr ""
+msgstr "Пользовательские шрифты."
 
 #: data/io.github.itprojects.MasVisGtk.gschema.xml:55
 msgid "Custom font preferences, using the font button."
-msgstr ""
+msgstr "Настройки пользовательских шрифтов с помощью кнопки шрифта."
 
 #: data/io.github.itprojects.MasVisGtk.gschema.xml:60
 msgid "Save format."
-msgstr ""
+msgstr "Сохраните формат."
 
 #: data/io.github.itprojects.MasVisGtk.gschema.xml:65
 msgid "Open other files."
-msgstr ""
+msgstr "Откройте другие файлы."
 
 #: data/io.github.itprojects.MasVisGtk.gschema.xml:66
 msgid ""
 "Allows opeing non-audio file types, like videos. App can crash more often. "
 "Needs lots of free RAM."
 msgstr ""
+"Позволяет открывать файлы неаудио форматов, например видео. Приложение может "
+"чаще рушить. Нужно много свободная памяти."
 
 #: data/io.github.itprojects.MasVisGtk.gschema.xml:71
 msgid "DPI for plots."
-msgstr ""
+msgstr "DPI для график."
 
 #: data/io.github.itprojects.MasVisGtk.gschema.xml:76
 msgid "DPI for saved images."
-msgstr ""
+msgstr "DPI для сохраненных изображений."
 
 #: data/io.github.itprojects.MasVisGtk.gschema.xml:81
 msgid "One audio plot width in comparison window."
+msgstr "Одна ширина аудио-участок в сравнимом окне."
+
+#: data/io.github.itprojects.MasVisGtk.gschema.xml:86
+msgid "Animation duration in milliseconds."
+msgstr "Продолжительность анимации за миллисекунды."
+
+#: data/io.github.itprojects.MasVisGtk.gschema.xml:91
+#: src/gtk/preferences-overlay.ui:276
+msgid "Use GStreamer for processing, instead of FFMPEG."
+msgstr "Используйте GStreamer для обработки, вместо FFMPEG."
+
+#: data/io.github.itprojects.MasVisGtk.gschema.xml:92
+msgid ""
+"FFMPEG is the default audio file processing software. Gstreamer can be used "
+"to process audio files."
 msgstr ""
+"FFMPEG - это программное обеспечение для обработки аудиофайлов по умолчанию. "
+"Gstreamer может использоваться для обработки аудиофайлов."
 
 #: src/gtk/help-overlay.ui:11
 msgid "Window Actions"
-msgstr ""
+msgstr "Действия с окном"
 
 #: src/gtk/help-overlay.ui:15
 msgid "Help Manual"
-msgstr ""
+msgstr "Помочь"
 
 #: src/gtk/help-overlay.ui:21
 msgid "Open Menu"
-msgstr ""
+msgstr "Открытый Меню"
 
 #: src/gtk/help-overlay.ui:27
 msgid "Fullscreen/Unfullscreen"
-msgstr ""
+msgstr "Полноэкранный/Неполноэкранный"
 
 #: src/gtk/help-overlay.ui:33
 msgid "Unfullscreen"
-msgstr ""
+msgstr "Неполноэкранный"
 
 #: src/gtk/help-overlay.ui:39
 msgid "Shortcuts"
-msgstr ""
+msgstr "Клавиши"
 
 #: src/gtk/help-overlay.ui:45
 msgid "Quit"
-msgstr ""
+msgstr "Выйти"
 
 #: src/gtk/help-overlay.ui:52
 msgid "File Actions"
-msgstr ""
+msgstr "Действия Файл"
 
 #: src/gtk/help-overlay.ui:56
 msgid "Show File Information"
-msgstr ""
+msgstr "Покажите информацию о файле"
 
 #: src/gtk/help-overlay.ui:62
 msgid "Simple File(s) Open"
-msgstr ""
+msgstr "Простой Файл(ы) Открыт"
 
 #: src/gtk/help-overlay.ui:68
-msgid "Advance Open / Overview"
-msgstr ""
+msgid "Advanced Open / Overview"
+msgstr "Расширенное открытие файла / Обзор"
 
 #: src/gtk/help-overlay.ui:75
 msgid "Tab Actions"
-msgstr ""
+msgstr "Действия Вкладки"
 
-#: src/gtk/help-overlay.ui:80 src/main_gtk_window.py:448
-#: src/gtk/help-overlay.ui:85 src/main_gtk_window.py:468
-#: src/main_gtk_window.py:827 src/main_gtk_window.py:831
+#: src/gtk/help-overlay.ui:79 src/main_gtk_window.py:154
+#: src/main_gtk_window.py:1011
+msgid "Animate Tabs"
+msgstr "Оживить Вкладки"
+
+#: src/gtk/help-overlay.ui:85 src/main_gtk_window.py:831
 msgid "Compare Tabs"
-msgstr ""
+msgstr "Сравнить Вкладки"
 
-#: src/gtk/help-overlay.ui:86 src/gtk/help-overlay.ui:91
+#: src/gtk/help-overlay.ui:91
 msgid "Save Current Tab"
-msgstr ""
+msgstr "Сохранить Текущую Вкладку"
 
-#: src/gtk/help-overlay.ui:92 src/gtk/help-overlay.ui:97
+#: src/gtk/help-overlay.ui:97
 msgid "Save All Tabs"
-msgstr ""
+msgstr "Сохраните Все Вкладки"
 
 #: src/gtk/manual-overlay.ui:4
 msgid "Understanding Graphs"
-msgstr ""
+msgstr "Понимание Графов"
 
 #: src/gtk/preferences-overlay.ui:9
 msgid "Language"
-msgstr ""
+msgstr "Язык"
 
 #: src/gtk/preferences-overlay.ui:12
 msgid "Language and locale"
-msgstr ""
+msgstr "Язык и окружающая среда"
 
 #: src/gtk/preferences-overlay.ui:74
 msgid "Theme and Style"
-msgstr ""
+msgstr "Тема и стиль"
 
 #: src/gtk/preferences-overlay.ui:77
 msgid "Application style"
-msgstr ""
+msgstr "Application style"
 
 #: src/gtk/preferences-overlay.ui:97
 msgid "Matplotlib built-in style"
-msgstr ""
+msgstr "Матплотлиб встроенный стиль"
 
 #: src/gtk/preferences-overlay.ui:108
 msgid "Matplotlib custom background"
-msgstr ""
+msgstr "Матплотлиб пользовательский фон"
 
 #: src/gtk/preferences-overlay.ui:132
 msgid "Matplotlib custom font"
-msgstr ""
+msgstr "Матплотлиб пользовательский шрифт"
 
 #: src/gtk/preferences-overlay.ui:158
 msgid "Files"
-msgstr ""
+msgstr "Файлы"
 
 #: src/gtk/preferences-overlay.ui:161
 msgid "Default saved image format"
-msgstr ""
+msgstr "Сохраняемый формат изображения по умолчанию"
 
 #: src/gtk/preferences-overlay.ui:185
 msgid "Open other (video) files. Needs more free RAM."
 msgstr ""
+"Открыть другие (видео) файлы. Нужно больше свободной оперативной памяти."
 
 #: src/gtk/preferences-overlay.ui:192
 msgid "Visual Quality"
-msgstr ""
+msgstr "Видимое Качество"
 
 #: src/gtk/preferences-overlay.ui:195
 msgid "DPI of plots"
-msgstr ""
+msgstr "DPI для график"
 
 #: src/gtk/preferences-overlay.ui:214
 msgid "DPI of saved files"
-msgstr ""
+msgstr "DPI для сохраненных изображений"
 
 #: src/gtk/preferences-overlay.ui:233
 msgid "One audio plot width in comparison window"
-msgstr ""
+msgstr "Одна ширина аудио-участок в сравнимом окне"
 
-#: src/main.py:157 src/main.py:161 src/main.py:169 src/main.py:165
+#: src/gtk/preferences-overlay.ui:252
+msgid "Set animation duration [ms]"
+msgstr "Установить длительность анимации [мсек]"
+
+#: src/gtk/preferences-overlay.ui:273 src/main.py:492
+msgid "Processing"
+msgstr "Обработка"
+
+#: src/main.py:165
 msgid "Cannot set locale "
-msgstr ""
+msgstr "Не можете установить окружающая среда "
 
-#: src/main.py:159 src/main.py:163 src/main.py:171 src/main.py:167
+#: src/main.py:167
 msgid "FILES/FOLDERS"
-msgstr ""
+msgstr "ФАЙЛЫ/ПАПКИ"
 
-#: src/main.py:161 src/main.py:165 src/main.py:173 src/main.py:169
+#: src/main.py:169
 msgid ""
 "  FILE(S) and/or FOLDER(S) paths to process inside the application\n"
 "\n"
 "  MasVisGtk is an audio file analysis application."
 msgstr ""
+"  ФАЙЛ (S) и/или FOLDER(S) пути для обработки внутри приложения\n"
+"\n"
+"  MasVisGtk — это приложение для анализа аудиофайлов."
 
-#: src/main.py:164 src/main.py:168 src/main.py:176 src/main.py:172
+#: src/main.py:172
 msgid ""
 "The original python module is also available with this package.\n"
 "The command line options are different from the original.\n"
 "Large file are always slow to render."
 msgstr ""
+"Оригинальный модуль Python также доступен с этим пакетом.\n"
+"Параметры командной строки отличаются от оригинала.\n"
+"Большие файлы всегда медленно обрабатывают."
 
-#: src/main.py:173 src/main.py:177 src/main.py:185 src/main.py:181
+#: src/main.py:181
 msgid "Version of MasVisGtk."
-msgstr ""
+msgstr "Версия МасВисГтк."
 
-#: src/main.py:182 src/main.py:186 src/main.py:194 src/main.py:190
+#: src/main.py:190
 msgid "Show Verbose Messages."
-msgstr ""
+msgstr "Показывать Подробные Сообщения."
 
-#: src/main.py:191 src/main.py:195 src/main.py:203 src/main.py:199
+#: src/main.py:199
 msgid "Show Debug Messages."
-msgstr ""
+msgstr "Показать Сообщения Разработчика."
 
-#: src/main.py:200 src/main.py:204 src/main.py:212 src/main.py:208
+#: src/main.py:208
 msgid "Show Supported Formats."
-msgstr ""
+msgstr "Показать Поддерживаемы Форформаты."
 
-#: src/main.py:209 src/main.py:213 src/main.py:221 src/main.py:217
+#: src/main.py:217
 msgid ""
 "Use [LU], instead of [LUFS], when displaying R128 values, (default: LUFS)."
 msgstr ""
+"Использовать [LU], вместо [LUFS], при отображии значений R128, (по "
+"умолчанию: LUFS)."
 
-#: src/main.py:218 src/main.py:222 src/main.py:230 src/main.py:226
+#: src/main.py:226
 msgid ""
 "flat, generate one overview tab for all, or dir, for one tab for folders, "
 "(default: flat)."
 msgstr ""
+"flat, создав одну вкладку обзора для всех или dir для одной вкладки для "
+"папки (по умолчанию: плоский)."
 
-#: src/main.py:227 src/main.py:231 src/main.py:239 src/main.py:235
+#: src/main.py:235
 msgid "If input is a folder, process subfolders, too."
-msgstr ""
+msgstr "Если вход - это папка, процессные подпапки тоже."
 
-#: src/main.py:236 src/main.py:240 src/main.py:248 src/main.py:244
+#: src/main.py:244
 msgid "FILE(S) or FOLDER(S)"
-msgstr ""
+msgstr "ФАЙЛ(Ы) или ПАПКИ"
 
-#: src/main.py:350 src/main.py:359 src/main.py:366 src/main.py:374
 #: src/main.py:370
 msgid "MasVisGtk Version "
-msgstr ""
+msgstr "Версия МасВисГтк "
 
-#: src/main.py:358 src/main.py:367 src/main.py:374 src/main.py:382
 #: src/main.py:378
 msgid "Supported Formats: "
-msgstr ""
+msgstr "Поддерживаемый Форматы: "
 
-#: src/main.py:369 src/main.py:378 src/main.py:385 src/main.py:393
 #: src/main.py:389
 msgid "is not possible with option -o. Try dir or flat."
-msgstr ""
+msgstr "невозможно с -o. Попробуйте dir или flat."
 
-#: src/main.py:390 src/main.py:399 src/main.py:406 src/main.py:414
 #: src/main.py:410
 msgid "No input files or folders supplied."
-msgstr ""
+msgstr "Никаких входов или папки не предоставлены."
 
-#: src/main.py:404 src/main.py:413 src/main.py:420 src/main.py:428
 #: src/main.py:424
-msgid "Bad permisions for file. "
-msgstr ""
+msgid "Bad permissions for file. "
+msgstr "Плохие разрешения для файла. "
 
-#: src/main.py:422 src/main.py:431 src/main.py:438 src/main.py:446
 #: src/main.py:442
 msgid "Bad input: "
-msgstr ""
+msgstr "Неверные входные данные: "
 
-#: src/main.py:425 src/main.py:434 src/main.py:441 src/main.py:449
 #: src/main.py:445
 msgid "Error processing files: "
-msgstr ""
+msgstr "Ошибка в обработке файлов: "
 
-#: src/main.py:432 src/main.py:441 src/main.py:448 src/main.py:456
 #: src/main.py:452
 msgid "Bad input files: "
-msgstr ""
+msgstr "Плохие входные файлы: "
 
-#: src/main.py:434 src/main.py:443 src/main.py:450 src/main.py:458
 #: src/main.py:454
 msgid "Problem Files"
-msgstr ""
+msgstr "Проблематичные Файлы"
 
-#: src/main.py:434 src/main.py:443 src/main.py:450 src/main.py:458
 #: src/main.py:454
 msgid "Ignoring bad input files:"
-msgstr ""
+msgstr "Пренебрегаем неверных входных файлов:"
 
-#: src/main.py:438 src/main.py:447 src/main.py:454 src/main.py:462
 #: src/main.py:458
 msgid "No Files"
-msgstr ""
+msgstr "Нет Файлов"
 
-#: src/main.py:438 src/main.py:447 src/main.py:454 src/main.py:462
 #: src/main.py:458
 msgid "No valid files found!"
-msgstr ""
+msgstr "Не найдено допустимых файлов!"
 
-#: src/main.py:465 src/main.py:474 src/main.py:481 src/main.py:489
 #: src/main.py:485
 msgid "Unsupported MimeType"
-msgstr ""
+msgstr "Неподдерживаемый вид файла"
 
-#: src/main.py:465 src/main.py:474 src/main.py:481 src/main.py:489
 #: src/main.py:485
 msgid "Skipping file: "
-msgstr ""
+msgstr "Пропущенный файл: "
 
-#: src/main.py:472 src/main.py:481 src/main.py:488
-#: src/gtk/preferences-overlay.ui:273 src/main.py:496 src/main.py:492
-msgid "Processing"
-msgstr ""
-
-#: src/main.py:504 src/main.py:513 src/main.py:520 src/main.py:528
 #: src/main.py:524
 msgid "AsyncWorkerError"
-msgstr ""
+msgstr "Ошибка AsyncWorkerError"
 
-#: src/main.py:532 src/main.py:541 src/main.py:548 src/main.py:556
 #: src/main.py:552
 msgid "Duplicate path: "
-msgstr ""
+msgstr "Дублированный путь: "
 
-#: src/main.py:538 src/main.py:547 src/main.py:554 src/main.py:562
 #: src/main.py:558
 msgid "Error in Opening"
-msgstr ""
+msgstr "Oшибка при Oткрытии"
 
-#: src/main.py:554 src/main.py:590 src/main.py:563 src/main.py:599
-#: src/main.py:570 src/main.py:606 src/main.py:578 src/main.py:614
 #: src/main.py:574 src/main.py:610
 msgid "Cannot detect save file format, defaulting to png."
 msgstr ""
+"Невозможно определить формат файла сохранения, используется png по умолчанию."
 
-#: src/main.py:561 src/main.py:570 src/main.py:699 src/main.py:577
-#: src/main.py:706 src/main.py:585 src/main.py:714 src/main.py:581
-#: src/main.py:710
+#: src/main.py:581 src/main.py:710
 msgid "is not writeable."
-msgstr ""
+msgstr "не может быть записован."
 
-#: src/main.py:563 src/main.py:599 src/main.py:572 src/main.py:608
-#: src/main.py:701 src/main.py:579 src/main.py:615 src/main.py:708
-#: src/main.py:587 src/main.py:623 src/main.py:716 src/main.py:583
-#: src/main.py:619 src/main.py:712
+#: src/main.py:583 src/main.py:619 src/main.py:712
 msgid "Permissions"
-msgstr ""
+msgstr "Разрешения"
 
-#: src/main.py:597 src/main.py:606 src/main.py:613 src/main.py:621
 #: src/main.py:617
 msgid " is not writeable."
-msgstr ""
+msgstr " не может быть записован."
 
-#: src/main.py:865 src/main_gtk_window.py:436 src/main_gtk_window.py:624
-#: src/main_gtk_window.py:634 src/main.py:915 src/main_gtk_window.py:456
-#: src/main_gtk_window.py:806 src/main_gtk_window.py:816 src/main.py:922
-#: src/main_gtk_window.py:815 src/main_gtk_window.py:1191
-#: src/main_gtk_window.py:1201 src/main.py:950 src/main_gtk_window.py:819
-#: src/main_gtk_window.py:1195 src/main_gtk_window.py:1205 src/main.py:938
+#: src/main.py:938 src/main_gtk_window.py:819 src/main_gtk_window.py:1195
+#: src/main_gtk_window.py:1205
 msgid "Close"
-msgstr ""
+msgstr "Закрыть"
 
-#: src/main.py:935 src/main.py:985 src/main.py:993 src/main.py:1021
 #: src/main.py:1009
 msgid "Opening File Error"
-msgstr ""
+msgstr "Ошибка Открытия Файла"
 
-#: src/main.py:937 src/main.py:987 src/main.py:995 src/main.py:1023
 #: src/main.py:1011
 msgid "Errors in Processing!"
-msgstr ""
+msgstr "Ошибки при обработке!"
 
-#: src/main.py:953 src/main.py:964 src/main.py:1003 src/main.py:1014
-#: src/main.py:1011 src/main.py:1022 src/main.py:1039 src/main.py:1054
 #: src/main.py:1027 src/main.py:1041
 msgid "Unable to open input "
-msgstr ""
+msgstr "Не удалось открыть входной файл "
 
-#: src/main.py:954 src/main.py:1004 src/main.py:1012 src/main.py:1040
 #: src/main.py:1028
 msgid "Cannot Open File"
-msgstr ""
+msgstr "Не удалось открыть Файл"
 
-#: src/main.py:963 src/main.py:1013 src/main.py:1021 src/main.py:1053
 #: src/main.py:1040
 msgid "The minimum file duration is 3 seconds."
-msgstr ""
+msgstr "Минимальная продолжительность файла составляет 3 секунды."
 
-#: src/main.py:965 src/main.py:1015 src/main.py:1023 src/main.py:1055
 #: src/main.py:1042
 msgid "File Error"
-msgstr ""
+msgstr "Ошибка Файла"
 
-#: src/main_gtk_window.py:127 src/main_gtk_window.py:422
-#: src/main_gtk_window.py:133 src/main_gtk_window.py:442
-#: src/main_gtk_window.py:153 src/main_gtk_window.py:797
-#: src/main_gtk_window.py:801
+#: src/main_gtk_window.py:153 src/main_gtk_window.py:801
 msgid "File Information"
-msgstr ""
+msgstr "Информация о файле"
 
-#: src/main_gtk_window.py:128 src/main_gtk_window.py:135
 #: src/main_gtk_window.py:155
 msgid "Go Compare"
-msgstr ""
+msgstr "Давай Сравнивать"
 
-#: src/main_gtk_window.py:129 src/main_gtk_window.py:136
 #: src/main_gtk_window.py:156
 msgid "Save All"
-msgstr ""
+msgstr "Сохранить все"
 
-#: src/main_gtk_window.py:133 src/main_gtk_window.py:140
 #: src/main_gtk_window.py:160
 msgid "Preferences"
-msgstr ""
+msgstr "Предпочтения"
 
-#: src/main_gtk_window.py:134 src/main_gtk_window.py:141
 #: src/main_gtk_window.py:161
 msgid "Formats"
-msgstr ""
+msgstr "Форформатов"
 
-#: src/main_gtk_window.py:135 src/main_gtk_window.py:142
 #: src/main_gtk_window.py:162
 msgid "Keyboard Shortcuts"
-msgstr ""
+msgstr "Сочетания клавиш"
 
-#: src/main_gtk_window.py:136 src/main_gtk_window.py:143
 #: src/main_gtk_window.py:163
 msgid "Help"
-msgstr ""
+msgstr "Помочь"
 
-#: src/main_gtk_window.py:137 src/main_gtk_window.py:144
 #: src/main_gtk_window.py:164
 msgid "About"
-msgstr ""
+msgstr "О приложении"
 
-#: src/main_gtk_window.py:150 src/main_gtk_window.py:210
-#: src/main_gtk_window.py:215 src/main_gtk_window.py:157
-#: src/main_gtk_window.py:217 src/main_gtk_window.py:222
-#: src/main_gtk_window.py:179 src/main_gtk_window.py:550
-#: src/main_gtk_window.py:555 src/main_gtk_window.py:180
-#: src/main_gtk_window.py:554 src/main_gtk_window.py:559
+#: src/main_gtk_window.py:180 src/main_gtk_window.py:554
+#: src/main_gtk_window.py:559
 msgid "Open Files"
-msgstr ""
+msgstr "Откройте Файлы"
 
-#: src/main_gtk_window.py:155 src/main_gtk_window.py:225
-#: src/main_gtk_window.py:162 src/main_gtk_window.py:232
-#: src/main_gtk_window.py:188 src/main_gtk_window.py:565
 #: src/main_gtk_window.py:190 src/main_gtk_window.py:569
 msgid "Advanced Open"
-msgstr ""
+msgstr "Расширенное Открытие"
 
-#: src/main_gtk_window.py:160 src/main_gtk_window.py:339
-#: src/main_gtk_window.py:361 src/main_gtk_window.py:167
-#: src/main_gtk_window.py:346 src/main_gtk_window.py:368
-#: src/main_gtk_window.py:427 src/main_gtk_window.py:195
-#: src/main_gtk_window.py:701 src/main_gtk_window.py:723
-#: src/main_gtk_window.py:782 src/main_gtk_window.py:198
-#: src/main_gtk_window.py:705 src/main_gtk_window.py:727
-#: src/main_gtk_window.py:786
+#: src/main_gtk_window.py:198 src/main_gtk_window.py:705
+#: src/main_gtk_window.py:727 src/main_gtk_window.py:786
 msgid "Save"
-msgstr ""
+msgstr "Сохранить"
 
-#: src/main_gtk_window.py:160 src/main_gtk_window.py:167
-#: src/main_gtk_window.py:197 src/main_gtk_window.py:200
+#: src/main_gtk_window.py:200
 msgid "Save Tab"
-msgstr ""
+msgstr "Сохранить Вкладку"
 
-#: src/main_gtk_window.py:218 src/main_gtk_window.py:225
-#: src/main_gtk_window.py:558 src/main_gtk_window.py:562
+#: src/main_gtk_window.py:209 src/main_gtk_window.py:409
+msgid "Dynamic Range"
+msgstr "Динамический диапазон"
+
+#: src/main_gtk_window.py:221 src/main_gtk_window.py:506
+msgid "Dynamic Range Chart"
+msgstr "Диаграмма Динамического Диапазона"
+
+#: src/main_gtk_window.py:238
+msgid "Zoom in"
+msgstr "Увеличение"
+
+#: src/main_gtk_window.py:246
+msgid "Restore original dimensions"
+msgstr "Восстановить первоначальные размеры"
+
+#: src/main_gtk_window.py:260
+msgid "Scale to Window Width"
+msgstr "Масштабировать по ширине окна"
+
+#: src/main_gtk_window.py:268
+msgid "Zoom out"
+msgstr "Отдаление"
+
+#: src/main_gtk_window.py:276
+msgid "Zoom Level [px]"
+msgstr "Уровень масштабирования [px]"
+
+#: src/main_gtk_window.py:335
+msgid "Overview"
+msgstr "Обзор"
+
+#: src/main_gtk_window.py:406
+msgid "Unknown Dynamic Range"
+msgstr "Неизвестный Динамический Диапазон"
+
+#: src/main_gtk_window.py:529
+msgid "Dynamic Range of Channels"
+msgstr "Динамический Диапазон Каналов"
+
+#: src/main_gtk_window.py:536
+msgid "Channel #"
+msgstr "Канал #"
+
+#: src/main_gtk_window.py:562
 msgid "Open Folders"
-msgstr ""
+msgstr "Открыть Папки"
 
-#: src/main_gtk_window.py:231 src/main_gtk_window.py:238
-#: src/main_gtk_window.py:572 src/main_gtk_window.py:576
+#: src/main_gtk_window.py:576
 msgid "Add Files"
-msgstr ""
+msgstr "Добавить Файлы"
 
-#: src/main_gtk_window.py:231 src/main_gtk_window.py:238
-#: src/main_gtk_window.py:574 src/main_gtk_window.py:578
+#: src/main_gtk_window.py:578
 msgid "Add files for processing"
-msgstr ""
+msgstr "Добавить Файлы для обработки"
 
-#: src/main_gtk_window.py:233 src/main_gtk_window.py:240
-#: src/main_gtk_window.py:578 src/main_gtk_window.py:582
+#: src/main_gtk_window.py:582
 msgid "Add Folders"
-msgstr ""
+msgstr "Добавить Папки"
 
-#: src/main_gtk_window.py:233 src/main_gtk_window.py:240
-#: src/main_gtk_window.py:580 src/main_gtk_window.py:584
+#: src/main_gtk_window.py:584
 msgid "Add folders for processing"
-msgstr ""
+msgstr "Добавить Папки для обработки"
 
-#: src/main_gtk_window.py:242 src/main_gtk_window.py:249
-#: src/main_gtk_window.py:590 src/main_gtk_window.py:594
+#: src/main_gtk_window.py:594
 msgid "use LUFS units"
-msgstr ""
+msgstr "использовать LUFS единицы"
 
-#: src/main_gtk_window.py:246 src/main_gtk_window.py:253
-#: src/main_gtk_window.py:594 src/main_gtk_window.py:598
+#: src/main_gtk_window.py:598
 msgid "recursive (search sub-folders)"
-msgstr ""
+msgstr "искать (поиск в подпапках)"
 
-#: src/main_gtk_window.py:252 src/main_gtk_window.py:259
-#: src/main_gtk_window.py:600 src/main_gtk_window.py:604
+#: src/main_gtk_window.py:604
 msgid "overview mode"
-msgstr ""
+msgstr "режим обзора"
 
-#: src/main_gtk_window.py:283 src/main_gtk_window.py:290
-#: src/main_gtk_window.py:632 src/main_gtk_window.py:636
+#: src/main_gtk_window.py:636
 msgid "Start"
-msgstr ""
+msgstr "Начать"
 
-#: src/main_gtk_window.py:283 src/main_gtk_window.py:290
-#: src/main_gtk_window.py:633 src/main_gtk_window.py:637
+#: src/main_gtk_window.py:637
 msgid "Begin audio analysis"
-msgstr ""
+msgstr "Начать обработку звука"
 
-#: src/main_gtk_window.py:308 src/main_gtk_window.py:315
-#: src/main_gtk_window.py:660 src/main_gtk_window.py:664
+#: src/main_gtk_window.py:664
 msgid "Failed Open"
-msgstr ""
+msgstr "Не удалось Открыть"
 
-#: src/main_gtk_window.py:340 src/main_gtk_window.py:347
-#: src/main_gtk_window.py:702 src/main_gtk_window.py:706
+#: src/main_gtk_window.py:706
 msgid "Save in Folder"
-msgstr ""
+msgstr "Сохраните в Папке"
 
-#: src/main_gtk_window.py:362 src/main_gtk_window.py:369
-#: src/main_gtk_window.py:724 src/main_gtk_window.py:728
+#: src/main_gtk_window.py:728
 msgid "Save All in Folder"
-msgstr ""
+msgstr "Сохраните Все в Папке"
 
-#: src/main_gtk_window.py:442 src/main_gtk_window.py:465
-#: src/main_gtk_window.py:536 src/main_gtk_window.py:462
-#: src/main_gtk_window.py:485 src/main_gtk_window.py:556
-#: src/main_gtk_window.py:821 src/main_gtk_window.py:844
-#: src/main_gtk_window.py:931 src/main_gtk_window.py:825
-#: src/main_gtk_window.py:848 src/main_gtk_window.py:935
+#: src/main_gtk_window.py:787
+msgid "Save Animation"
+msgstr "Сохранить Анимацию"
+
+#: src/main_gtk_window.py:825 src/main_gtk_window.py:848
+#: src/main_gtk_window.py:935
 msgid "Cannot Compare"
-msgstr ""
+msgstr "Невозможно Сравнивать"
 
-#: src/main_gtk_window.py:442 src/main_gtk_window.py:462
-#: src/main_gtk_window.py:821 src/main_gtk_window.py:825
+#: src/main_gtk_window.py:825
 msgid "No tabs."
-msgstr ""
+msgstr "Вкладки отсутствуют."
 
-#: src/main_gtk_window.py:465 src/main_gtk_window.py:536
-#: src/main_gtk_window.py:485 src/main_gtk_window.py:556
-#: src/main_gtk_window.py:626 src/main_gtk_window.py:649
-#: src/main_gtk_window.py:697 src/main_gtk_window.py:844
-#: src/main_gtk_window.py:931 src/main_gtk_window.py:1001
-#: src/main_gtk_window.py:1024 src/main_gtk_window.py:1078
 #: src/main_gtk_window.py:848 src/main_gtk_window.py:935
 #: src/main_gtk_window.py:1005 src/main_gtk_window.py:1028
 #: src/main_gtk_window.py:1082
 msgid "Too few tabs."
-msgstr ""
+msgstr "Слишком мало вкладок."
 
-#: src/main_gtk_window.py:478 src/main_gtk_window.py:498
-#: src/main_gtk_window.py:858 src/main_gtk_window.py:862
+#: src/main_gtk_window.py:862
 msgid "Go!"
-msgstr ""
+msgstr "Давай!"
 
-#: src/main_gtk_window.py:478 src/main_gtk_window.py:498
-#: src/main_gtk_window.py:859 src/main_gtk_window.py:863
+#: src/main_gtk_window.py:863
 msgid "Compare tabs in separate window"
-msgstr ""
+msgstr "Compare tabs in separate window"
 
-#: src/main_gtk_window.py:482 src/main_gtk_window.py:502
-#: src/main_gtk_window.py:666 src/main_gtk_window.py:865
-#: src/main_gtk_window.py:1045 src/main_gtk_window.py:869
-#: src/main_gtk_window.py:1049
+#: src/main_gtk_window.py:869 src/main_gtk_window.py:1049
 msgid "☑ All!"
-msgstr ""
+msgstr "☑ Все!"
 
-#: src/main_gtk_window.py:482 src/main_gtk_window.py:502
-#: src/main_gtk_window.py:866 src/main_gtk_window.py:870
+#: src/main_gtk_window.py:870
 msgid "Compare ALL tabs in separate window"
-msgstr ""
+msgstr "Сравнить ВСЕ вкладки в отдельном окне"
 
-#: src/main_gtk_window.py:545 src/main_gtk_window.py:565
-#: src/main_gtk_window.py:940 src/main_gtk_window.py:944
+#: src/main_gtk_window.py:944
 msgid "Comparison #"
-msgstr ""
+msgstr "Сравнение #"
 
-#: src/main_gtk_window.py:622 src/main_gtk_window.py:804
-#: src/main_gtk_window.py:1189 src/main_gtk_window.py:1193
+#: src/main_gtk_window.py:1005 src/main_gtk_window.py:1028
+#: src/main_gtk_window.py:1082
+msgid "Cannot Animate"
+msgstr "Невозможно Оживить"
+
+#: src/main_gtk_window.py:1042
+msgid "Animate"
+msgstr "Оживить"
+
+#: src/main_gtk_window.py:1043
+msgid "Animate tabs in separate window"
+msgstr "Оживить вкладки в отдельном окне"
+
+#: src/main_gtk_window.py:1050
+msgid "Animate ALL tabs in separate window"
+msgstr "Оживить ВСЕ вкладки в отдельном окне"
+
+#: src/main_gtk_window.py:1092
+msgid "Animation #"
+msgstr "Анимацию #"
+
+#: src/main_gtk_window.py:1107
+msgid "Save tabs to animated gif image"
+msgstr "Сохранять вкладки в анимированный gif файл"
+
+#: src/main_gtk_window.py:1154
+msgid "Processing images."
+msgstr "Обработка изображений."
+
+#: src/main_gtk_window.py:1161
+msgid "Animated image ready for saving."
+msgstr "Анимированное изображение готово к сохранению."
+
+#: src/main_gtk_window.py:1164
+msgid "Animation Error"
+msgstr "Ошибка Анимации"
+
+#: src/main_gtk_window.py:1165
+msgid ""
+"Cannot create animation.\n"
+"Plotting canvas cannot be made into image.\n"
+msgstr ""
+"Невозможно создать анимацию.\n"
+"Невозможно преобразовать чертеж графиков в изображение.\n"
+
+#: src/main_gtk_window.py:1193
 msgid "Supported Formats"
-msgstr ""
+msgstr "Поддерживаемые Форматы"
 
-#: src/main_gtk_window.py:653 src/main_gtk_window.py:835
-#: src/main_gtk_window.py:1220 src/main_gtk_window.py:1224
+#: src/main_gtk_window.py:1224
 msgid "Original PyMasVis module development."
-msgstr ""
+msgstr "Первоначальная разработка модуля ПайМасВис."
 
-#: src/main_gtk_window.py:655 src/main_gtk_window.py:837
-#: src/main_gtk_window.py:1222 src/main_gtk_window.py:1226
+#: src/main_gtk_window.py:1226
 msgid "GTK application, originally based on PyMasVis commit #657196."
-msgstr ""
+msgstr "ГТК приложение, первоначально основанный на ПайМасВис версия #657196."
 
-#: src/output_gtk.py:179 src/output_gtk.py:181
+#: src/output_gtk.py:181
 msgid "Input file has no audio stream: "
-msgstr ""
+msgstr "Входной файл не содержит звуковой дорожки: "
 
-#: src/output_gtk.py:219 src/output_gtk.py:221 src/output_gtk.py:222
+#: src/output_gtk.py:222
 msgid ""
 "Crest: {:0.2f} dB,  DR: {},  L$_K$: {:0.1f} {},  LRA: {:0.1f} LU,  PLR: "
 "{:0.1f} LU"
 msgstr ""
+"Крест: {:0.2f} дБ,  ДД: {},  L$_K$: {:0.1f} {},  LRA: {:0.1f} LU,  PLR: "
+"{:0.1f} LU"
 
-#: src/output_gtk.py:222 src/output_gtk.py:224 src/output_gtk.py:225
+#: src/output_gtk.py:225
 msgid ""
 "Encoding: {},  Channels: {},  Layout: {},  Bits: {},\n"
 "Sample rate: {} Hz,  Bitrate: {} kbps,  Duration: {},  Size: {:0.1f} MB"
 msgstr ""
+"Кодирование: {},  Каналы: {},  Расположение: {},  Биты: {},\n"
+"Частота дискретизации: {} гц ,  Битрейт: {} кбит/с,  Продолжительность: {},  "
+"Размер: {:0.1f} МБ"
 
-#: src/output_gtk.py:234 src/output_gtk.py:236 src/output_gtk.py:237
+#: src/output_gtk.py:237
 msgid "Album"
-msgstr ""
+msgstr "Альбом"
 
-#: src/output_gtk.py:236 src/output_gtk.py:238 src/output_gtk.py:239
+#: src/output_gtk.py:239
 msgid "Track"
-msgstr ""
+msgstr "Дорожка"
 
-#: src/output_gtk.py:238 src/output_gtk.py:240 src/output_gtk.py:241
+#: src/output_gtk.py:241
 msgid "Date"
-msgstr ""
+msgstr "Дата"
 
-#: src/output_gtk.py:259 src/output_gtk.py:267 src/output_gtk.py:268
+#: src/output_gtk.py:268
 msgid "Checksum (energy): "
-msgstr ""
+msgstr "Контрольная сумма (энергия): "
 
-#: src/output_gtk.py:267 src/output_gtk.py:275 src/output_gtk.py:276
+#: src/output_gtk.py:276
 msgid "MasVisGtk "
-msgstr ""
+msgstr "МасВисГтк "
 
-#: src/output_gtk.py:313 src/output_gtk.py:325 src/output_gtk.py:326
+#: src/output_gtk.py:326
 msgid ""
 "{}: Crest = {:0.2f} dB / RMS = {:0.2f} dBFS / Peak = {:0.2f} dBFS / True "
 "Peak ≈ {:0.2f} dBTP"
 msgstr ""
+"{}: Крест = {:0.2f} дБ / RMS = {:0.2f} дБФС / Пик = {:0.2f} дБФС / True Peak "
+"≈ {:0.2f} дбТП"
 
-#: src/output_gtk.py:355 src/output_gtk.py:369 src/output_gtk.py:370
+#: src/output_gtk.py:370
 msgid ""
 "Loudest part ({} channel, {} samples > 95{} during 20 ms at {:0.2f} sec)"
 msgstr ""
+"Самая громкая часть ({} канал, {} образцы > 95{} во время 20 мсек при "
+"{:0.2f} сек)"
 
-#: src/output_gtk.py:437 src/output_gtk.py:455 src/output_gtk.py:456
+#: src/output_gtk.py:456
 msgid "Normalised average spectrum, "
-msgstr ""
+msgstr "Нормализованный средний спектр, "
 
-#: src/output_gtk.py:437 src/output_gtk.py:455 src/output_gtk.py:456
+#: src/output_gtk.py:456
 msgid " frames"
-msgstr ""
+msgstr " отрезки"
 
-#: src/output_gtk.py:495 src/output_gtk.py:515 src/output_gtk.py:516
+#: src/output_gtk.py:516
 msgid "Allpassed crest factor"
-msgstr ""
+msgstr "Многополосный фильтр (Allpass)"
 
-#: src/output_gtk.py:535 src/output_gtk.py:561 src/output_gtk.py:562
+#: src/output_gtk.py:562
 msgid "Histogram, 'bits': "
-msgstr ""
+msgstr "Гистограмма, 'биты': "
 
-#: src/output_gtk.py:590 src/output_gtk.py:622 src/output_gtk.py:623
+#: src/output_gtk.py:623
 msgid "Peak vs RMS level"
-msgstr ""
+msgstr "Амплитудный / Среднекв.  (RMS)"
 
-#: src/output_gtk.py:621 src/output_gtk.py:660 src/output_gtk.py:661
+#: src/output_gtk.py:661
 msgid "Short term (1 s) crest factor"
-msgstr ""
+msgstr "Краткосрочный (1 сек) крест-фактор"
 
-#: src/output_gtk.py:653 src/output_gtk.py:699 src/output_gtk.py:700
+#: src/output_gtk.py:700
 msgid "EBU R 128 Short term loudness"
-msgstr ""
+msgstr "ЕБУ Р 128 кратковременная громкость"
 
-#: src/output_gtk.py:654 src/output_gtk.py:705 src/output_gtk.py:706
+#: src/output_gtk.py:706
 msgid "Short term PLR"
-msgstr ""
+msgstr "Краткосрочный PLR"
 
-#: src/output_gtk.py:725 src/output_gtk.py:800 src/main_gtk_window.py:256
-#: src/main_gtk_window.py:260
-msgid "Scale to Window Width"
-msgstr ""
-
-#: src/output_gtk.py:779 src/output_gtk.py:859 src/main_gtk_window.py:402
-#: src/main_gtk_window.py:406
-msgid "Unknown Dynamic Range"
-msgstr ""
-
-#: src/output_gtk.py:783 src/output_gtk.py:863 src/main_gtk_window.py:205
-#: src/main_gtk_window.py:405 src/main_gtk_window.py:209
-#: src/main_gtk_window.py:409
-msgid "Dynamic Range"
-msgstr ""
-
-#: src/output_gtk.py:857 src/output_gtk.py:932 src/output_gtk.py:847
+#: src/output_gtk.py:847
 msgid ""
 "DR = {}\n"
 "Peak = {:0.1f} dBFS\n"
 "Crest = {:0.1f} dB\n"
 "L$_k$ = {:0.1f} LU"
 msgstr ""
+"ДД = {}\n"
+"Пик = {:0.1f} dBFS\n"
+"Крест = {:0.1f} dB\n"
+"L$_k$ = {:0.1f} LU"
 
-#: src/output_gtk.py:866 src/output_gtk.py:941 src/output_gtk.py:856
+#: src/output_gtk.py:856
 msgid "{} [{}, {} channels, {} bits, {:0.1f} kHz, {} kbps]"
-msgstr ""
-
-#: src/main_gtk_window.py:192 src/main_gtk_window.py:199
-#: src/main_gtk_window.py:331 src/main_gtk_window.py:335
-msgid "Overview"
-msgstr ""
+msgstr "{} [{}, {} каналы, {} биты, {:0.1f} кгц, {} кбит/с]"
 
 #: src/params.py:198
 msgid "Mono"
-msgstr ""
+msgstr "Моно"
 
 #: src/params.py:200
 msgid "Left"
-msgstr ""
+msgstr "Левый"
 
 #: src/params.py:200
 msgid "Right"
-msgstr ""
+msgstr "Правый"
 
 #: src/params.py:202
 msgid "Downmix Left"
-msgstr ""
+msgstr "Перемешанный-вниз левый канал"
 
 #: src/params.py:202
 msgid "Downmix Right"
-msgstr ""
+msgstr "Перемешанный-вниз правый канал"
 
 #: src/params.py:204 src/params.py:206 src/params.py:208 src/params.py:210
 #: src/params.py:212 src/params.py:214 src/params.py:216 src/params.py:218
@@ -827,7 +856,7 @@ msgstr ""
 #: src/params.py:252 src/params.py:254 src/params.py:256 src/params.py:258
 #: src/params.py:260 src/params.py:262 src/params.py:264 src/params.py:266
 msgid "Front Left"
-msgstr ""
+msgstr "Передний Левый"
 
 #: src/params.py:204 src/params.py:206 src/params.py:208 src/params.py:210
 #: src/params.py:212 src/params.py:214 src/params.py:216 src/params.py:218
@@ -838,7 +867,7 @@ msgstr ""
 #: src/params.py:252 src/params.py:254 src/params.py:256 src/params.py:258
 #: src/params.py:260 src/params.py:262 src/params.py:264 src/params.py:266
 msgid "Front Right"
-msgstr ""
+msgstr "Передний Правый"
 
 #: src/params.py:204 src/params.py:216 src/params.py:222 src/params.py:224
 #: src/params.py:226 src/params.py:232 src/params.py:236 src/params.py:238
@@ -846,7 +875,7 @@ msgstr ""
 #: src/params.py:252 src/params.py:258 src/params.py:260 src/params.py:262
 #: src/params.py:266
 msgid "Low Frequency"
-msgstr ""
+msgstr "Низкочастотный"
 
 #: src/params.py:206 src/params.py:210 src/params.py:216 src/params.py:218
 #: src/params.py:220 src/params.py:222 src/params.py:224 src/params.py:226
@@ -856,228 +885,117 @@ msgstr ""
 #: src/params.py:258 src/params.py:260 src/params.py:262 src/params.py:264
 #: src/params.py:266
 msgid "Front Center"
-msgstr ""
+msgstr "Передний Центральный"
 
 #: src/params.py:208 src/params.py:210 src/params.py:222 src/params.py:228
 #: src/params.py:234 src/params.py:236 src/params.py:238 src/params.py:254
 #: src/params.py:264 src/params.py:266
 msgid "Back Center"
-msgstr ""
+msgstr "Задний Центральный"
 
 #: src/params.py:212 src/params.py:218 src/params.py:224 src/params.py:234
 #: src/params.py:238 src/params.py:242 src/params.py:246 src/params.py:248
 #: src/params.py:252 src/params.py:254 src/params.py:256 src/params.py:258
 #: src/params.py:260 src/params.py:262 src/params.py:264 src/params.py:266
 msgid "Back Left"
-msgstr ""
+msgstr "Задний Левый"
 
 #: src/params.py:212 src/params.py:218 src/params.py:224 src/params.py:234
 #: src/params.py:238 src/params.py:242 src/params.py:246 src/params.py:248
 #: src/params.py:252 src/params.py:254 src/params.py:256 src/params.py:258
 #: src/params.py:260 src/params.py:262 src/params.py:264 src/params.py:266
 msgid "Back Right"
-msgstr ""
+msgstr "Задний Правый"
 
 #: src/params.py:214 src/params.py:220 src/params.py:226 src/params.py:228
 #: src/params.py:230 src/params.py:236 src/params.py:240 src/params.py:242
 #: src/params.py:244 src/params.py:246 src/params.py:250 src/params.py:254
 #: src/params.py:260 src/params.py:262 src/params.py:264 src/params.py:266
 msgid "Side Left"
-msgstr ""
+msgstr "Левая Сторона"
 
 #: src/params.py:214 src/params.py:220 src/params.py:226 src/params.py:228
 #: src/params.py:230 src/params.py:236 src/params.py:240 src/params.py:242
 #: src/params.py:244 src/params.py:246 src/params.py:250 src/params.py:254
 #: src/params.py:260 src/params.py:262 src/params.py:264 src/params.py:266
 msgid "Side Right"
-msgstr ""
+msgstr "Правая Сторона"
 
 #: src/params.py:230 src/params.py:240 src/params.py:244 src/params.py:248
 #: src/params.py:250 src/params.py:266
 msgid "Front Left-of-Center"
-msgstr ""
+msgstr "Передний Левый Центральный"
 
 #: src/params.py:230 src/params.py:240 src/params.py:244 src/params.py:248
 #: src/params.py:250 src/params.py:266
 msgid "Front Right-of-Center"
-msgstr ""
+msgstr "Передний Правый Центральный"
 
 #: src/params.py:232 src/params.py:252 src/params.py:256 src/params.py:258
 #: src/params.py:260 src/params.py:262 src/params.py:264 src/params.py:266
 msgid "Top Front Left"
-msgstr ""
+msgstr "Верхний Передний Левый"
 
 #: src/params.py:232 src/params.py:252 src/params.py:256 src/params.py:258
 #: src/params.py:260 src/params.py:262 src/params.py:264 src/params.py:266
 msgid "Top Front Right"
-msgstr ""
+msgstr "Верхний Передний Правый"
 
 #: src/params.py:256 src/params.py:258 src/params.py:262 src/params.py:264
 #: src/params.py:266
 msgid "Top Back Left"
-msgstr ""
+msgstr "Верхний Задний Левый"
 
 #: src/params.py:256 src/params.py:258 src/params.py:262 src/params.py:264
 #: src/params.py:266
 msgid "Top Back Right"
-msgstr ""
+msgstr "Верхний Задний Правый"
 
 #: src/params.py:264 src/params.py:266
 msgid "Top Front Center"
-msgstr ""
+msgstr "Верхний Передний Центральный"
 
 #: src/params.py:264 src/params.py:266
 msgid "Top Back Center"
-msgstr ""
+msgstr "Верхний Задний Центральный"
 
 #: src/params.py:264
 msgid "Wide Left"
-msgstr ""
+msgstr "Широкий Левый"
 
 #: src/params.py:264
 msgid "Wide Right"
-msgstr ""
+msgstr "Широкий Правый"
 
 #: src/params.py:266
 msgid "Top Center"
-msgstr ""
+msgstr "Верхний Центральный"
 
 #: src/params.py:266
 msgid "Low Frequency 2"
-msgstr ""
+msgstr "Низкочастотный #2"
 
 #: src/params.py:266
 msgid "Top Side Left"
-msgstr ""
+msgstr "Верхний Левая Сторона"
 
 #: src/params.py:266
 msgid "Top Side Right"
-msgstr ""
+msgstr "Верхний Правая Сторона"
 
 #: src/params.py:266
 msgid "Bottom Front Center"
-msgstr ""
+msgstr "Нижний Передний Центральный"
 
 #: src/params.py:266
 msgid "Bottom Front Left"
-msgstr ""
+msgstr "Нижний Передний Левый"
 
 #: src/params.py:266
 msgid "Bottom Front Right"
-msgstr ""
-
-#: data/io.github.itprojects.MasVisGtk.gschema.xml:86
-msgid "Animation duration in milliseconds."
-msgstr ""
-
-#: src/gtk/help-overlay.ui:79 src/main_gtk_window.py:134
-#: src/main_gtk_window.py:632 src/main_gtk_window.py:154
-#: src/main_gtk_window.py:1007 src/main_gtk_window.py:1011
-msgid "Animate Tabs"
-msgstr ""
-
-#: src/gtk/preferences-overlay.ui:252
-msgid "Set animation duration [ms]"
-msgstr ""
-
-#: src/main_gtk_window.py:428 src/main_gtk_window.py:783
-#: src/main_gtk_window.py:787
-msgid "Save Animation"
-msgstr ""
-
-#: src/main_gtk_window.py:626 src/main_gtk_window.py:649
-#: src/main_gtk_window.py:697 src/main_gtk_window.py:1001
-#: src/main_gtk_window.py:1024 src/main_gtk_window.py:1078
-#: src/main_gtk_window.py:1005 src/main_gtk_window.py:1028
-#: src/main_gtk_window.py:1082
-msgid "Cannot Animate"
-msgstr ""
-
-#: src/main_gtk_window.py:662 src/main_gtk_window.py:1038
-#: src/main_gtk_window.py:1042
-msgid "Animate"
-msgstr ""
-
-#: src/main_gtk_window.py:662 src/main_gtk_window.py:1039
-#: src/main_gtk_window.py:1043
-msgid "Animate tabs in separate window"
-msgstr ""
-
-#: src/main_gtk_window.py:666 src/main_gtk_window.py:1046
-#: src/main_gtk_window.py:1050
-msgid "Animate ALL tabs in separate window"
-msgstr ""
-
-#: src/main_gtk_window.py:707 src/main_gtk_window.py:1088
-#: src/main_gtk_window.py:1092
-msgid "Animation #"
-msgstr ""
-
-#: src/main_gtk_window.py:722 src/main_gtk_window.py:1103
-#: src/main_gtk_window.py:1107
-msgid "Save tabs to animated gif image"
-msgstr ""
-
-#: src/main_gtk_window.py:765 src/main_gtk_window.py:1150
-#: src/main_gtk_window.py:1154
-msgid "Processing images."
-msgstr ""
-
-#: src/main_gtk_window.py:772 src/main_gtk_window.py:1157
-#: src/main_gtk_window.py:1161
-msgid "Animated image ready for saving."
-msgstr ""
-
-#: src/main_gtk_window.py:775 src/main_gtk_window.py:1160
-#: src/main_gtk_window.py:1164
-msgid "Animation Error"
-msgstr ""
-
-#: src/main_gtk_window.py:776 src/main_gtk_window.py:1161
-#: src/main_gtk_window.py:1165
-msgid ""
-"Cannot create animation.\n"
-"Plotting canvas cannot be made into image.\n"
-msgstr ""
-
-#: src/output_gtk.py:770
-msgid "Reset original view"
-msgstr ""
-
-#: src/output_gtk.py:772
-msgid "Back to previous view"
-msgstr ""
-
-#: src/output_gtk.py:774
-msgid "Forward to next view"
-msgstr ""
-
-#: src/output_gtk.py:776
-msgid ""
-"Left button pans, Right button zooms\n"
-"x/y fixes axis, CTRL fixes aspect"
-msgstr ""
-
-#: src/output_gtk.py:778
-msgid ""
-"Zoom to rectangle\n"
-"x/y fixes axis"
-msgstr ""
-
-#: src/output_gtk.py:782
-msgid "Save the figure"
-msgstr ""
-
-#: src/output_gtk.py:789 src/main_gtk_window.py:272 src/main_gtk_window.py:276
-msgid "Zoom Level [px]"
-msgstr ""
-
-#: src/output_gtk.py:795
-msgid "Resotre original dimensions"
-msgstr ""
+msgstr "Нижний Передний Правый"
 
 #: src/params.py:346
-#, python-format
 msgid ""
 "\n"
 "<i>See the <b>glossary at the end</b> for <b>audio terms</b> and "
@@ -1300,39 +1218,251 @@ msgid ""
 "in the 16 bit PCM format. These bars are presented in the histogram, showing "
 "if some sample levels are more common than others.\n"
 msgstr ""
-
-#: src/main_gtk_window.py:218 src/main_gtk_window.py:502
-#: src/main_gtk_window.py:221 src/main_gtk_window.py:506
-msgid "Dynamic Range Chart"
-msgstr ""
-
-#: src/main_gtk_window.py:234 src/main_gtk_window.py:238
-msgid "Zoom in"
-msgstr ""
-
-#: src/main_gtk_window.py:242 src/main_gtk_window.py:246
-msgid "Restore original dimensions"
-msgstr ""
-
-#: src/main_gtk_window.py:264 src/main_gtk_window.py:268
-msgid "Zoom out"
-msgstr ""
-
-#: src/main_gtk_window.py:525 src/main_gtk_window.py:529
-msgid "Dynamic Range of Channels"
-msgstr ""
-
-#: src/main_gtk_window.py:532 src/main_gtk_window.py:536
-msgid "Channel #"
-msgstr ""
-
-#: data/io.github.itprojects.MasVisGtk.gschema.xml:91
-#: src/gtk/preferences-overlay.ui:276
-msgid "Use GStreamer for processing, instead of FFMPEG."
-msgstr ""
-
-#: data/io.github.itprojects.MasVisGtk.gschema.xml:92
-msgid ""
-"FFMPEG is the default audio file processing software. Gstreamer can be used "
-"to process audio files."
-msgstr ""
+"\n"
+"<i>Смотрите <b>глосария в конце для</b> <b>аудио терминов</b> и "
+"<b>определений</b>.</i>\n"
+"\n"
+"## <span size=\"larger\"><b>Графизор Обзора</b></span>\n"
+"\n"
+"Граф обзорный график подходит для отображения сжатой информации о целых "
+"альбомах. На нем видны формы сигналов слева и правых каналов, наложенных "
+"друг на друга. Левый канал показан в синем, правым в красном. Части, где "
+"левый и правый канал перекрывываются, показаны черным цветом. Если показано "
+"много цвета, то каналы совсем другие.\n"
+"\n"
+"Фактор гребного рога и уровень самого высокого пика показан справа от "
+"каждого графа. Значение может отличаться от значения в подробном анализе, "
+"так как левый и правый канал анализируются как одно из них.\n"
+"\n"
+"## <span size=\"larger\"><b>Подробный график анализа</b></span>\n"
+"\n"
+"Подробный график анализа показывает более глубокий анализ одного трека. На "
+"каждом графике показан различный аспект трека, как описано ниже.\n"
+"\n"
+"### <span size=\"large\"><b>Левый и правый каналы</b></span>\n"
+"\n"
+"Верхний график показывает форму волны для левого и правого каналов, также "
+"как и на графике просмотра (overview), но отдельно по каналам. Также имеются "
+"графики крест-фактора, среднеквадратичного (RMS) уровня и график пиковых "
+"(амплитудных) уровней каналов.\n"
+"\n"
+"### <span size=\"large\"><b>Самый громкий участок</b></span>\n"
+"\n"
+"Для того, чтобы показать, как именно самый громкий участок записи подвергся "
+"процессу мастеринга, модуль MasVis находит эту часть (в записи) и "
+"увеличивает её масштаб, отображая окно в 100 миллисекунд. Как правило, "
+"клиппирование сигнала и/или его жесткое ограничение (brickwall limitation) "
+"видно именно на этом графике.\n"
+"\n"
+"В соответствии с алгоритмом модуля MasVis, этот отрезок нельзя выбрать "
+"вручную, так как должен появляться один и тот же график вне зависимости от "
+"того, кто делает анализ. Вычисление модулем MasVis делается автоматически, "
+"следующим образом:\n"
+"\n"
+"1. Находится самый громкий сэмпл (отрезок) в звуковом файле\n"
+"\n"
+"2. Устанавливается порог (threshold) в 95 процентов от этого сэмпла\n"
+"\n"
+"3. Для каждого участка, где сигнал превышает этот заданный порог, проводится "
+"подсчёт количества таких сэмплов\n"
+"\n"
+"4. Выбирается тот участок, где имеет место самое большое количество таких "
+"сэмплов (превышающих порог)\n"
+"\n"
+"Количество образцов, для выбранной части, отображается над графиком.\n"
+"\n"
+"### <span size=\"large\"><b>Нормализованный усреднённый спектр</b></span>\n"
+"\n"
+"Этот график показывает усреднённый спектр сигнала. График соответствует "
+"усреднённому односекундному окну сигнала по методу Blackman. Этот график "
+"может использоваться для определения тембрального характера сигнала. Для "
+"сравнения сигнала с эталонными (reference) показателями, также на графике "
+"отображены вспомогательные диагональные линии 6 дБ/октава. \"У естественных "
+"звуков\" (независимо от того, каких именно), как правило, присутствует "
+"именно такой наклон приблизительно в 6 дБ/октава. Таким образом, эти "
+"наклонные линии дают возможность оценки спектрального содержания сигнала.\n"
+"\n"
+"Несмотря на то, что этот график не способен показать разницу сигналов, "
+"подвергшихся процессу мастеринга или обработке другими (программными) "
+"инструментами, тем не менее крайне полезен например для сравнения различных "
+"версий одного и того же альбома. \"Переизданные\" (Remastered) версии "
+"альбомов часто имеют различные спектральные изменения. Эту разницу при "
+"помощи графиков спектра можно увидеть весьма отчётливо для разных версий "
+"записей.\n"
+"\n"
+"График спектра нормализован, поэтому среднеквадратичный (RMS) уровень "
+"сигнала не способен на него оказать никакого влияния.\n"
+"\n"
+"### <span size=\"large\"><b>Многополосный крест-фактор</b></span>\n"
+"\n"
+"Этот график, вероятно, является самым показательным (разоблачающим) в "
+"алгоритме модуля MasVis. Он дает оценку того, насколько крест-фактор "
+"подвергся ухудшению (ослаблению) в процессе 2-х канального мастеринга. На "
+"графике присутствуют четыре кривые: две красные для правого канала и две "
+"синие для левого. Пунктирная линия показывает крест-фактор, вычисленный в "
+"соответствии с сигналом, который отображен на графике выше. Непрерывная "
+"линия показывает крест-фактор сигнала прошедшего многополосный фильтр. "
+"Данная (вторая) версия крест-фактора приблизительна (грубая), но тем не "
+"менее, как правило имеет даже несколько заниженное значение и показывает "
+"насколько большим был крест-фактор до применения максимизации (maximation) "
+"при 2-х канальном мастеринге.\n"
+"\n"
+"На первый взгляд может показаться, что сделать подобную оценку не возможно, "
+"но опыт показывает, что метод работает. Конечно, это не дает точной оценки "
+"оригинального (изначального) крест-фактора, тем не менее достаточно хорошо "
+"показывает, насколько сильно запись была подвергнута разрушительному влиянию "
+"при процессе максимизации громкости.\n"
+"\n"
+"Разница между максимумом непрерывной и пунктирной линий достаточно хорошо "
+"коррелирует с суммарной потерей значения крест-фактора, являющейся "
+"результатом максимизации уровня при 2-х канальном сведении. \n"
+"\n"
+"Вот как выглядит алгоритм модуля MasVis для построения данного графика:\n"
+"\n"
+"1. Пунктирной линией строится график крест-фактора всей записи (всего "
+"трэка).\n"
+"\n"
+"2. Запись проходит через семь различных фильтров первого порядка: 20, 60, "
+"200, 600, 2000, 6000 и 20000 Гц\n"
+"\n"
+"3. После каждого (из семи) фильтров, для сигнала вычисляется новое значение "
+"крест-фактора\n"
+"\n"
+"4. Построение непрерывной линии, представляющей крест-факторы всех семи "
+"сигналов (функции частотных фильтров)\n"
+"\n"
+"### <span size=\"large\"><b>Гистограмма</b></span>\n"
+"\n"
+"В 16-битном аудио, таком как CD, форма волны представлена 16-битными "
+"числами, дающими для сэмпла диапазон значений от -32768 до +32767. Некоторые "
+"значения встречаются чаще, чем другие. Если, например, запись абсолютно "
+"тихая, то все значения в сэмпле будут равны 0, и такое значение становится "
+"частым. Если присутствует тихий звук, тогда частыми становятся небольшие "
+"значения, а если сигнал предельно громкий и клиппирован (ограничен сверху), "
+"тогда значения для сэмпла сменятся на такие же предельные.\n"
+"\n"
+"Гистограмма показывает число одинаковых сэмплов для каждого установленного "
+"значения. Таким образом, запись, в которой записана полная тишина, покажет "
+"на гистограмме пик в районе 0, или же пики в нижнем и/или верхнем участках "
+"гистограммы (в левой и/или правой её части), если запись имеет "
+"клиппирование.\n"
+"\n"
+"Таким образом, при помощи этого статистического анализа, установлено, что "
+"сумма многих сигналов с достаточно постоянной амплитудой на протяжении "
+"времени будет приводить к \"нормальному распределению\". Если ось Y "
+"представлена логарифмическими значениями (как в модуле MasVis), то "
+"распределение принимает форму параболы. Если сигналы не имеют постоянных "
+"амплитуд, а варьируются в течение времени, то форма гистограммы принимает "
+"форму пирамиды с более или менее линейными кривыми.\n"
+"\n"
+"Однако, гистограмма суммы большинства некоррелированных сигналов никогда не "
+"имеет резких окончаний. Такие резкие окончания происходят только если "
+"сигналы коррелируются (каковыми они почти никогда быть не могут), или же "
+"имеет место вмешательство 2-х канального сведения.\n"
+"\n"
+"Таким образом, можно наблюдать гистограмму с гладкими наклонами для любого "
+"сочетания различных сигналов, если только 2-х канальная запись "
+"неподвергалась клиппированию или грубому ограничению (brickwall limitation). "
+"В этом смысле гистограмма довольно показательна на предмет клиппирования или "
+"ограничения.\n"
+"\n"
+"Количество \"бит\" над гистограммой основано на 65536 уровнях и указывает "
+"такое максимальное количество, которое встретилось в звуковом файле хотя бы "
+"один раз. Если в звуковом файле встретились все 65536 типовых уровней, тогда "
+"число битов отобразится как 16,0. Если была только половина из них, т.е. "
+"32768 типовых уровней, значит отобразится 15,0. В математических терминах "
+"данное отображаемое число является логарифмом по основанию 2 от числа "
+"используемых типовых уровней. Несколько парадоксально, но записи, которые "
+"были подвергнуты процессу мастерингового сведения, как правило подходят к "
+"16,0 \"битам\", тогда как необработанные записи в полном масштабе, как "
+"правило, укладываются в 14-15 \"битов\".\n"
+"\n"
+"### <span size=\"large\"><b>Амплитудный / Среднеквадратичный (RMS) уровень</"
+"b></span>\n"
+"\n"
+"Этот график основан на 1 секундном отрезке (фрейма) сигнала, и каждый "
+"представлен в виде круга на диаграмме в соответствии с вычисленными для него "
+"(фрейма) среднеквадратичного (RMS) и амплитудного уровней. Так как разница "
+"между амплитудными и среднеквадратичными (RMS) уровнями есть ничто иное, как "
+"крест-фактор, то его значение также можно обнаружить на данной диаграмме.\n"
+"\n"
+"Этот график полезен для отображения динамики записи. Если сигнал усилен, "
+"круги перемещаются вверх вправо, так как и амплитудный и среднеквадратичный "
+"(RMS) уровни увеличиваются на равное количество. Когда круги достигают "
+"верхнего предела, то дальнейшее увеличение среднеквадратичного (RMS) уровня "
+"возможно, только за счёт ухудшения (снижения) крест-фактора.\n"
+"\n"
+"Подавляющее большинство современных записей (производства) имеют "
+"значительное скопление в правом верхнем углу.\n"
+"\n"
+"### <span size=\"large\"><b>Краткосрочный крест-фактор</b></span>\n"
+"\n"
+"Каждый из этих кругов также отображен на другом графике. Здесь отображаются "
+"Амплитудные/Среднеквадратичные (RMS) уровни в разрезе односекундного отрезка "
+"времени. Это показательно при сравнении с графиком формы волны.\n"
+"\n"
+"Для естественных, необработанных звуков крест-фактор, как правило, "
+"увеличивается не на много с увеличением громкости. Громкий звук, как "
+"правило, ассоциируется с более богатым спектром и увеличенным числом "
+"звуковых источников, и оба этих фактора увеличивают крест-фактор. Однако, "
+"если имело место клиппирование или грубое ограничение из-за применения 2-х "
+"канального сведения, то крест-фактор наоборот становится ниже при увеличении "
+"громкости.\n"
+"\n"
+"## <span size=\"larger\"><b>Глоссарий</b></span>\n"
+"\n"
+"### <span size=\"large\"><b>Крест-фактор</b></span>\n"
+"\n"
+"Крест-фактор - отношение между пиковым (амплитудным) и среднеквадратичным "
+"(RMS) значениями в рамках фрэйма. Крест-Фактор главным образом выражен в "
+"децибелах (дБ), потому что это различие между амплитудным уровнем (в dB) и "
+"среднеквадратичным (RMS) уровнем (также в dB). Крест-фактор никогда не может "
+"быть отрицательным. Для синусоиды крест-фактор равен 3 дБ, для волны "
+"прямоугольной формы он равен 0 дБ.\n"
+"\n"
+"### <span size=\"large\"><b>Спектр</b></span>\n"
+"\n"
+"График спектра - это результат преобразования Фурье (FFT) и он показывает "
+"как распределена энергия в сигнале на различных частотах.\n"
+"\n"
+"### <span size=\"large\"><b>Среднеквадратичные (RMS) и пиковые (амплитудные) "
+"значения</b></span>\n"
+"\n"
+"Среднеквадратичное (RMS) (квадратный корень из среднеарифметического "
+"значения квадратов этих чисел) значение пропорционально средней мощности "
+"сигнала, взятого за определённый промежуток времени. Пиковое (амплитудное) "
+"значение, с другой стороны является абсолютно максимальной величиной в "
+"пределах периода времени.\n"
+"\n"
+"### <span size=\"large\"><b>Фрейм (отрезок)</b></span>\n"
+"\n"
+"В случае с аудио, фрейм, как правило - это короткий или длинный отрезок "
+"звукового сигнала. В рамках модуля MasVis время для отображения (вычисления) "
+"графика спектра и краткосрочного крест-фактора равно 1 секунде.\n"
+"\n"
+"### <span size=\"large\"><b>Многополосный фильтр (Allpass)</b></span>\n"
+"\n"
+"Многополосный фильтр позволяет всем частотам пройти без ослабления или "
+"увеличения громкости. Однако фазы различных частот смещаются по-разному. В "
+"результате сигнал, который кажется очень схожим на слух с оригинальным "
+"сигналом, имеет очень отличающуюся форму волны.\n"
+"\n"
+"### <span size=\"large\"><b>Контрольная сумма</b></span>\n"
+"\n"
+"Контрольные суммы используются часто, чтобы гарантировать целостность файлов "
+"с данными. Алгоритмы контрольной суммы, как правило, приводят к результатам, "
+"которые очень отличаются, даже в случае изменения лишь единственного бита в "
+"файле с данными. Алгоритм вычисления контрольной суммы в MasVis отличается "
+"от общепринятого в том, что сумма остается той же самой, в случае, если к "
+"файлу добавлена тишина.\n"
+"\n"
+"### <span size=\"large\"><b>Гистограмма</b></span>\n"
+"\n"
+"Гистограмма - диаграмма, которая говорит \"сколько есть одинакового\". "
+"Например, простая гистограмма может показать, сколько есть студентов, "
+"которые сдали или провалили экзамен. У этой гистограммы будет только два "
+"значения: один для числа студентов, которые потерпели неудачу, и один для "
+"числа студентов, которые сдали. У гистограммы в модуле MasVis есть 65536 "
+"внутренних значений, каждое из которых представляет один уровень в 16-битном "
+"формате PCM. Эти значения представлены на графике гистограммы, показывая, "
+"имеются ли типовые уровни, которые встречаются чаще других.\n"

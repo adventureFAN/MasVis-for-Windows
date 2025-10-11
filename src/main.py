@@ -421,7 +421,7 @@ class MasVisGtk(Adw.Application):
                     if os.path.isfile(f):
                         # Check read permission.
                         if not os.access(f, os.R_OK):
-                            log.warning(_(f'Bad permisions for file. ') + f'[{f}]')
+                            log.warning(_(f'Bad permissions for file. ') + f'[{f}]')
                             continue
                         # Check audio mimetype.
                         mimetype_probed_file = self.guess_mimetype(f)

@@ -65,7 +65,7 @@
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="accelerator">&lt;Shift&gt;o</property>
-                <property name="title" translatable="yes">Advance Open / Overview</property>
+                <property name="title" translatable="yes">Advanced Open / Overview</property>
               </object>
             </child>
           </object>
