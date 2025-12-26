@@ -47,9 +47,6 @@ Based on the proven `pymasvis` Python module, MasVisGtk uses standard libraries 
 - **📊 Multiple View Modes** - Choose between flat view (all files together) or directory-based organisation
 - **⚡ Parallel Processing** - Efficient handling of multiple files with optimised resource usage
 
-### 🔌 **Use as a Plugin in a DAW**
-- There is a [Windows VST3 plugin](https://github.com/itprojects/MasVisGtk/blob/plugin/MasVisGtkPlugin.vst3) version of MasVisGtk, for quick analysis [see plugin brach](https://github.com/itprojects/MasVisGtk/blob/plugin/README.md).
-
 ---
 
 ## 🎧 Supported Audio Formats
@@ -319,6 +316,18 @@ Dynamic Range measures the difference between the loudest and quietest parts of 
 *Professional Dynamic Range quality reference chart for interpreting DR values and audio quality assessment*
 
 > **Chart Source:** The dynamic range chart is taken from a [post](forums.stevehoffman.tv) in a public forum.
+
+---
+
+## 🔌 **Plugin & Extras**
+
+- There is a `VST3 plugin` version of MasVisGtk, for quick analysis [see plugin brach](https://github.com/itprojects/MasVisGtk/blob/plugin/README.md), featuring the Histogram and Allpass Crest Factor sections. 
+
+![MasVisGtk plugin on Windows](https://raw.githubusercontent.com/itprojects/MasVisGtk/plugin/screenshot.png)
+
+- There are scripts to simplify the work of MasVisGtk. `AB Classifier` can compare two audio files in `AB` and `Blind Mode`.
+
+![AB Classifier on Linux](https://raw.githubusercontent.com/itprojects/MasVisGtk/extras/img/0.png)
 
 ---
 
