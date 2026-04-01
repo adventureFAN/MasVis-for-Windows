@@ -477,7 +477,7 @@ class MasVisGtk(Adw.Application):
         try:
             info = file.query_info('standard::content-type', Gio.FileQueryInfoFlags.NONE, None)
             mimetype = info.get_content_type()
-            if mimetype.lower().startswith('audio/') or self.pref_open_other_files:
+            if mimetype.lower().startswith('audio/') or (self.pref_open_other_files and mimetype.lower().startswith('video/')):
                 return file_path
             else:
                 return None

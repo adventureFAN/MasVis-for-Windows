@@ -197,7 +197,7 @@ def render(
 
     fs = track['samplerate']
     crest_db = analysis['crest_db']
-    crest_total_db = analysis['crest_total_db']
+    crest_total_db = analysis['crest_total_db'][0] # extra [0] because array
     dr = analysis['dr']
     dr_channels = analysis['dr_channels']
     l_kg = analysis['l_kg']
@@ -217,7 +217,7 @@ def render(
     if win.app.check_cancellations():
         return
 
-    if overview_mode == None:# Detailed one track plot.
+    if overview_mode == None: # Detailed one track plot.
         with Timer('Drawing plot...', Steps.draw_plot, callback):
             subtitle_analysis = _('Crest: {:0.2f} dB,  DR: {},  L$_K$: {:0.1f} {},  LRA: {:0.1f} LU,  PLR: {:0.1f} LU').format(
                 float(crest_total_db), dr if dr > 0 else "??.?", l_kg + r128_offset, r128_unit, lra, plr
@@ -771,7 +771,7 @@ def render(
             tab_page.tabbox.dr_val = '??.?'
         else:
             tab_page.tabbox.int_dr = int(dr)
-            tab_page.tabbox.dr_val = str(dr) if dr > 10 else f'0{str(dr)}' # padding
+            tab_page.tabbox.dr_val = f'0{str(dr)}' if dr < 10 else str(dr) # padding
             tab_page.tabbox.dr_channels = dr_channels
             tab_page.tabbox.c_layout = c_layout
 

@@ -60,6 +60,13 @@
   <developer_name translate="no">ITProjects</developer_name>
   <translation type="gettext">masvisgtk</translation>
   <releases>
+    <release version="6.0.2" date="2026-04-01">
+      <description translate="no">
+        <p>Updated Russian translation.</p>
+        <p>Fixed Dynamic Range label bug.</p>
+        <p>Fixed Adw.TabPage tooltip un-escaped text.</p>
+      </description>
+    </release>
     <release version="6.0.1" date="2025-10-11">
       <description translate="no">
         <p>Added Russian translation.</p>

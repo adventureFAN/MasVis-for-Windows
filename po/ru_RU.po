@@ -342,7 +342,7 @@ msgstr "Показать Сообщения Разработчика."
 
 #: src/main.py:208
 msgid "Show Supported Formats."
-msgstr "Показать Поддерживаемы Форформаты."
+msgstr "Показать Поддерживаемы Форматы."
 
 #: src/main.py:217
 msgid ""
@@ -487,7 +487,7 @@ msgstr "Информация о файле"
 
 #: src/main_gtk_window.py:155
 msgid "Go Compare"
-msgstr "Давай Сравнивать"
+msgstr "Сравнивать"
 
 #: src/main_gtk_window.py:156
 msgid "Save All"
@@ -499,7 +499,7 @@ msgstr "Предпочтения"
 
 #: src/main_gtk_window.py:161
 msgid "Formats"
-msgstr "Форформатов"
+msgstr "Форматов"
 
 #: src/main_gtk_window.py:162
 msgid "Keyboard Shortcuts"
@@ -669,7 +669,7 @@ msgstr "Сравнение #"
 #: src/main_gtk_window.py:1005 src/main_gtk_window.py:1028
 #: src/main_gtk_window.py:1082
 msgid "Cannot Animate"
-msgstr "Невозможно Оживить"
+msgstr "Невозможно Оживить Изображения"
 
 #: src/main_gtk_window.py:1042
 msgid "Animate"
@@ -677,11 +677,11 @@ msgstr "Оживить"
 
 #: src/main_gtk_window.py:1043
 msgid "Animate tabs in separate window"
-msgstr "Оживить вкладки в отдельном окне"
+msgstr "Оживить изображения в отдельном окне"
 
 #: src/main_gtk_window.py:1050
 msgid "Animate ALL tabs in separate window"
-msgstr "Оживить ВСЕ вкладки в отдельном окне"
+msgstr "Оживить ВСЕ изображения в отдельном окне"
 
 #: src/main_gtk_window.py:1092
 msgid "Animation #"
@@ -689,7 +689,7 @@ msgstr "Анимацию #"
 
 #: src/main_gtk_window.py:1107
 msgid "Save tabs to animated gif image"
-msgstr "Сохранять вкладки в анимированный gif файл"
+msgstr "Сохранять изображения в анимированный гиф (gif) файл"
 
 #: src/main_gtk_window.py:1154
 msgid "Processing images."

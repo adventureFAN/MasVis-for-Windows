@@ -330,12 +330,12 @@ class PyPlotWindow(Adw.ApplicationWindow):
 
         if overview_mode == 'dir':
             page.set_title(a_file.file_name)
-            page.set_tooltip(a_file.file_path)
+            page.set_tooltip(GLib.markup_escape_text(a_file.file_path, len(a_file.file_path)))
         elif overview_mode == 'flat':
             page.set_title(_('Overview'))
         else:
             page.set_title(a_file.file_name)
-            page.set_tooltip(a_file.file_name + '\n\n' + a_file.file_path)
+            page.set_tooltip(GLib.markup_escape_text(a_file.file_name + '\n\n' + a_file.file_path, len(a_file.file_name + '\n\n' + a_file.file_path)))
 
         return page
 
