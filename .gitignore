@@ -1,0 +1,59 @@
+# Python / local development
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Build / packaging output
+build/
+dist/
+release/
+release-license-staging/
+
+# Downloaded FFmpeg release binaries are build inputs, not source-controlled files.
+vendor/ffmpeg/*.exe
+vendor/ffmpeg/*.zip
+vendor/ffmpeg/*.7z
+vendor/ffmpeg/*.sha256
+vendor/ffmpeg/*.dll
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local upstream reference checkout. It is not part of the public repository;
+# the Windows runtime uses the selected top-level src/ core files.
+upstream-masvis/
+
+# Research / calibration outputs and private local corpora
+assessment-results/
+assessment-results-*/
+assessment-replay-*/
+comparison-results/
+memory-results/
+regression-results/
+
+# Development-only research / regression helpers
+assessment_probe.py
+assessment_replay.py
+comparison_probe.py
+comparison_replay.py
+comparison_batch.ps1
+comparison_replay.ps1
+memory_probe.py
+production_regression.py
+render_test.py
+
+# Internal handoff/manifests. Keep the public v1 methodology docs below.
+docs/*
+!docs/DYNAMICS-ASSESSMENT-V1.md
+!docs/DYNAMICS-COMPARISON-V1.md
+
+# Obsolete pre-release FFmpeg setup-helper experiment; never publish if left locally.
+packaging/Setup-FFmpeg.cmd
+packaging/Setup-FFmpeg.ps1

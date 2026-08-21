@@ -1,6 +1,10 @@
 '''
 Copyright 2024 ITProjects
 Copyright 2012 Joakim Fors
+Copyright (C) 2026 adventureFAN - MasVis for Windows modifications
+
+Modified 2026-08-21 for MasVis for Windows: bounded-memory True Peak
+processing with an exact legacy fallback path.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -141,7 +145,11 @@ def loudest(data, fs, ns, nc, peaks):
     return c_max, s_max, ns_max, w_max
 
 
-def true_peaks(data, fs, ns, nc, data_peak):
+_TRUE_PEAK_CHUNK_SAMPLES = 1_000_000
+
+
+def _true_peaks_legacy(data, fs, ns, nc, data_peak):
+    """Original full-buffer MasVis True Peak implementation."""
     fir = fir_coeffs()
     fir_phases, fir_size = fir.shape
     d_size = data.itemsize
@@ -164,6 +172,112 @@ def true_peaks(data, fs, ns, nc, data_peak):
     true_peak_dbtp = db(true_peak, 1.0)
 
     return sttp, true_peak_dbtp
+
+
+def _update_short_term_true_peak(output_row, values, global_start, hop, window):
+    """Accumulate maxima for one segment of upstream's flattened peaks array."""
+    count = int(values.size)
+    if count <= 0:
+        return
+
+    global_end = global_start + count
+    steps = int(output_row.size)
+
+    first = max(0, ((global_start - window) // hop) + 1)
+    last = min(steps - 1, (global_end - 1) // hop)
+
+    for index in range(first, last + 1):
+        window_start = index * hop
+        window_end = window_start + window
+        overlap_start = max(global_start, window_start)
+        overlap_end = min(global_end, window_end)
+
+        if overlap_start >= overlap_end:
+            continue
+
+        local_start = overlap_start - global_start
+        local_end = overlap_end - global_start
+        candidate = values[local_start:local_end].max()
+
+        if candidate > output_row[index]:
+            output_row[index] = candidate
+
+
+def _true_peaks_chunked(data, fs, ns, nc, data_peak, chunk_samples):
+    """Bounded-memory equivalent of the existing MasVis True Peak path."""
+    fir = fir_coeffs()
+    fir_phases, fir_size = fir.shape
+    d_size = data.itemsize
+    strides = ns - fir_size
+    true_peak = np.copy(data_peak)
+    steps = int((ns - 3 * fs) / fs) + 1
+    sttp = np.zeros((nc, steps))
+
+    # Preserve the existing upstream as_strided() semantics exactly.  NumPy
+    # stride values are byte offsets: the first row stride below is therefore
+    # fir_phases * fs bytes, not that many float64 elements.
+    row_stride_bytes = fir_phases * fs
+    hop = row_stride_bytes // d_size
+    window = fir_phases * 3 * fs
+
+    for c in range(nc):
+        fir_strides = as_strided(
+            data[c], (strides, fir_size, 1), (d_size, d_size, d_size)
+        )
+
+        for chunk_start in range(0, strides, chunk_samples):
+            chunk_end = min(strides, chunk_start + chunk_samples)
+            peaks = np.dot(fir, fir_strides[chunk_start:chunk_end])
+
+            # Avoid a second full-size temporary buffer.
+            np.abs(peaks, out=peaks)
+
+            peak = peaks.max()
+            if peak > true_peak[c]:
+                true_peak[c] = peak
+
+            # np.dot() produces the same phase-major arrangement as the
+            # original full-buffer implementation.  Map each chunk back into
+            # that conceptual flattened array and reproduce the existing
+            # short-term maxima exactly.
+            for phase in range(fir_phases):
+                phase_values = peaks[phase, :, 0]
+                global_start = phase * strides + chunk_start
+                _update_short_term_true_peak(
+                    sttp[c], phase_values, global_start, hop, window
+                )
+
+    true_peak_dbtp = db(true_peak, 1.0)
+
+    return sttp, true_peak_dbtp
+
+
+def true_peaks(data, fs, ns, nc, data_peak):
+    """Calculate True Peak while bounding the large FIR temporary buffer.
+
+    The optimized path is intentionally conservative.  It is used only for
+    the float64, C-contiguous data layout produced by the Windows loader and
+    only when upstream's byte stride maps cleanly to whole float64 elements.
+    All other cases retain the original implementation.
+    """
+    fir_phases, fir_size = fir_coeffs().shape
+    d_size = data.itemsize
+    strides = ns - fir_size
+    row_stride_bytes = fir_phases * fs
+
+    use_chunked = (
+        data.dtype == np.float64
+        and data.flags.c_contiguous
+        and strides > _TRUE_PEAK_CHUNK_SAMPLES
+        and row_stride_bytes % d_size == 0
+    )
+
+    if not use_chunked:
+        return _true_peaks_legacy(data, fs, ns, nc, data_peak)
+
+    return _true_peaks_chunked(
+        data, fs, ns, nc, data_peak, _TRUE_PEAK_CHUNK_SAMPLES
+    )
 
 
 def ebu_r128(data, fs, ns, nc, cl):
