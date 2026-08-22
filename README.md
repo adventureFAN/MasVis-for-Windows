@@ -132,17 +132,6 @@ level-matches them, and then keeps several different measurements separate:
 
 ![Dynamics Comparison](assets/screenshots/dynamics-comparison-diff-dr.png)
 
-**Want to reproduce this exact comparison?** Use the included
-[Loudness War](examples/Eternal%20Desert%20-%20Loudness%20War.mp3) and
-[Vinyl-like transfer simulation](examples/Eternal%20Desert%20-%20Loudness%20War%20%28Vinyl%20Remaster%29.mp3)
-versions of *Eternal Desert*, then run **Dynamics Comparison**. The screenshot
-shows **DR 6.5 vs 10.4** even though the aligned loudness development remains
-essentially unchanged.
-
-A large DR difference can coexist with very similar loudness development if the
-main difference is concentrated in peaks, crest factor or transient structure.
-The application intentionally does not collapse those dimensions into a claim of
-"real" or "fake" dynamics.
 
 For the frozen v1 methodology, see
 [docs/DYNAMICS-COMPARISON-V1.md](docs/DYNAMICS-COMPARISON-V1.md).
