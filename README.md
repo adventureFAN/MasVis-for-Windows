@@ -130,7 +130,7 @@ level-matches them, and then keeps several different measurements separate:
 - **Peak Structure Difference** — a separate 0-100 point description of how
   strongly peak/crest structure differs after alignment and level matching.
 
-![Dynamics Comparison](assets/screenshots/dynamics-comparison.png)
+![Dynamics Comparison](assets/screenshots/dynamics-comparison-diff-dr.png)
 
 **Want to reproduce this exact comparison?** Use the included
 [Loudness War](examples/Eternal%20Desert%20-%20Loudness%20War.mp3) and
