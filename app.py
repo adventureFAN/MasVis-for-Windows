@@ -144,7 +144,7 @@ CONTROL_ICON_FILES = {
 }
 
 APP_NAME = "MasVis for Windows"
-APP_VERSION = "1.1.0"
+APP_VERSION = "1.1.1"
 SETTINGS_ORGANIZATION = "MasVis for Windows"
 LEGACY_SETTINGS_ORGANIZATION = "MasVisGtk"
 LEGACY_SETTINGS_APPLICATION = "MasVisGtk for Windows"
@@ -258,24 +258,25 @@ def dr_color(dr):
 
 
 def assessment_color(label):
+    """Value-neutral blue palette: intensity encodes evidence strength, not quality."""
     colors = {
-        "Low": "#3f6f55",
-        "Mild": "#5f7344",
-        "Moderate": "#8a6f32",
-        "High": "#8b542c",
-        "Very High": "#823f43",
+        "Low": "#536878",
+        "Mild": "#466b83",
+        "Moderate": "#39708f",
+        "High": "#2c759a",
+        "Very High": "#1f7aa5",
     }
     return colors.get(str(label), "#555b64")
 
 
 def comparison_similarity_color(label):
-    """Muted comparison palette: greener means the aligned dynamics are more similar."""
+    """Value-neutral blue palette: intensity encodes similarity, not quality."""
     colors = {
-        "Extremely High": "#3f6f55",
-        "Very High": "#5f7344",
-        "High": "#8a6f32",
-        "Moderate": "#8b542c",
-        "Low": "#823f43",
+        "Extremely High": "#1f7aa5",
+        "Very High": "#2c759a",
+        "High": "#39708f",
+        "Moderate": "#466b83",
+        "Low": "#536878",
         "Inconclusive": "#555b64",
     }
     return colors.get(str(label), "#555b64")
@@ -4276,9 +4277,9 @@ class DynamicsComparisonDialog(QDialog):
         outer.addLayout(versions)
 
         # Give the aligned loudness-dynamics verdict the same kind of immediate
-        # visual weight as the DR meter above it.  The muted palette encodes
-        # *difference magnitude*, not audio quality: green means the two
-        # versions are very similar, warmer colors mean a larger difference.
+        # visual weight as the DR meter above it.  LDS is similarity, not a
+        # quality score, so the badge uses a value-neutral blue progression
+        # rather than a red/orange/green good/bad-style scale.
         similarity = self.interpretation.get("dynamics_similarity") or {}
         similarity_score = similarity.get("score")
         similarity_label = str(similarity.get("label", "Inconclusive"))

@@ -1,3 +1,43 @@
+# MasVis for Windows 1.1.1 — release notes
+
+## Focused visual-semantics patch
+
+MasVis for Windows 1.1.1 is a deliberately small patch release. It changes the
+visual treatment of the **Dynamics Assessment** score and **Loudness Dynamics
+Similarity (LDS)** so that measurement strength is not presented with an
+evaluative traffic-light palette.
+
+## Change
+
+- Replaced the Dynamics Assessment score badge's green/brown/red progression
+  with a value-neutral monochromatic blue progression. Higher scores still have
+  stronger visual intensity, but the color no longer suggests a sound-quality
+  grade.
+- Replaced the LDS badge's traffic-light-style palette with the same
+  value-neutral blue progression. Higher LDS values still have stronger visual
+  intensity, but the color no longer implies that higher similarity is
+  inherently better.
+- The blue steps were made deliberately more distinct while keeping white badge
+  text readable in both Light and Dark application themes.
+- All existing Assessment and LDS labels and thresholds remain unchanged.
+- `Inconclusive` remains neutral gray.
+
+## Analysis compatibility
+
+There are **no changes** to Dynamics Assessment or Dynamics Comparison formulas,
+weights, thresholds, alignment, level matching, Loudness Dynamics Advantage,
+Peak Structure Difference or any classic MasVis measurement. Existing 1.1.0
+analysis results therefore remain directly comparable with 1.1.1.
+
+## Distribution
+
+The release continues to use the same previously validated self-contained Windows
+packaging baseline and pinned Gyan FFmpeg 9.0.1 Essentials runtime. The Setup
+installer retains the same stable Inno Setup AppId and is designed to update an
+existing MasVis for Windows installation in place.
+
+---
+
 # MasVis for Windows 1.1.0 — release notes
 
 ## Feature and maintenance release

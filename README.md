@@ -273,7 +273,7 @@ runtime and the exact bundled FFmpeg/ffprobe build.
 
 ### Setup installer — recommended for most users
 
-1. Download `MasVis-for-Windows-1.1.0-Setup.exe` from the Releases page.
+1. Download `MasVis-for-Windows-1.1.1-Setup.exe` from the Releases page.
 2. Run the installer.
 3. Start **MasVis for Windows** from the Start menu or the optional desktop
    shortcut.
@@ -288,7 +288,7 @@ as unknown when the downloaded Setup is launched.
 
 ### Portable ZIP
 
-Prefer not to install anything? Download `MasVis-for-Windows-1.1.0-win64.zip`,
+Prefer not to install anything? Download `MasVis-for-Windows-1.1.1-win64.zip`,
 extract it to a normal folder and run `MasVis-for-Windows.exe`.
 
 Python, PySide6/Qt, NumPy, SciPy, Matplotlib and the other tested runtime

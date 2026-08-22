@@ -45,7 +45,7 @@ has an unexpected SHA-256 hash.
 ## Setup installer
 
 MasVis for Windows also provides an optional traditional Windows installer built
-with **Inno Setup 7**. The validated installer baseline for 1.1.0 is **Inno Setup
+with **Inno Setup 7**. The installer baseline for 1.1.1 remains **Inno Setup
 7.1.0 x64**. The installer packages the already-tested
 `dist\MasVis-for-Windows\` onedir runtime; it does not rebuild or modify the
 application itself.
@@ -66,7 +66,7 @@ runtime, create the Setup executable with:
 The result is written to:
 
 ```text
-release\MasVis-for-Windows-1.1.0-Setup.exe
+release\MasVis-for-Windows-1.1.1-Setup.exe
 ```
 
 `create_installer.ps1` independently checks the required release files and the
@@ -97,6 +97,6 @@ The bundled-FFmpeg onedir path was validated for the 1.0.0 release with the
 established Golden Vicarious analyses and Dynamics Comparison. That package
 measured approximately 438.61 MiB unpacked and 177.56 MiB as an Optimal ZIP.
 A Gyan Full Shared experiment was rejected because it was larger than the
-accepted Essentials Static runtime. The 1.1.0 release intentionally retains
+accepted Essentials Static runtime. The 1.1.1 release intentionally retains
 the same pinned packaging/runtime baseline and must pass the packaging gate
 again before publication.

@@ -1,7 +1,7 @@
 # Third-party source access for the Windows package
 
 This file records exact source-access/build identity for third-party runtime
-components shipped with MasVis for Windows 1.1.0.
+components shipped with MasVis for Windows 1.1.1.
 
 ## Qt for Python / PySide6 6.11.2
 
