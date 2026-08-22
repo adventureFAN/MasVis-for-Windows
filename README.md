@@ -39,18 +39,19 @@ compressed Loudness War master and applies a simplified vinyl-like transfer
 chain that changes peak/crest structure without restoring the lost loudness
 dynamics.)
 
-That gives the project two complementary demonstrations:
+That gives the project three complementary demonstrations:
 
 - **Reference vs Loudness War:** DR **10.4 → 6.5**, with a real reduction in
   aligned loudness dynamics.
-- **Loudness War vs Vinyl-like transfer:** DR **6.5 → 10.2**, while Loudness
+- **Loudness War vs Vinyl-like transfer:** DR **6.5 → 10.4**, while Loudness
   Dynamics Similarity remains **99.3 / 100**, Loudness Curve Similarity is
   **99.77%**, and **no Loudness Dynamics Advantage** is detected.
+- **Reference vs Vinyl-like transfer:** both versions measure **DR 10.4**, yet
+  Loudness Dynamics Similarity is only **62.9 / 100** and Version A shows a
+  **Strong Loudness Dynamics Advantage**.
 
-The second case is deliberately provocative: the DR value almost returns to the
-Reference value even though the compressed loudness development was never
-expanded or restored.
-
+Together, these controlled cases show why measured DR and aligned loudness
+dynamics should be interpreted as related but distinct properties of the signal.
 The example audio is separately cleared demonstration media and is **not covered
 by the project's GPL-3.0-or-later source-code license**. See
 [`examples/README.md`](examples/README.md) for the exact purpose, processing and
@@ -135,7 +136,7 @@ level-matches them, and then keeps several different measurements separate:
 [Loudness War](examples/Eternal%20Desert%20-%20Loudness%20War.mp3) and
 [Vinyl-like transfer simulation](examples/Eternal%20Desert%20-%20Loudness%20War%20%28Vinyl%20Remaster%29.mp3)
 versions of *Eternal Desert*, then run **Dynamics Comparison**. The screenshot
-shows **DR 6.5 vs 10.2** even though the aligned loudness development remains
+shows **DR 6.5 vs 10.4** even though the aligned loudness development remains
 essentially unchanged.
 
 A large DR difference can coexist with very similar loudness development if the
@@ -146,7 +147,7 @@ The application intentionally does not collapse those dimensions into a claim of
 For the frozen v1 methodology, see
 [docs/DYNAMICS-COMPARISON-V1.md](docs/DYNAMICS-COMPARISON-V1.md).
 
-## Two controlled *Eternal Desert* experiments
+## Three controlled *Eternal Desert* experiments
 
 ### 1. Loudness War: lower DR with genuinely reduced loudness dynamics
 
@@ -171,33 +172,61 @@ change in the song's measured loudness dynamics.
 For the second experiment, the already compressed **DR 6.5 Loudness War master**
 was processed through a deliberately simplified vinyl-like transfer chain. No
 expansion or dynamic restoration was applied. Nevertheless, its measured DR
-rises to **10.2** — almost the **10.4** of the original Reference.
+rises to **10.4** — matching the **10.4** of the original Reference.
+
+![Higher measured DR without restored loudness dynamics](assets/screenshots/dynamics-comparison.png)
 
 MasVis for Windows simultaneously reports:
 
 - **Loudness Dynamics Similarity: 99.3 / 100 — Extremely High**;
 - **Loudness Curve Similarity: 99.77%**;
 - **Loudness Dynamics Advantage: None detected**;
-- **Peak Structure Difference: 71.6 / 100 — Strong**;
+- **Peak Structure Difference: 71.4 / 100 — Strong**;
 - EBU LRA change: effectively **0.00 LU**;
 - **Alignment: Reliable**.
 
-That is the point of the example: the DR meter is measuring a real change in
-peak/RMS or crest structure, but the higher DR value does **not** mean that the
-previously lost loudness dynamics have been restored. A higher DR value from a
-vinyl or needledrop source therefore cannot, by itself, prove that a more dynamic
-master was used.
+The DR meter is measuring a real change in peak/RMS or crest structure, but the
+higher DR value does **not** mean that the previously lost loudness dynamics have
+been restored. A higher DR value from a vinyl or needledrop source therefore
+cannot, by itself, prove that a more dynamic master was used.
 
 The file name uses “Vinyl Remaster” as a short demo label. This is **not an actual
 vinyl release or a complete physical vinyl-cutting/playback model**; it is a
 controlled signal-processing simulation for demonstrating the measurement
 problem.
 
-Both experiments are practical validation examples, not proof that the program
-can reconstruct mastering history. MasVis for Windows reports what the measured
-signals support and keeps uncertainty visible when they do not support a reliable
-conclusion.
+### 3. Similar measured DR with different loudness dynamics
 
+🎧 **Listen / download:**
+[Reference MP3](examples/Eternal%20Desert%20-%20Reference.mp3) ·
+[Vinyl-like transfer simulation](examples/Eternal%20Desert%20-%20Loudness%20War%20%28Vinyl%20Remaster%29.mp3)
+
+The third experiment compares the original Reference directly with that same
+vinyl-like transfer. Both versions measure **DR 10.4**, but their aligned
+Short-Term loudness dynamics are clearly different.
+
+![Similar measured DR with different loudness dynamics](assets/screenshots/dynamics-comparison-equal-dr.png)
+
+MasVis for Windows reports:
+
+- **Measured DR: 10.4 vs 10.4 — essentially equal**;
+- **Loudness Dynamics Similarity: 62.9 / 100 — Moderate**;
+- **Loudness Curve Similarity: 95.51%**;
+- **Loudness Dynamics Advantage: Strong — Version A**;
+- **Level Difference: Version B is 0.86 dB louder**;
+- **Peak Structure Difference: 56.7 / 100 — Moderate**;
+- **EBU LRA change: -3.95 LU in Version B**;
+- **Alignment: Reliable**.
+
+This is the complementary case: essentially equal measured DR values do not
+necessarily imply equal loudness dynamics. Here the Reference retains a
+substantially wider aligned Short-Term loudness span even though both versions
+receive the same TT-style DR value.
+
+All three experiments are practical validation examples, not proof that the
+program can reconstruct mastering history. MasVis for Windows reports what the
+measured signals support and keeps uncertainty visible when they do not support a
+reliable conclusion.
 ## Highlights
 
 - Native Windows interface with multiple report tabs, drag & drop and Advanced

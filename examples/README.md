@@ -2,7 +2,7 @@
 
 This folder contains three controlled versions of **Eternal Desert** used by the
 Dynamics Comparison examples in the MasVis for Windows README. They are included
-so users can listen to the material and reproduce both comparison cases
+so users can listen to the material and reproduce all three comparison cases
 themselves.
 
 ## Files
@@ -56,20 +56,34 @@ and **-1.0 dBTP**.
 Compared directly with `Eternal Desert - Loudness War.mp3`, MasVis for Windows
 1.1.0 reports:
 
-- **Measured DR: 6.5 vs 10.2** (+3.7 for the vinyl-like file);
+- **Measured DR: 6.5 vs 10.4** (+3.9 for the vinyl-like file);
 - **Loudness Dynamics Similarity: 99.3 / 100 — Extremely High**;
 - **Loudness Curve Similarity: 99.77%**;
 - **Loudness Dynamics Advantage: None detected**;
 - **Level Difference: Version B is 5.97 dB quieter**;
-- **Peak Structure Difference: 71.6 / 100 — Strong**;
+- **Peak Structure Difference: 71.4 / 100 — Strong**;
 - **EBU LRA change: effectively 0.00 LU**;
 - **Alignment: Reliable**.
 
-This is the deliberately counter-intuitive example: the measured DR rises from
-**6.5 to 10.2**, almost matching the Reference's **10.4**, even though the
-aligned loudness dynamics remain essentially unchanged. The extra DR comes from
-changed peak/crest structure, not from restoring the compressed musical loudness
-development.
+The measured DR therefore rises from **6.5 to 10.4**, matching the Reference's
+**10.4**, even though the aligned loudness dynamics remain essentially unchanged.
+The extra measured DR comes from changed peak/crest structure, not from restoring
+the compressed musical loudness development.
+
+Compared directly with the Reference, the same vinyl-like file produces the
+complementary result:
+
+- **Measured DR: 10.4 vs 10.4 — essentially equal**;
+- **Loudness Dynamics Similarity: 62.9 / 100 — Moderate**;
+- **Loudness Curve Similarity: 95.51%**;
+- **Loudness Dynamics Advantage: Strong — Version A**;
+- **Level Difference: Version B is 0.86 dB louder**;
+- **Peak Structure Difference: 56.7 / 100 — Moderate**;
+- **EBU LRA change: -3.95 LU in Version B**;
+- **Alignment: Reliable**.
+
+Here the measured DR values are equal while the Reference retains substantially
+wider aligned Short-Term loudness dynamics.
 
 ## How to try the examples
 
@@ -89,11 +103,19 @@ development.
    Dynamics Advantage is detected, and the strongest difference is instead in
    peak structure.
 
+### Experiment 3 — Reference vs vinyl-like transfer
+
+1. Open `Eternal Desert - Reference.mp3` and
+   `Eternal Desert - Loudness War (Vinyl Remaster).mp3`.
+2. Run **Dynamics Comparison**.
+3. Observe that both files measure DR 10.4 while the aligned Short-Term loudness
+   dynamics differ substantially and Version A receives a Strong Loudness
+   Dynamics Advantage.
+
 The examples are not intended to declare one version “good” and another “bad”.
 They demonstrate why DR is useful evidence but cannot, on its own, describe every
 kind of dynamic change or prove that a vinyl/needledrop source used a different
 master.
-
 ## Creation and licensing
 
 *Eternal Desert* is an **AI-assisted song created with Suno**, with **lyrics and
