@@ -25,7 +25,7 @@ for interpreting one master and comparing two versions of the same music.
 ## Try it yourself with *Eternal Desert*
 
 MasVis for Windows includes **three controlled demo files** built from the same
-track. You can listen to them, analyze them separately, and reproduce two (or more?) very
+track. You can listen to them, analyze them separately, and reproduce very
 different Dynamics Comparison cases yourself.
 
 - 🎧 **[Eternal Desert — Reference](examples/Eternal%20Desert%20-%20Reference.mp3)**
