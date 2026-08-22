@@ -22,6 +22,31 @@ for interpreting one master and comparing two versions of the same music.
 
 ![MasVis for Windows main window](assets/screenshots/main-window.png)
 
+## Try it yourself with *Eternal Desert*
+
+MasVis for Windows now includes the **exact two demo files** used for the
+Dynamics Comparison example in this repository. You can listen to them, analyze
+them separately, and reproduce the comparison yourself instead of only looking
+at a screenshot.
+
+- 🎧 **[Eternal Desert — Reference](examples/Eternal%20Desert%20-%20Reference.mp3)**
+- 🔥 **[Eternal Desert — Loudness War](examples/Eternal%20Desert%20-%20Loudness%20War.mp3)**
+
+*Eternal Desert* is an AI-assisted song created with Suno from **lyrics and
+creative prompting by adventureFAN**. The second file is a deliberately louder,
+densely limited derivative made specifically to demonstrate how level, DR,
+loudness dynamics and peak structure can change independently.
+
+Load both files into MasVis for Windows and open **Dynamics Comparison**. The
+current test pair produces the controlled example shown below: **DR 10.4 vs 6.5**
+and an aligned level difference of about **+6.70 dB** for the Loudness War
+version.
+
+The example audio is separately cleared demonstration media and is **not covered
+by the project's GPL-3.0-or-later source-code license**. See
+[`examples/README.md`](examples/README.md) for the exact purpose and licensing
+notes.
+
 ## Why use MasVis for Windows?
 
 Two releases of the same song can sound and measure very differently. One may be
@@ -97,6 +122,11 @@ level-matches them, and then keeps several different measurements separate:
 
 ![Dynamics Comparison](assets/screenshots/dynamics-comparison.png)
 
+**Want to reproduce this exact comparison?** Use the included
+[Reference](examples/Eternal%20Desert%20-%20Reference.mp3) and
+[Loudness War](examples/Eternal%20Desert%20-%20Loudness%20War.mp3) versions of
+*Eternal Desert*, then run **Dynamics Comparison**.
+
 A large DR difference can coexist with very similar loudness development if the
 main difference is concentrated in peaks, crest factor or transient structure.
 The application intentionally does not collapse those dimensions into a claim of
@@ -106,6 +136,10 @@ For the frozen v1 methodology, see
 [docs/DYNAMICS-COMPARISON-V1.md](docs/DYNAMICS-COMPARISON-V1.md).
 
 ## A controlled Loudness War example
+
+🎧 **Listen / download the exact files:**
+[Reference MP3](examples/Eternal%20Desert%20-%20Reference.mp3) ·
+[Loudness War MP3](examples/Eternal%20Desert%20-%20Loudness%20War.mp3)
 
 The Dynamics Comparison screenshot above uses two versions of the same
 user-created track, **Eternal Desert**. Version B was deliberately made much
