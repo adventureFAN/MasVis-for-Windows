@@ -42,6 +42,44 @@ After final validation, `packaging\create_release_zip.ps1` creates the public
 portable ZIP and hard-fails if either bundled FFmpeg executable is missing or
 has an unexpected SHA-256 hash.
 
+## Setup installer
+
+MasVis for Windows also provides an optional traditional Windows installer built
+with **Inno Setup 7**. The validated installer baseline for 1.1.0 is **Inno Setup
+7.1.0 x64**. The installer packages the already-tested
+`dist\MasVis-for-Windows\` onedir runtime; it does not rebuild or modify the
+application itself.
+
+Install Inno Setup 7 x64 interactively with winget:
+
+```powershell
+winget install --id JRSoftware.InnoSetup.7 -e -s winget -i
+```
+
+Then, after `build_packaging_test.ps1` has produced and validated the onedir
+runtime, create the Setup executable with:
+
+```powershell
+.\packaging\create_installer.ps1
+```
+
+The result is written to:
+
+```text
+release\MasVis-for-Windows-1.1.0-Setup.exe
+```
+
+`create_installer.ps1` independently checks the required release files and the
+exact bundled FFmpeg/ffprobe SHA-256 hashes before invoking Inno Setup. The
+installer uses a stable application ID so later installers can update the same
+installation, creates a Start Menu shortcut, offers an optional desktop shortcut
+and registers a normal Windows uninstaller. It deliberately creates **no audio
+file associations**.
+
+The Setup executable is currently **not code-signed**. `AppPublisher` metadata
+identifies adventureFAN inside the installer, but Windows may still display
+"Unknown publisher" until a trusted Authenticode signature is added.
+
 ## License/distribution policy
 
 MasVis for Windows is distributed under **GPL-3.0-or-later**. Reused upstream

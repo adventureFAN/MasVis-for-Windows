@@ -206,17 +206,34 @@ that the validated FFmpeg build can decode.
 
 ## Download and run
 
-The public Windows release is a **portable 64-bit ZIP**. No installer is
-required.
+The public Windows release is available as a normal **Setup installer** and as a
+**portable 64-bit ZIP**. Both contain the same validated MasVis for Windows
+runtime and the exact bundled FFmpeg/ffprobe build.
 
-1. Download `MasVis-for-Windows-1.1.0-win64.zip` from the Releases page.
-2. Extract the ZIP to a normal folder.
-3. Run `MasVis-for-Windows.exe`.
+### Setup installer — recommended for most users
+
+1. Download `MasVis-for-Windows-1.1.0-Setup.exe` from the Releases page.
+2. Run the installer.
+3. Start **MasVis for Windows** from the Start menu or the optional desktop
+   shortcut.
+
+The installer places the application under Program Files, creates a normal
+Windows uninstall entry and can update an existing MasVis for Windows
+installation in place in future releases. It does **not** register MasVis as the
+default application for audio files.
+
+The current installer is not code-signed, so Windows may identify the publisher
+as unknown when the downloaded Setup is launched.
+
+### Portable ZIP
+
+Prefer not to install anything? Download `MasVis-for-Windows-1.1.0-win64.zip`,
+extract it to a normal folder and run `MasVis-for-Windows.exe`.
 
 Python, PySide6/Qt, NumPy, SciPy, Matplotlib and the other tested runtime
-dependencies are included. The exact validated **Gyan FFmpeg 9.0.1 Essentials**
-`ffmpeg.exe` and `ffprobe.exe` binaries are bundled as well, so no separate
-FFmpeg installation or PATH configuration is required.
+dependencies are included in both distributions. The exact validated **Gyan
+FFmpeg 9.0.1 Essentials** `ffmpeg.exe` and `ffprobe.exe` binaries are bundled as
+well, so no separate FFmpeg installation or PATH configuration is required.
 
 The tested release target is **Windows 11 x64**.
 
