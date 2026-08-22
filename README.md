@@ -32,12 +32,12 @@ different Dynamics Comparison cases yourself.
 - 🔥 **[Eternal Desert — Loudness War](examples/Eternal%20Desert%20-%20Loudness%20War.mp3)**
 - 💿 **[Eternal Desert — Vinyl-like transfer simulation](examples/Eternal%20Desert%20-%20Loudness%20War%20%28Vinyl%20Remaster%29.mp3)**
 
-*Eternal Desert* is an AI-assisted song created with Suno from **lyrics and
+(*Eternal Desert* is an AI-assisted song created with Suno from **lyrics and
 creative prompting by adventureFAN**. The Loudness War version is deliberately
 louder and more heavily limited. The third file starts from that already
 compressed Loudness War master and applies a simplified vinyl-like transfer
 chain that changes peak/crest structure without restoring the lost loudness
-dynamics.
+dynamics.)
 
 That gives the project two complementary demonstrations:
 
