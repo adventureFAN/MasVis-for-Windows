@@ -22,40 +22,29 @@ for interpreting one master and comparing two versions of the same music.
 
 ![MasVis for Windows main window](assets/screenshots/main-window.png)
 
-## Try it yourself with *Eternal Desert*
+## Highlights
 
-MasVis for Windows includes **three controlled demo files** built from the same
-track. You can listen to them, analyze them separately, and reproduce very
-different Dynamics Comparison cases yourself.
-
-- 🎧 **[Eternal Desert — Reference](examples/Eternal%20Desert%20-%20Reference.mp3)**
-- 🔥 **[Eternal Desert — Loudness War](examples/Eternal%20Desert%20-%20Loudness%20War.mp3)**
-- 💿 **[Eternal Desert — Vinyl-like transfer simulation](examples/Eternal%20Desert%20-%20Loudness%20War%20%28Vinyl%20Remaster%29.mp3)**
-
-(*Eternal Desert* is an AI-assisted song created with Suno from **lyrics and
-creative prompting by adventureFAN**. The Loudness War version is deliberately
-louder and more heavily limited. The third file starts from that already
-compressed Loudness War master and applies a simplified vinyl-like transfer
-chain that changes peak/crest structure without restoring the lost loudness
-dynamics.)
-
-That gives the project three complementary demonstrations:
-
-- **Reference vs Loudness War:** DR **10.4 → 6.5**, with a real reduction in
-  aligned loudness dynamics.
-- **Loudness War vs Vinyl-like transfer:** DR **6.5 → 10.4**, while Loudness
-  Dynamics Similarity remains **99.3 / 100**, Loudness Curve Similarity is
-  **99.77%**, and **no Loudness Dynamics Advantage** is detected.
-- **Reference vs Vinyl-like transfer:** both versions measure **DR 10.4**, yet
-  Loudness Dynamics Similarity is only **62.9 / 100** and Version A shows a
-  **Strong Loudness Dynamics Advantage**.
-
-Together, these controlled cases show why measured DR and aligned loudness
-dynamics should be interpreted as related but distinct properties of the signal.
-The example audio is separately cleared demonstration media and is **not covered
-by the project's GPL-3.0-or-later source-code license**. See
-[`examples/README.md`](examples/README.md) for the exact purpose, processing and
-licensing notes.
+- Native Windows interface with multiple report tabs, drag & drop and Advanced
+  Open.
+- Detailed MasVis reports with waveform, spectrum, crest factor, histogram,
+  Peak-vs-RMS, EBU R128 loudness and TT-style DR information.
+- Explainable **Dynamics Assessment** for single tracks.
+- Same-content **Dynamics Comparison** with reliable-alignment gating,
+  loudness-level matching and separate loudness/peak interpretation.
+- **Play** button that sends the current original file to the default audio
+  player configured in Windows. MasVis itself remains analysis-only.
+- Side-by-side visual comparison with synchronized zoom and animated GIF export.
+- Light/Dark application theme plus Light/Dark report presentation.
+- Save and Save All with per-export format and resolution selection.
+- High-resolution raster export to PNG, JPEG, WebP and TIFF, plus raster-backed
+  SVG, PDF and EPS containers.
+- Remembered open/export locations for a more natural Windows workflow.
+- Built-in Help and Glossary covering both the classic report and the newer
+  dynamics features in end-user language.
+- FFmpeg/ffprobe decoding using a fixed, verified FFmpeg 9.0.1 Essentials build
+  bundled with the portable Windows release.
+- Bounded-memory True Peak processing that preserves validated results while
+  greatly reducing temporary memory use on eligible input.
 
 ## Why use MasVis for Windows?
 
@@ -132,9 +121,43 @@ level-matches them, and then keeps several different measurements separate:
 
 ![Dynamics Comparison](assets/screenshots/dynamics-comparison-diff-dr.png)
 
-
 For the frozen v1 methodology, see
 [docs/DYNAMICS-COMPARISON-V1.md](docs/DYNAMICS-COMPARISON-V1.md).
+
+## Try it yourself with *Eternal Desert*
+
+MasVis for Windows includes **three controlled demo files** built from the same
+track. You can listen to them, analyze them separately, and reproduce very
+different Dynamics Comparison cases yourself.
+
+- 🎧 **[Eternal Desert — Reference](examples/Eternal%20Desert%20-%20Reference.mp3)**
+- 🔥 **[Eternal Desert — Loudness War](examples/Eternal%20Desert%20-%20Loudness%20War.mp3)**
+- 💿 **[Eternal Desert — Vinyl-like transfer simulation](examples/Eternal%20Desert%20-%20Loudness%20War%20%28Vinyl%20Remaster%29.mp3)**
+
+(*Eternal Desert* is an AI-assisted song created with Suno from **lyrics and
+creative prompting by adventureFAN**. The Loudness War version is deliberately
+louder and more heavily limited. The third file starts from that already
+compressed Loudness War master and applies a simplified vinyl-like transfer
+chain that changes peak/crest structure without restoring the lost loudness
+dynamics.)
+
+That gives the project three complementary demonstrations:
+
+- **Reference vs Loudness War:** DR **10.4 → 6.5**, with a real reduction in
+  aligned loudness dynamics.
+- **Loudness War vs Vinyl-like transfer:** DR **6.5 → 10.4**, while Loudness
+  Dynamics Similarity remains **99.3 / 100**, Loudness Curve Similarity is
+  **99.77%**, and **no Loudness Dynamics Advantage** is detected.
+- **Reference vs Vinyl-like transfer:** both versions measure **DR 10.4**, yet
+  Loudness Dynamics Similarity is only **62.9 / 100** and Version A shows a
+  **Strong Loudness Dynamics Advantage**.
+
+Together, these controlled cases show why measured DR and aligned loudness
+dynamics should be interpreted as related but distinct properties of the signal.
+The example audio is separately cleared demonstration media and is **not covered
+by the project's GPL-3.0-or-later source-code license**. See
+[`examples/README.md`](examples/README.md) for the exact purpose, processing and
+licensing notes.
 
 ## Three controlled *Eternal Desert* experiments
 
@@ -216,29 +239,6 @@ All three experiments are practical validation examples, not proof that the
 program can reconstruct mastering history. MasVis for Windows reports what the
 measured signals support and keeps uncertainty visible when they do not support a
 reliable conclusion.
-## Highlights
-
-- Native Windows interface with multiple report tabs, drag & drop and Advanced
-  Open.
-- Detailed MasVis reports with waveform, spectrum, crest factor, histogram,
-  Peak-vs-RMS, EBU R128 loudness and TT-style DR information.
-- Explainable **Dynamics Assessment** for single tracks.
-- Same-content **Dynamics Comparison** with reliable-alignment gating,
-  loudness-level matching and separate loudness/peak interpretation.
-- **Play** button that sends the current original file to the default audio
-  player configured in Windows. MasVis itself remains analysis-only.
-- Side-by-side visual comparison with synchronized zoom and animated GIF export.
-- Light/Dark application theme plus Light/Dark report presentation.
-- Save and Save All with per-export format and resolution selection.
-- High-resolution raster export to PNG, JPEG, WebP and TIFF, plus raster-backed
-  SVG, PDF and EPS containers.
-- Remembered open/export locations for a more natural Windows workflow.
-- Built-in Help and Glossary covering both the classic report and the newer
-  dynamics features in end-user language.
-- FFmpeg/ffprobe decoding using a fixed, verified FFmpeg 9.0.1 Essentials build
-  bundled with the portable Windows release.
-- Bounded-memory True Peak processing that preserves validated results while
-  greatly reducing temporary memory use on eligible input.
 
 ## What MasVis for Windows does not claim
 
