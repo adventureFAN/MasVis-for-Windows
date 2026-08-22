@@ -24,28 +24,37 @@ for interpreting one master and comparing two versions of the same music.
 
 ## Try it yourself with *Eternal Desert*
 
-MasVis for Windows now includes the **exact two demo files** used for the
-Dynamics Comparison example in this repository. You can listen to them, analyze
-them separately, and reproduce the comparison yourself instead of only looking
-at a screenshot.
+MasVis for Windows includes **three controlled demo files** built from the same
+track. You can listen to them, analyze them separately, and reproduce two very
+different Dynamics Comparison cases yourself.
 
 - 🎧 **[Eternal Desert — Reference](examples/Eternal%20Desert%20-%20Reference.mp3)**
 - 🔥 **[Eternal Desert — Loudness War](examples/Eternal%20Desert%20-%20Loudness%20War.mp3)**
+- 💿 **[Eternal Desert — Vinyl-like transfer simulation](examples/Eternal%20Desert%20-%20Loudness%20War%20%28Vinyl%20Remaster%29.mp3)**
 
 *Eternal Desert* is an AI-assisted song created with Suno from **lyrics and
-creative prompting by adventureFAN**. The second file is a deliberately louder,
-densely limited derivative made specifically to demonstrate how level, DR,
-loudness dynamics and peak structure can change independently.
+creative prompting by adventureFAN**. The Loudness War version is deliberately
+louder and more heavily limited. The third file starts from that already
+compressed Loudness War master and applies a simplified vinyl-like transfer
+chain that changes peak/crest structure without restoring the lost loudness
+dynamics.
 
-Load both files into MasVis for Windows and open **Dynamics Comparison**. The
-current test pair produces the controlled example shown below: **DR 10.4 vs 6.5**
-and an aligned level difference of about **+6.70 dB** for the Loudness War
-version.
+That gives the project two complementary demonstrations:
+
+- **Reference vs Loudness War:** DR **10.4 → 6.5**, with a real reduction in
+  aligned loudness dynamics.
+- **Loudness War vs Vinyl-like transfer:** DR **6.5 → 10.2**, while Loudness
+  Dynamics Similarity remains **99.3 / 100**, Loudness Curve Similarity is
+  **99.77%**, and **no Loudness Dynamics Advantage** is detected.
+
+The second case is deliberately provocative: the DR value almost returns to the
+Reference value even though the compressed loudness development was never
+expanded or restored.
 
 The example audio is separately cleared demonstration media and is **not covered
 by the project's GPL-3.0-or-later source-code license**. See
-[`examples/README.md`](examples/README.md) for the exact purpose and licensing
-notes.
+[`examples/README.md`](examples/README.md) for the exact purpose, processing and
+licensing notes.
 
 ## Why use MasVis for Windows?
 
@@ -123,9 +132,11 @@ level-matches them, and then keeps several different measurements separate:
 ![Dynamics Comparison](assets/screenshots/dynamics-comparison.png)
 
 **Want to reproduce this exact comparison?** Use the included
-[Reference](examples/Eternal%20Desert%20-%20Reference.mp3) and
-[Loudness War](examples/Eternal%20Desert%20-%20Loudness%20War.mp3) versions of
-*Eternal Desert*, then run **Dynamics Comparison**.
+[Loudness War](examples/Eternal%20Desert%20-%20Loudness%20War.mp3) and
+[Vinyl-like transfer simulation](examples/Eternal%20Desert%20-%20Loudness%20War%20%28Vinyl%20Remaster%29.mp3)
+versions of *Eternal Desert*, then run **Dynamics Comparison**. The screenshot
+shows **DR 6.5 vs 10.2** even though the aligned loudness development remains
+essentially unchanged.
 
 A large DR difference can coexist with very similar loudness development if the
 main difference is concentrated in peaks, crest factor or transient structure.
@@ -135,25 +146,57 @@ The application intentionally does not collapse those dimensions into a claim of
 For the frozen v1 methodology, see
 [docs/DYNAMICS-COMPARISON-V1.md](docs/DYNAMICS-COMPARISON-V1.md).
 
-## A controlled Loudness War example
+## Two controlled *Eternal Desert* experiments
 
-🎧 **Listen / download the exact files:**
+### 1. Loudness War: lower DR with genuinely reduced loudness dynamics
+
+🎧 **Listen / download:**
 [Reference MP3](examples/Eternal%20Desert%20-%20Reference.mp3) ·
 [Loudness War MP3](examples/Eternal%20Desert%20-%20Loudness%20War.mp3)
 
-The Dynamics Comparison screenshot above uses two versions of the same
-user-created track, **Eternal Desert**. Version B was deliberately made much
-louder and denser as a controlled Loudness War stress test.
+The Loudness War version was deliberately made much louder and denser from the
+Reference as a controlled level-maximization stress test. MasVis for Windows
+reports **DR 10.4 vs 6.5**, with the Loudness War version about **6.70 dB louder**
+after alignment and a clear reduction in aligned Short-Term loudness dynamics.
 
-In that example MasVis for Windows reports:
+This is the familiar case where a much lower DR value coincides with a real
+change in the song's measured loudness dynamics.
 
-- **DR 10.4** for Version A versus **DR 6.5** for Version B;
-- Version B about **6.70 dB louder**;
-- aligned Short-Term loudness dynamics that clearly favor Version A.
+### 2. Vinyl-like transfer: higher DR without restored loudness dynamics
 
-This is a practical validation example, not proof that the program can reconstruct
-mastering history. MasVis for Windows reports what the measured signals support
-and keeps uncertainty visible when they do not support a reliable conclusion.
+💿 **Listen / download:**
+[Loudness War MP3](examples/Eternal%20Desert%20-%20Loudness%20War.mp3) ·
+[Vinyl-like transfer simulation](examples/Eternal%20Desert%20-%20Loudness%20War%20%28Vinyl%20Remaster%29.mp3)
+
+For the second experiment, the already compressed **DR 6.5 Loudness War master**
+was processed through a deliberately simplified vinyl-like transfer chain. No
+expansion or dynamic restoration was applied. Nevertheless, its measured DR
+rises to **10.2** — almost the **10.4** of the original Reference.
+
+MasVis for Windows simultaneously reports:
+
+- **Loudness Dynamics Similarity: 99.3 / 100 — Extremely High**;
+- **Loudness Curve Similarity: 99.77%**;
+- **Loudness Dynamics Advantage: None detected**;
+- **Peak Structure Difference: 71.6 / 100 — Strong**;
+- EBU LRA change: effectively **0.00 LU**;
+- **Alignment: Reliable**.
+
+That is the point of the example: the DR meter is measuring a real change in
+peak/RMS or crest structure, but the higher DR value does **not** mean that the
+previously lost loudness dynamics have been restored. A higher DR value from a
+vinyl or needledrop source therefore cannot, by itself, prove that a more dynamic
+master was used.
+
+The file name uses “Vinyl Remaster” as a short demo label. This is **not an actual
+vinyl release or a complete physical vinyl-cutting/playback model**; it is a
+controlled signal-processing simulation for demonstrating the measurement
+problem.
+
+Both experiments are practical validation examples, not proof that the program
+can reconstruct mastering history. MasVis for Windows reports what the measured
+signals support and keeps uncertainty visible when they do not support a reliable
+conclusion.
 
 ## Highlights
 
