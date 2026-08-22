@@ -50,6 +50,10 @@ from .params import c_color
 log = logging.getLogger(__package__)
 
 VERSION = __version__
+# Optional host-application override. Standalone/upstream-style rendering keeps
+# the original MasVisGtk footer, while MasVis for Windows supplies its own
+# product/version label from the application wrapper.
+REPORT_FOOTER_LABEL = None
 DPI = 72
 R128_OFFSET = 23
 
@@ -185,7 +189,7 @@ def render(
         fig_d.text(
             pos['right'],
             pos['footer_y'],
-            ('MasVisGtk %s' % (VERSION)),
+            (REPORT_FOOTER_LABEL or ('MasVisGtk %s' % (VERSION))),
             fontsize='small',
             va='bottom',
             ha='right',
@@ -625,6 +629,9 @@ def render(
                 255 - img_buf[:, :, 3:4]
             )
             img_buf[:, :, -1] = 255
+            # The temporary named buffer figure otherwise remains registered
+            # in pyplot for the lifetime of the process.
+            plt.close(fig_buf)
             plt.figure('overview')
             plt.imshow(img_buf, aspect='auto', interpolation='none')
             overview = io.BytesIO()

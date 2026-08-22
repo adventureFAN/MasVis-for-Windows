@@ -53,10 +53,12 @@ separate third-party executables inside the portable package. The package ships
 GPLv3 text, the exact Gyan build README and source-access/build-identity
 information under `THIRD-PARTY-LICENSES\FFmpeg-Gyan-9.0.1\`.
 
-## 1.0.0 validation status
+## Validated release baseline
 
-The bundled-FFmpeg onedir path was validated with the established Golden
-Vicarious analyses and Dynamics Comparison. The package measured approximately
-438.61 MiB unpacked and 177.56 MiB as an Optimal ZIP. A Gyan Full Shared
-experiment was rejected because it was larger than the accepted Essentials
-Static runtime.
+The bundled-FFmpeg onedir path was validated for the 1.0.0 release with the
+established Golden Vicarious analyses and Dynamics Comparison. That package
+measured approximately 438.61 MiB unpacked and 177.56 MiB as an Optimal ZIP.
+A Gyan Full Shared experiment was rejected because it was larger than the
+accepted Essentials Static runtime. The 1.1.0 release intentionally retains
+the same pinned packaging/runtime baseline and must pass the packaging gate
+again before publication.

@@ -138,7 +138,7 @@ def _dynamics_similarity(status: str, short_term: dict[str, float]) -> dict[str,
     }
 
 
-def _musical_dynamics_advantage(status: str, short_term: dict[str, float], deltas: dict[str, float]) -> dict[str, Any]:
+def _loudness_dynamics_advantage(status: str, short_term: dict[str, float], deltas: dict[str, float]) -> dict[str, Any]:
     """Direction of aligned Short-Term loudness dynamics, deliberately excluding DR/PLR.
 
     The robust aligned short-term span is primary. EBU LRA is corroborative.
@@ -299,11 +299,11 @@ def _peak_headroom(deltas: dict[str, float]) -> dict[str, Any]:
 def _comparison_conclusion(
     status: str,
     similarity: dict[str, Any],
-    musical: dict[str, Any],
+    loudness_dynamics: dict[str, Any],
     measured_dr: dict[str, Any],
     peak_structure: dict[str, Any],
     peak_headroom: dict[str, Any],
-    short_term: dict[str, float],
+    level_reference: dict[str, float],
 ) -> dict[str, str]:
     if status == "Inconclusive":
         return {
@@ -313,25 +313,25 @@ def _comparison_conclusion(
         }
 
     dr_winner = measured_dr.get("higher_measured_dr", "Unavailable")
-    musical_dir = musical.get("direction", "Inconclusive")
+    loudness_dir = loudness_dynamics.get("direction", "Inconclusive")
     peak_score = peak_structure.get("score")
     peak_score = float(peak_score) if peak_score is not None else 0.0
     plr_winner = peak_headroom.get("higher_plr", "Unavailable")
-    level = _finite(short_term.get("level_offset_b_minus_a_db"), 0.0)
+    level = _finite(level_reference.get("level_offset_b_minus_a_db"), 0.0)
     sim_score = similarity.get("score")
     sim_score = float(sim_score) if sim_score is not None else 0.0
 
     # Pure gain changes cannot create a TT-DR advantage.  This branch therefore
-    # requires measured DR *and* PLR to stay essentially equal while the musical
-    # dynamics remain the same.
-    if dr_winner == "Equal" and musical_dir == "None" and plr_winner == "Equal" and abs(level) >= 1.0 and peak_score < 40.0:
+    # requires measured DR *and* PLR to stay essentially equal while aligned
+    # Short-Term loudness dynamics remain the same.
+    if dr_winner == "Equal" and loudness_dir == "None" and plr_winner == "Equal" and abs(level) >= 1.0 and peak_score < 40.0:
         return {
             "code": "primarily_level_shift",
             "title": "Primarily a level shift",
             "summary": "The versions differ in playback/master level, while measured DR, PLR and aligned Short-Term loudness dynamics remain essentially unchanged.",
         }
 
-    if dr_winner in ("A", "B") and musical_dir == "None":
+    if dr_winner in ("A", "B") and loudness_dir == "None":
         if peak_score >= 40.0:
             return {
                 "code": "dr_advantage_not_musical_peak_structure",
@@ -344,7 +344,7 @@ def _comparison_conclusion(
             "summary": f"Version {dr_winner} measures higher DR, but the aligned Short-Term loudness range does not show a corresponding advantage.",
         }
 
-    if dr_winner in ("A", "B") and musical_dir == dr_winner:
+    if dr_winner in ("A", "B") and loudness_dir == dr_winner:
         # If PLR points the opposite way, keep the result explicitly mixed even
         # though Short-Term loudness dynamics and TT DR agree.
         opposite = "A" if dr_winner == "B" else "B"
@@ -354,35 +354,35 @@ def _comparison_conclusion(
                 "title": "Mixed evidence",
                 "summary": f"Version {dr_winner} shows the wider Short-Term loudness range and higher measured DR, while peak-headroom evidence points the other way.",
             }
-        strength = musical.get("strength", "")
+        strength = loudness_dynamics.get("strength", "")
         return {
             "code": "dr_advantage_corroborated",
             "title": "Higher measured DR is corroborated",
             "summary": f"Version {dr_winner} has the higher measured DR and also shows a {str(strength).lower()} advantage in aligned Short-Term loudness range.",
         }
 
-    if dr_winner in ("A", "B") and musical_dir in ("A", "B") and musical_dir != dr_winner:
+    if dr_winner in ("A", "B") and loudness_dir in ("A", "B") and loudness_dir != dr_winner:
         return {
             "code": "dr_vs_musical_conflict",
             "title": "Measured DR and loudness dynamics disagree",
-            "summary": f"Version {dr_winner} has the higher measured DR, but Version {musical_dir} shows the wider aligned Short-Term loudness range.",
+            "summary": f"Version {dr_winner} has the higher measured DR, but Version {loudness_dir} shows the wider aligned Short-Term loudness range.",
         }
 
-    if musical_dir == "Mixed":
+    if loudness_dir == "Mixed":
         return {
             "code": "mixed_musical_metrics",
             "title": "Mixed loudness-dynamics evidence",
             "summary": "The aligned loudness-range measures do not agree strongly enough on a single dynamics advantage.",
         }
 
-    if dr_winner == "Equal" and musical_dir in ("A", "B"):
+    if dr_winner == "Equal" and loudness_dir in ("A", "B"):
         return {
             "code": "musical_difference_without_dr_difference",
             "title": "Loudness dynamics differ despite similar measured DR",
-            "summary": f"Measured DR is essentially equal, while Version {musical_dir} shows the wider aligned Short-Term loudness range.",
+            "summary": f"Measured DR is essentially equal, while Version {loudness_dir} shows the wider aligned Short-Term loudness range.",
         }
 
-    if sim_score >= 97.0 and musical_dir == "None":
+    if sim_score >= 97.0 and loudness_dir == "None":
         return {
             "code": "essentially_same_dynamics",
             "title": "Essentially the same loudness dynamics",
@@ -399,6 +399,7 @@ def _comparison_conclusion(
 def interpret_result(result: dict[str, Any]) -> dict[str, Any]:
     """Apply the frozen Dynamics Comparison v1.0 interpretation model."""
     status = str(result.get("alignment_status", "Inconclusive"))
+    momentary = result.get("momentary_loudness") or {}
     short_term = result.get("short_term_loudness") or {}
     peak_crest = result.get("peak_crest") or {}
     deltas = result.get("metric_deltas_b_minus_a") or {}
@@ -406,23 +407,24 @@ def interpret_result(result: dict[str, Any]) -> dict[str, Any]:
     metrics_b = (result.get("version_b") or {}).get("metrics") or {}
 
     similarity = _dynamics_similarity(status, short_term)
-    musical = _musical_dynamics_advantage(status, short_term, deltas)
+    loudness_dynamics = _loudness_dynamics_advantage(status, short_term, deltas)
     peaks = _peak_structure(status, peak_crest)
     measured_dr = _measured_dr(metrics_a, metrics_b)
     headroom = _peak_headroom(deltas)
     conclusion = _comparison_conclusion(
-        status, similarity, musical, measured_dr, peaks, headroom, short_term
+        status, similarity, loudness_dynamics, measured_dr, peaks, headroom, momentary
     )
 
     return {
         "comparison_version": COMPARE_VERSION,
         "dynamics_similarity": similarity,
-        "musical_dynamics_advantage": musical,
+        # Legacy result key retained for stored Research 0.2 / v1 compatibility.
+        "musical_dynamics_advantage": loudness_dynamics,
         "measured_dr": measured_dr,
         "peak_headroom": headroom,
         "peak_structure_difference": peaks,
-        "level_difference_b_minus_a_db": round(_finite(short_term.get("level_offset_b_minus_a_db")), 2)
-        if np.isfinite(_finite(short_term.get("level_offset_b_minus_a_db"))) else None,
+        "level_difference_b_minus_a_db": round(_finite(momentary.get("level_offset_b_minus_a_db")), 2)
+        if np.isfinite(_finite(momentary.get("level_offset_b_minus_a_db"))) else None,
         "conclusion": conclusion,
         "cautions": [
             "Loudness Dynamics Similarity is an explainable 0..100 score, not a statistical probability.",
@@ -551,9 +553,16 @@ def compare_files(
         peak_crest = {
             "count": int(count),
             "peak_lift_after_level_match_median_db": float(np.nanmedian(peak_lift)),
-            "peak_lift_after_level_match_p90_db": float(np.nanpercentile(peak_lift, 90)),
+            # Difference magnitude must be symmetric under A/B reversal.
+            # Percentile(abs(delta)) gives the same p90 magnitude when the
+            # comparison direction is swapped; percentile(delta) did not.
+            "peak_lift_after_level_match_p90_db": float(
+                np.nanpercentile(np.abs(peak_lift), 90)
+            ),
             "crest_delta_median_db": float(np.nanmedian(crest_delta_arr)),
-            "crest_delta_p90_db": float(np.nanpercentile(crest_delta_arr, 90)),
+            "crest_delta_p90_db": float(
+                np.nanpercentile(np.abs(crest_delta_arr), 90)
+            ),
             "crest_correlation": float(np.corrcoef(ca, cb)[0, 1]) if np.std(ca) > 1e-6 and np.std(cb) > 1e-6 else float("nan"),
         }
     else:

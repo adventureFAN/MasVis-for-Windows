@@ -95,4 +95,4 @@ The Windows binary package stages the exact Python-package license/notice files 
 
 The PySide6/Qt runtime collected by the current Windows build also contains OpenSSL 3 runtime DLLs; OpenSSL 3.x is covered by Apache License 2.0 and that license text is included in the release license bundle.
 
-The official MasVis for Windows 1.0 ZIP contains the exact validated Gyan FFmpeg 9.0.1 Essentials object code described above. The exact upstream binary identity, source revision, build README, hashes and source-access information are documented for redistribution. See `packaging/THIRD_PARTY_SOURCE.md`.
+The official MasVis for Windows portable release ZIP contains the exact validated Gyan FFmpeg 9.0.1 Essentials object code described above. The exact upstream binary identity, source revision, build README, hashes and source-access information are documented for redistribution. See `packaging/THIRD_PARTY_SOURCE.md`.

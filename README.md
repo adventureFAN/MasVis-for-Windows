@@ -4,89 +4,161 @@
   <img src="assets/app/masvis-for-windows.png" alt="MasVis for Windows icon" width="128">
 </p>
 
+<p align="center">
+  <strong>See what loudness, limiting, headroom and dynamics are actually doing.</strong>
+</p>
+
 **MasVis for Windows** is an independent Windows-native fork of
 [MasVisGtk](https://github.com/itprojects/MasVisGtk) by ITProjects. MasVisGtk
 builds on PyMasVis by Joakim Fors, a Python reimplementation of the original
 MasVis.
 
-MasVis for Windows keeps the proven MasVis/PyMasVis analysis and report concepts
-while replacing the GTK/libadwaita desktop interface with a native PySide6/Qt
-application for Windows.
+It keeps the proven MasVis/PyMasVis analysis and report concepts while replacing
+the GTK/libadwaita desktop interface with a native PySide6/Qt application for
+Windows. On top of the classic report, MasVis for Windows adds explainable tools
+for interpreting one master and comparing two versions of the same music.
 
-> **We don't replace DR. We explain it.**
+> ## **We don't replace DR. We explain it.**
 
 ![MasVis for Windows main window](assets/screenshots/main-window.png)
 
-## Highlights
+## Why use MasVis for Windows?
 
-- Detailed MasVis reports with waveform, spectrum, crest factor, histogram,
-  Peak-vs-RMS, EBU R128 loudness and TT-style DR information.
-- **Dynamics Assessment**: an explainable 0-100 **Level Maximization Evidence**
-  score for a single waveform.
-- **Dynamics Comparison**: aligns two versions of substantially the same
-  material and separates **Loudness Dynamics Similarity** from
-  **Peak Structure Difference** and measured DR.
-- Windows-native Light/Dark application theme plus Light/Dark report
-  presentation.
-- Multiple report tabs, Overview modes, drag & drop, Advanced Open and
-  Windows-friendly file dialogs.
-- Side-by-side report comparison and configurable animated GIF export.
-- High-resolution raster export to PNG, JPEG, WebP and TIFF, plus
-  raster-backed SVG, PDF and EPS containers.
-- FFmpeg/ffprobe decoding with a fixed, verified FFmpeg 9.0.1 Essentials build
-  bundled directly with the portable Windows release.
-- Bounded-memory True Peak processing that preserves the validated analysis
-  result path while greatly reducing temporary memory use on eligible input.
+Two releases of the same song can sound and measure very differently. One may be
+quieter with more headroom, another may be pushed louder with compression or
+limiting, and a vinyl or captured version can show different peaks even when its
+underlying musical dynamics are very similar.
 
-## Dynamics Assessment
+This is part of why discussions around the **Loudness War** became so focused on
+DR values: they are useful, but one number cannot describe every kind of dynamic
+change.
 
-Dynamics Assessment is intended to make common direct level-maximization
-signatures easier to inspect instead of reducing the result to one unexplained
-number. It combines several deterministic indicators and shows why they
-contributed to the final score.
+MasVis for Windows helps separate those ideas instead of turning them into one
+"good" or "bad" score:
+
+- **How loud is the track overall?**
+- **How much peak/headroom-based dynamic range does it measure?**
+- **Does the waveform show signs commonly associated with strong level
+  maximization or limiting?**
+- **If two masters measure differently, is the difference mainly level,
+  loudness dynamics over time, peak/crest structure, or a combination?**
+
+The goal is not to tell you which master you should prefer. It is to make the
+measurements easier to understand.
+
+## Three ways to look at dynamics
+
+### 1. Classic MasVis analysis
+
+Analyze a track and get the familiar detailed MasVis report: waveform, spectrum,
+crest factor, peak-vs-RMS behavior, EBU R128 loudness, TT-style DR, True Peak,
+LRA, PLR and more.
+
+**DR remains visible exactly because it is useful.** MasVis for Windows simply
+adds more context around it instead of treating DR as a universal quality score.
+
+### 2. Dynamics Assessment
+
+**Simple question:** *How strongly does this waveform show measurable signs
+associated with level maximization and strong limiting?*
+
+Dynamics Assessment combines several already-measured indicators into an
+explainable **Level Maximization Evidence** score from 0 to 100 and shows which
+measurements contributed to it.
 
 ![Dynamics Assessment](assets/screenshots/dynamics-assessment.png)
 
-The result is **not** a probability that a track was mastered in a particular
-way and **not** a sound-quality grade. DR and LRA are shown as context and do not
-directly add score points.
+The result is deterministic and transparent, but it is **not** a probability
+that a track was mastered in a particular way and **not** a sound-quality grade.
+TT-style DR and LRA remain visible as context and do not directly add score
+points.
 
 For the frozen v1 methodology, see
 [docs/DYNAMICS-ASSESSMENT-V1.md](docs/DYNAMICS-ASSESSMENT-V1.md).
 
-## Dynamics Comparison
+### 3. Dynamics Comparison
 
-Dynamics Comparison is for two versions of substantially the same material. It
-aligns the files, level-matches the comparison and keeps three different ideas
-separate:
+**Simple question:** *If two versions of the same music measure differently,
+what is actually different — mainly their level, their loudness dynamics over
+time, their peak/crest structure, or some combination of those?*
 
-- **Measured DR** — the normal MasVis/TT-style DR result.
-- **Loudness Dynamics Similarity** — similarity of the aligned EBU R128
-  Short-Term loudness development.
-- **Peak Structure Difference** — a separate deterministic score for differences
-  in peak/crest structure after alignment and level matching.
+Dynamics Comparison aligns two versions of substantially the same material,
+level-matches them, and then keeps several different measurements separate:
+
+- **Measured DR** — the normal MasVis/TT-style DR result for each version.
+- **Loudness Dynamics Similarity (LDS)** — a 0-100 point score describing how
+  similarly the aligned Short-Term loudness develops over time.
+- **Loudness Curve Similarity** — the direct Pearson correlation of those
+  aligned Short-Term loudness curves, shown as a percentage.
+- **Loudness Dynamics Advantage** — whether one version shows a wider aligned
+  loudness-dynamics span.
+- **Peak Structure Difference** — a separate 0-100 point description of how
+  strongly peak/crest structure differs after alignment and level matching.
 
 ![Dynamics Comparison](assets/screenshots/dynamics-comparison.png)
 
-### Controlled practical example shown above
-
-The screenshots use two versions of the same user-created track, **Eternal
-Desert**. Version B was deliberately made much louder and denser as a controlled
-"Loudness War" stress test. In this example the application reports DR 10.4 for
-Version A and DR 6.5 for Version B, while Version B is 6.70 dB louder and the
-aligned Short-Term loudness analysis strongly favors Version A.
-
-This is an **illustrative validation example**, not proof that MasVis for
-Windows can infer mastering history. The comparison only reports what its
-measured signals support.
-
-A large measured-DR difference can also coexist with very high Loudness
-Dynamics Similarity when most of the difference is concentrated in
-peak/crest/transient structure. The application intentionally does not collapse
-those dimensions into a single claim of "real" or "fake" dynamics.
+A large DR difference can coexist with very similar loudness development if the
+main difference is concentrated in peaks, crest factor or transient structure.
+The application intentionally does not collapse those dimensions into a claim of
+"real" or "fake" dynamics.
 
 For the frozen v1 methodology, see
 [docs/DYNAMICS-COMPARISON-V1.md](docs/DYNAMICS-COMPARISON-V1.md).
+
+## A controlled Loudness War example
+
+The Dynamics Comparison screenshot above uses two versions of the same
+user-created track, **Eternal Desert**. Version B was deliberately made much
+louder and denser as a controlled Loudness War stress test.
+
+In that example MasVis for Windows reports:
+
+- **DR 10.4** for Version A versus **DR 6.5** for Version B;
+- Version B about **6.70 dB louder**;
+- aligned Short-Term loudness dynamics that clearly favor Version A.
+
+This is a practical validation example, not proof that the program can reconstruct
+mastering history. MasVis for Windows reports what the measured signals support
+and keeps uncertainty visible when they do not support a reliable conclusion.
+
+## Highlights
+
+- Native Windows interface with multiple report tabs, drag & drop and Advanced
+  Open.
+- Detailed MasVis reports with waveform, spectrum, crest factor, histogram,
+  Peak-vs-RMS, EBU R128 loudness and TT-style DR information.
+- Explainable **Dynamics Assessment** for single tracks.
+- Same-content **Dynamics Comparison** with reliable-alignment gating,
+  loudness-level matching and separate loudness/peak interpretation.
+- **Play** button that sends the current original file to the default audio
+  player configured in Windows. MasVis itself remains analysis-only.
+- Side-by-side visual comparison with synchronized zoom and animated GIF export.
+- Light/Dark application theme plus Light/Dark report presentation.
+- Save and Save All with per-export format and resolution selection.
+- High-resolution raster export to PNG, JPEG, WebP and TIFF, plus raster-backed
+  SVG, PDF and EPS containers.
+- Remembered open/export locations for a more natural Windows workflow.
+- Built-in Help and Glossary covering both the classic report and the newer
+  dynamics features in end-user language.
+- FFmpeg/ffprobe decoding using a fixed, verified FFmpeg 9.0.1 Essentials build
+  bundled with the portable Windows release.
+- Bounded-memory True Peak processing that preserves validated results while
+  greatly reducing temporary memory use on eligible input.
+
+## What MasVis for Windows does not claim
+
+MasVis for Windows is an analysis tool, not an automatic mastering judge.
+
+It does **not**:
+
+- rate whether a song sounds good or bad;
+- prove which release came first or reconstruct mastering ancestry;
+- treat a higher DR value as automatically better;
+- treat vinyl/needledrop DR as proof of greater musical dynamics;
+- use its 0-100 dynamics scores as statistical probabilities;
+- contain its own audio player.
+
+Use the measurements as evidence and context — then use your ears for preference.
 
 ## Supported audio files
 
@@ -98,16 +170,19 @@ The Windows interface currently accepts these extensions:
 Actual decoding is performed by FFmpeg. A file still has to contain a stream
 that the validated FFmpeg build can decode.
 
-## Windows release
+## Download and run
 
-The public Windows release is a **portable 64-bit folder packaged as a ZIP**.
-Python, PySide6/Qt, NumPy, SciPy, Matplotlib and the remaining tested runtime
-dependencies are included.
+The public Windows release is a **portable 64-bit ZIP**. No installer is
+required.
 
-The release also includes the exact validated **Gyan FFmpeg 9.0.1 Essentials**
-`ffmpeg.exe` and `ffprobe.exe` binaries. They are kept inside the portable
-application runtime and are used exclusively by the packaged application. No
-separate FFmpeg installation, setup helper or PATH configuration is required.
+1. Download `MasVis-for-Windows-1.1.0-win64.zip` from the Releases page.
+2. Extract the ZIP to a normal folder.
+3. Run `MasVis-for-Windows.exe`.
+
+Python, PySide6/Qt, NumPy, SciPy, Matplotlib and the other tested runtime
+dependencies are included. The exact validated **Gyan FFmpeg 9.0.1 Essentials**
+`ffmpeg.exe` and `ffprobe.exe` binaries are bundled as well, so no separate
+FFmpeg installation or PATH configuration is required.
 
 The tested release target is **Windows 11 x64**.
 
@@ -132,7 +207,7 @@ python -m pip install -r .\requirements.txt
 python .\app.py
 ```
 
-## Project lineage and credit
+## Project lineage
 
 MasVis for Windows would not exist without the work that came before it:
 
@@ -146,7 +221,9 @@ This repository is an independent derivative/fork of MasVisGtk and links back
 to the upstream project explicitly. MasVis for Windows is developed
 independently and is **not an official MasVisGtk release**.
 
-Project direction, feature design, testing, and release decisions: **adventureFAN**.
+## Credits
+
+Project direction, feature design, testing, and release decisions: **adventureFAN**.  
 Most implementation, debugging, and technical documentation: developed collaboratively with **ChatGPT**.
 
 ## License and third-party software

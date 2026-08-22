@@ -3,19 +3,23 @@
 import base64
 import html
 import io
+import os
 import sys
 import threading
 import traceback
 from pathlib import Path
 
 import matplotlib
+
+# MasVis renders with Matplotlib; the Windows GUI itself is Qt.  Select the
+# non-interactive backend before importing pyplot so worker-thread rendering
+# never inherits an interactive Qt backend by accident.
+matplotlib.use("Agg", force=True)
+
 import matplotlib.pyplot as plt
 import numpy as np
 
 from PIL import Image
-
-# MasVis renders with Matplotlib; the Windows GUI itself is Qt.
-matplotlib.use("Agg", force=True)
 
 from PySide6.QtCore import (
     QByteArray,
@@ -75,7 +79,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from audio_loader import load_audio, scalar
+from audio_loader import AudioLoadCancelled, load_audio, scalar
 from dynamics_assessment import assess_dynamics
 from dynamics_compare import compare_files
 
@@ -119,6 +123,7 @@ FLUENT_ICON_FILES = {
     "save": "save.svg",
     "save_all": "save_multiple.svg",
     "compare": "item_compare.svg",
+    "play": "play.svg",
     "compare_all": "image_multiple.svg",
     "assessment": "data_histogram.svg",
     "gif": "gif.svg",
@@ -139,7 +144,7 @@ CONTROL_ICON_FILES = {
 }
 
 APP_NAME = "MasVis for Windows"
-APP_VERSION = "1.0.0"
+APP_VERSION = "1.1.0"
 SETTINGS_ORGANIZATION = "MasVis for Windows"
 LEGACY_SETTINGS_ORGANIZATION = "MasVisGtk"
 LEGACY_SETTINGS_APPLICATION = "MasVisGtk for Windows"
@@ -156,7 +161,7 @@ COMPARISON_MIN_PLOT_WIDTH = 300
 GIF_FRAME_WIDTH = 1080
 GIF_FRAME_DURATION_MS = 3000
 
-GIF_QUALITY_WIDTHS = {
+GIF_RESOLUTION_WIDTHS = {
     "Standard": 606,
     "High": 810,
     "Very High": 1080,
@@ -170,10 +175,10 @@ REPORT_QUALITY_SCALES = {
     "Very High": 4,
 }
 
-EXPORT_TARGET_WIDTHS = {
-    "Standard": 1212,
-    "High": 1818,
-    "Very High": 2424,
+EXPORT_RESOLUTION_WIDTHS = {
+    "Standard": 606,
+    "High": 1212,
+    "Very High": 1818,
 }
 
 SAVE_FORMATS = {
@@ -344,7 +349,7 @@ def save_report_image(
     png_data,
     output_path,
     save_format="PNG",
-    export_quality="High",
+    export_resolution="High",
 ):
     """
     Save an already-rendered report in the selected output container.
@@ -360,9 +365,9 @@ def save_report_image(
     if save_format not in SAVE_FORMATS:
         save_format = "PNG"
 
-    export_quality = (
-        export_quality
-        if export_quality in EXPORT_TARGET_WIDTHS
+    export_resolution = (
+        export_resolution
+        if export_resolution in EXPORT_RESOLUTION_WIDTHS
         else "High"
     )
 
@@ -380,7 +385,7 @@ def save_report_image(
         image = source.convert("RGB")
 
         target_width = min(
-            int(EXPORT_TARGET_WIDTHS[export_quality]),
+            int(EXPORT_RESOLUTION_WIDTHS[export_resolution]),
             int(image.width),
         )
 
@@ -411,7 +416,7 @@ def save_report_image(
                 "Standard": 90,
                 "High": 95,
                 "Very High": 98,
-            }[export_quality]
+            }[export_resolution]
             image.save(
                 output_path,
                 format="JPEG",
@@ -425,7 +430,7 @@ def save_report_image(
                 "Standard": 88,
                 "High": 95,
                 "Very High": 100,
-            }[export_quality]
+            }[export_resolution]
             image.save(
                 output_path,
                 format="WEBP",
@@ -538,6 +543,7 @@ def render_high_resolution(
 
     original_dpi = masvis_output.DPI
     original_positions = masvis_output.positions
+    original_footer_label = masvis_output.REPORT_FOOTER_LABEL
 
     render_scale = max(1, int(render_scale))
 
@@ -550,6 +556,7 @@ def render_high_resolution(
     try:
         masvis_output.DPI = original_dpi * render_scale
         masvis_output.positions = scaled_positions
+        masvis_output.REPORT_FOOTER_LABEL = f"{APP_NAME} {APP_VERSION}"
 
         with matplotlib.rc_context(
             rc=matplotlib_font_settings(report_font)
@@ -565,6 +572,7 @@ def render_high_resolution(
     finally:
         masvis_output.DPI = original_dpi
         masvis_output.positions = original_positions
+        masvis_output.REPORT_FOOTER_LABEL = original_footer_label
 
 
 def render_modern_overview_row(
@@ -1685,6 +1693,210 @@ def load_fluent_icon(kind, dark=True, size=TOOLBAR_ICON_SIZE):
         return QIcon()
 
 
+def _existing_directory(value=None, fallback=None):
+    """Return an existing directory, falling back to the current user home."""
+    fallback_path = Path(fallback) if fallback else Path.home()
+    try:
+        candidate = Path(str(value)).expanduser() if value else fallback_path
+    except Exception:
+        candidate = fallback_path
+
+    if candidate.is_file():
+        candidate = candidate.parent
+    if candidate.is_dir():
+        return candidate
+    if fallback_path.is_dir():
+        return fallback_path
+    return Path.home()
+
+
+def _resolution_combo(parent, widths, default_value):
+    combo = QComboBox(parent)
+    for name, width in widths.items():
+        combo.addItem(f"{name} ({width} px wide)", name)
+    index = combo.findData(default_value)
+    combo.setCurrentIndex(index if index >= 0 else combo.findData("High"))
+    return combo
+
+
+# ============================================================
+# Export dialogs
+# ============================================================
+
+
+def _add_file_dialog_controls(dialog, rows):
+    """Add application-styled controls to a Qt file dialog.
+
+    Native Windows file dialogs cannot host arbitrary Qt widgets, so export
+    dialogs deliberately use Qt's own file dialog when format/resolution controls
+    need to live in the same window as the file/folder chooser.
+    """
+    dialog.setOption(QFileDialog.Option.DontUseNativeDialog, True)
+
+    panel = QFrame(dialog)
+    panel.setObjectName("preferencesGroup")
+    grid = QGridLayout(panel)
+    grid.setContentsMargins(10, 8, 10, 8)
+    grid.setHorizontalSpacing(12)
+    grid.setVerticalSpacing(7)
+
+    for row_index, (label_text, control) in enumerate(rows):
+        label = QLabel(label_text)
+        label.setMinimumWidth(120)
+        grid.addWidget(label, row_index, 0)
+        grid.addWidget(control, row_index, 1)
+
+    layout = dialog.layout()
+    if isinstance(layout, QGridLayout):
+        layout.addWidget(
+            panel,
+            layout.rowCount(),
+            0,
+            1,
+            max(1, layout.columnCount()),
+        )
+    else:
+        layout.addWidget(panel)
+
+    dialog.resize(760, 560)
+    return panel
+
+
+def _report_save_dialog(parent, title, default_path, default_format, default_quality):
+    default_format = default_format if default_format in SAVE_FORMATS else "PNG"
+    default_quality = (
+        default_quality
+        if default_quality in EXPORT_RESOLUTION_WIDTHS
+        else "High"
+    )
+
+    info = SAVE_FORMATS[default_format]
+    dialog = QFileDialog(parent, title, str(default_path))
+    dialog.setAcceptMode(QFileDialog.AcceptMode.AcceptSave)
+    dialog.setFileMode(QFileDialog.FileMode.AnyFile)
+    dialog.setNameFilters([value["filter"] for value in SAVE_FORMATS.values()])
+    dialog.selectNameFilter(info["filter"])
+    dialog.setDefaultSuffix(info["extension"].lstrip("."))
+    dialog.setLabelText(QFileDialog.DialogLabel.FileType, "Format:")
+
+    quality_combo = _resolution_combo(
+        dialog, EXPORT_RESOLUTION_WIDTHS, default_quality
+    )
+    quality_combo.setToolTip(
+        "Controls saved raster resolution. Export never upscales "
+        "beyond the rendered source image."
+    )
+    _add_file_dialog_controls(
+        dialog,
+        [("Resolution:", quality_combo)],
+    )
+
+    def update_default_suffix(selected_filter):
+        for format_info in SAVE_FORMATS.values():
+            if selected_filter != format_info["filter"]:
+                continue
+
+            new_extension = format_info["extension"]
+            dialog.setDefaultSuffix(new_extension.lstrip("."))
+
+            # Keep the visible filename in sync with the selected format when
+            # it still carries one of our known export extensions. Do not
+            # rewrite an arbitrary extension the user typed deliberately.
+            selected_files = dialog.selectedFiles()
+            if selected_files:
+                current = Path(selected_files[0])
+                known_extensions = {
+                    info["extension"]
+                    for info in SAVE_FORMATS.values()
+                } | {".jpeg", ".tif"}
+                if current.suffix.lower() in known_extensions:
+                    dialog.selectFile(str(current.with_suffix(new_extension)))
+            break
+
+    dialog.filterSelected.connect(update_default_suffix)
+    return dialog, quality_combo
+
+
+def _report_save_all_dialog(parent, default_directory, default_format, default_quality):
+    default_format = default_format if default_format in SAVE_FORMATS else "PNG"
+    default_quality = (
+        default_quality
+        if default_quality in EXPORT_RESOLUTION_WIDTHS
+        else "High"
+    )
+
+    dialog = QFileDialog(parent, "Save All Tabs", str(default_directory))
+    dialog.setFileMode(QFileDialog.FileMode.Directory)
+    dialog.setOption(QFileDialog.Option.ShowDirsOnly, True)
+    dialog.setAcceptMode(QFileDialog.AcceptMode.AcceptOpen)
+    dialog.setLabelText(QFileDialog.DialogLabel.Accept, "Save All")
+
+    format_combo = QComboBox(dialog)
+    format_combo.addItems(list(SAVE_FORMATS.keys()))
+    format_combo.setCurrentText(default_format)
+    format_combo.setToolTip("Format used for every report saved to the selected folder.")
+
+    quality_combo = _resolution_combo(
+        dialog, EXPORT_RESOLUTION_WIDTHS, default_quality
+    )
+    quality_combo.setToolTip(
+        "Controls saved raster resolution. Export never upscales "
+        "beyond the rendered source image."
+    )
+
+    _add_file_dialog_controls(
+        dialog,
+        [
+            ("Format:", format_combo),
+            ("Resolution:", quality_combo),
+        ],
+    )
+    return dialog, format_combo, quality_combo
+
+
+def _gif_save_dialog(parent, default_path, default_quality, default_duration_seconds):
+    default_quality = (
+        default_quality
+        if default_quality in GIF_RESOLUTION_WIDTHS
+        else "High"
+    )
+    try:
+        default_duration_seconds = int(default_duration_seconds)
+    except (TypeError, ValueError):
+        default_duration_seconds = 3
+    default_duration_seconds = max(1, min(30, default_duration_seconds))
+
+    dialog = QFileDialog(parent, "Export Animated GIF", str(default_path))
+    dialog.setAcceptMode(QFileDialog.AcceptMode.AcceptSave)
+    dialog.setFileMode(QFileDialog.FileMode.AnyFile)
+    dialog.setNameFilter("Animated GIF (*.gif)")
+    dialog.setDefaultSuffix("gif")
+
+    quality_combo = _resolution_combo(
+        dialog, GIF_RESOLUTION_WIDTHS, default_quality
+    )
+    quality_combo.setToolTip(
+        "Standard = 606 px, High = 810 px, Very High = 1080 px wide. "
+        "Lower resolution creates substantially smaller GIF files."
+    )
+
+    duration_spin = QSpinBox(dialog)
+    duration_spin.setRange(1, 30)
+    duration_spin.setSingleStep(1)
+    duration_spin.setSuffix(" s")
+    duration_spin.setValue(default_duration_seconds)
+    duration_spin.setToolTip("Time each selected report stays visible in the GIF.")
+
+    _add_file_dialog_controls(
+        dialog,
+        [
+            ("GIF Resolution:", quality_combo),
+            ("Frame Duration:", duration_spin),
+        ],
+    )
+    return dialog, quality_combo, duration_spin
+
+
 # ============================================================
 # Preferences
 # ============================================================
@@ -1705,7 +1917,7 @@ class PreferencesDialog(QDialog):
             Qt.WindowType.WindowContextHelpButtonHint,
             False,
         )
-        self.setFixedSize(680, 700)
+        self.setFixedSize(680, 420)
 
         outer = QVBoxLayout(self)
         outer.setContentsMargins(18, 16, 18, 16)
@@ -1826,102 +2038,6 @@ class PreferencesDialog(QDialog):
         )
         outer.addWidget(reports_group)
 
-        # Saving -----------------------------------------------------
-        outer.addWidget(self.section_title("Saving"))
-        saving_group = self.group_frame()
-        saving_layout = QVBoxLayout(saving_group)
-        saving_layout.setContentsMargins(12, 10, 12, 10)
-        saving_layout.setSpacing(9)
-
-        self.save_format_combo = QComboBox()
-        self.save_format_combo.addItems(list(SAVE_FORMATS.keys()))
-        self.save_format_combo.setCurrentText(
-            self.values.get("save_format", "PNG")
-        )
-        self.save_format_combo.setFixedWidth(160)
-        self.save_format_combo.setToolTip(
-            "Sets the default format used by Save and Save All.\n"
-            "The Save dialog can still choose another format for one file."
-        )
-        saving_layout.addLayout(
-            self.control_row("Default image format:", self.save_format_combo)
-        )
-
-        self.export_quality_combo = QComboBox()
-        self.export_quality_combo.addItems(
-            ["Standard", "High", "Very High"]
-        )
-        self.export_quality_combo.setCurrentText(
-            self.values.get("export_quality", "High")
-        )
-        self.export_quality_combo.setFixedWidth(160)
-        self.export_quality_combo.setToolTip(
-            "Controls saved raster resolution/compression.\n"
-            "Export never upscales beyond the rendered source image.\n"
-            "For maximum output, also use Very High Report Quality."
-        )
-        saving_layout.addLayout(
-            self.control_row("Export Quality:", self.export_quality_combo)
-        )
-        outer.addWidget(saving_group)
-
-        # Compare & Animation ---------------------------------------
-        outer.addWidget(self.section_title("Compare & Animation"))
-        compare_group = self.group_frame()
-        compare_layout = QVBoxLayout(compare_group)
-        compare_layout.setContentsMargins(12, 10, 12, 10)
-        compare_layout.setSpacing(9)
-
-        self.comparison_width_spin = QSpinBox()
-        self.comparison_width_spin.setRange(606, 1080)
-        self.comparison_width_spin.setSingleStep(10)
-        self.comparison_width_spin.setSuffix(" px")
-        self.comparison_width_spin.setValue(
-            int(self.values.get("comparison_width", 606))
-        )
-        self.comparison_width_spin.setFixedWidth(160)
-        self.comparison_width_spin.setToolTip(
-            "Default width of each report in a new Compare window.\n"
-            "The Compare zoom bar can still change it afterward."
-        )
-        compare_layout.addLayout(
-            self.control_row("Comparison plot width:", self.comparison_width_spin)
-        )
-
-        self.gif_quality_combo = QComboBox()
-        self.gif_quality_combo.addItems(
-            ["Standard", "High", "Very High"]
-        )
-        self.gif_quality_combo.setCurrentText(
-            self.values.get("gif_quality", "High")
-        )
-        self.gif_quality_combo.setFixedWidth(160)
-        self.gif_quality_combo.setToolTip(
-            "Controls animated GIF frame resolution.\n"
-            "Standard = 606 px, High = 810 px, Very High = 1080 px wide.\n"
-            "Lower quality creates substantially smaller GIF files."
-        )
-        compare_layout.addLayout(
-            self.control_row("GIF Quality:", self.gif_quality_combo)
-        )
-
-        self.gif_duration_spin = QSpinBox()
-        self.gif_duration_spin.setRange(1, 30)
-        self.gif_duration_spin.setSingleStep(1)
-        self.gif_duration_spin.setSuffix(" s")
-        self.gif_duration_spin.setValue(
-            int(self.values.get("gif_duration", 3))
-        )
-        self.gif_duration_spin.setFixedWidth(160)
-        self.gif_duration_spin.setToolTip(
-            "Time each selected report stays visible in an exported GIF.\n"
-            "Allowed range: 1 to 30 seconds per frame."
-        )
-        compare_layout.addLayout(
-            self.control_row("GIF frame duration:", self.gif_duration_spin)
-        )
-        outer.addWidget(compare_group)
-
         outer.addStretch(1)
 
         buttons = QHBoxLayout()
@@ -2039,11 +2155,6 @@ class PreferencesDialog(QDialog):
         self.update_report_font_label()
         self.report_theme_combo.setCurrentText("Light")
         self.report_quality_combo.setCurrentText("High")
-        self.save_format_combo.setCurrentText("PNG")
-        self.export_quality_combo.setCurrentText("High")
-        self.comparison_width_spin.setValue(606)
-        self.gif_quality_combo.setCurrentText("High")
-        self.gif_duration_spin.setValue(3)
 
     def configuration(self):
         return {
@@ -2052,11 +2163,6 @@ class PreferencesDialog(QDialog):
             "report_font": self.report_font_value,
             "report_theme": self.report_theme_combo.currentText(),
             "report_quality": self.report_quality_combo.currentText(),
-            "save_format": self.save_format_combo.currentText(),
-            "export_quality": self.export_quality_combo.currentText(),
-            "comparison_width": self.comparison_width_spin.value(),
-            "gif_quality": self.gif_quality_combo.currentText(),
-            "gif_duration": self.gif_duration_spin.value(),
         }
 
 
@@ -2218,103 +2324,129 @@ class HelpDialog(QDialog):
         return cls.page(
             "Getting Started",
             """
-            <p><b>MasVis for Windows</b> analyzes audio files and presents
-            the results as visual MasVis reports.</p>
+            <p><b>MasVis for Windows</b> analyzes audio files and turns the
+            measurements into visual MasVis reports. It can help you inspect
+            loudness, peaks and dynamics, but it does not decide whether a track
+            sounds good or reconstruct how it was mastered.</p>
 
-            <h3>Open and analyze</h3>
-            <ul>
-              <li>Use <b>Open Files</b> or press <b>Ctrl+O</b> for one or more files.</li>
-              <li>Drag &amp; drop audio files directly into the main window.</li>
-              <li>Use <b>Advanced Open</b> for folders, recursive scanning,
-                  LU/LUFS selection and Overview modes.</li>
-            </ul>
+            <h3>A simple workflow</h3>
+            <ol>
+              <li><b>Open audio.</b> Use <b>Open Files</b> / <b>Ctrl+O</b>, drag &amp; drop files,
+                  or use <b>Advanced Open</b> for folders and Overview modes.</li>
+              <li><b>Read the report.</b> Each analyzed file gets its own tab. If a term or graph
+                  is unfamiliar, start with <b>Reading the Report</b> and the <b>Glossary</b>.</li>
+              <li><b>Use the interpretation tools when useful.</b> <b>Dynamics Assessment</b>
+                  summarizes level-maximization evidence for one track. <b>Dynamics Comparison</b>
+                  compares two versions of substantially the same musical material.</li>
+              <li><b>Save or compare.</b> Save the current report, save all open reports,
+                  place reports side-by-side, or export selected tabs as an animated GIF.</li>
+            </ol>
 
-            <h3>Work with results</h3>
+            <h3>Buttons around the report</h3>
             <ul>
-              <li>Every result stays in its own closable tab, even when only one tab is open.</li>
-              <li>The DR badge opens channel DR information and the Dynamic Range chart.</li>
-              <li><b>Dynamics Assessment</b>, directly beside the DR badge, explains how strongly the current waveform shows level-maximization signatures.</li>
+              <li>The <b>DR badge</b> opens channel DR values and the Dynamic Range chart.</li>
+              <li><b>Dynamics Assessment</b> explains how strongly the current waveform shows
+                  signatures associated with level maximization.</li>
+              <li><b>Compare</b> opens side-by-side comparison, GIF export and Dynamics Comparison.</li>
+              <li><b>Play</b> opens the audio file from the current detailed tab in the
+                  <b>default audio player configured in Windows</b>. MasVis does not contain an
+                  audio player of its own. Play is disabled when no detailed file tab is active.</li>
+              <li><b>File Information</b> shows technical properties, metadata and analysis details.</li>
               <li>The floating controls zoom the current report or fit it to the window.</li>
-              <li><b>Compare</b> can place reports side-by-side, export selected tabs as an animated GIF, or run a <b>Dynamics Comparison</b> on exactly two detailed reports.</li>
-              <li><b>File Information</b> shows readable technical, metadata and analysis details.</li>
             </ul>
 
-            <p>Appearance, fonts, report theme/quality, export defaults, comparison
-            width and GIF quality/timing can be changed in <b>Preferences</b>.</p>
+            <h3>Saving and Preferences</h3>
+            <p><b>Save</b> and <b>Save All</b> ask for format and export resolution at the time
+            you save. GIF export asks for its resolution and frame duration in the same way.
+            The last-used folders and export choices are remembered for convenience.</p>
 
-            <p><i>Changing report font, report theme or report quality affects newly rendered
-            reports. Existing tabs are already-rendered images and are not
-            regenerated automatically.</i></p>
+            <p><b>Preferences</b> contains settings that affect the application itself or how
+            <i>new reports are rendered</i>, such as theme, fonts and Report Quality. Report
+            Quality is different from export Resolution: it controls the source report created
+            during analysis, while export Resolution controls the size of the saved copy.</p>
+
+            <p><i>Existing tabs are already-rendered images. Changing Report Font, Report Theme
+            or Report Quality affects newly analyzed reports and does not regenerate tabs that
+            are already open.</i></p>
             """,
         )
-
     @classmethod
     def report_html(cls):
         return cls.page(
             "Reading the Report",
             """
-            <p>The detailed report combines several views of the same track.
-            No single graph or number is a complete judgement of audio quality;
-            the value comes from reading the measurements together.</p>
+            <p>The detailed report shows several views of the same track. The safest way to
+            read it is to look for a <b>pattern across multiple measurements</b> rather than
+            treating one number or one graph as a verdict. Higher or lower is not automatically
+            better, and none of these measurements is a sound-quality score.</p>
 
             <h3>Header measurements</h3>
-            <p><b>DR</b> is the MasVis dynamic-range value. <b>LUFS/LU</b>
-            describes integrated loudness, <b>LRA</b> loudness variation,
-            <b>PLR</b> the distance between loudness and peak level, and
-            <b>Crest</b> the relationship between peak and RMS level.</p>
+            <p><b>DR</b> is the classic MasVis/TT-style dynamic-range value. <b>LUFS/LU</b>
+            describes overall loudness, <b>LRA</b> how widely loudness varies across the track,
+            <b>PLR</b> the distance between True Peak and Integrated Loudness, and <b>Crest</b>
+            the relationship between peak and RMS level. The Glossary explains each term in
+            more detail.</p>
 
             <h3>Channel waveforms</h3>
-            <p>The first plots show each channel separately. The labels include
-            crest factor, RMS level, sample peak and true peak.</p>
+            <p>The first plots show the waveform of each channel. The labels include crest
+            factor, RMS level, sample peak and True Peak. Sample Peak is the highest stored
+            digital sample; True Peak estimates peaks that can appear between samples when the
+            waveform is reconstructed.</p>
 
             <h3>Loudest part</h3>
-            <p>MasVis automatically zooms into a short, very strong section of
-            the track. Flat-topped or repeatedly constrained peaks can make
-            clipping or strong limiting easier to recognize.</p>
+            <p>MasVis automatically zooms into a short, very strong section of the track.
+            Repeatedly flattened or tightly constrained peaks can make clipping or strong
+            limiting easier to recognize, but the picture should be read together with the
+            other measurements.</p>
 
             <h3>Normalized average spectrum</h3>
-            <p>Shows the average spectral balance independently of the overall
-            playback level. It is especially useful when comparing different
-            releases of the same recording.</p>
+            <p>Shows the average frequency balance after removing the simple overall level
+            difference. This can be useful when comparing different releases of the same
+            recording because obvious tonal/EQ differences become easier to spot.</p>
 
             <h3>Allpassed crest factor</h3>
-            <p>Compares the measured crest factor with the crest factor after
-            phase-only allpass filtering. A large difference can be an indicator
-            that peak structure was strongly altered by level maximization.</p>
+            <p>Compares the measured crest factor with the crest factor after phase-only
+            allpass filtering. A large recovery can be a sign that peak structure has been
+            strongly altered, but phase and source differences can also affect it.</p>
 
             <h3>Histogram</h3>
-            <p>Shows how often sample values occur. Abrupt concentrations at
-            extreme values can help reveal clipping or heavy limiting.</p>
+            <p>Shows how often sample values occur. Strong concentrations near the level limits
+            can support evidence of clipping or heavy limiting.</p>
 
             <h3>Peak vs. RMS</h3>
-            <p>Each point represents a short section of the track. Material
-            crowded near the upper-right area has high RMS and little remaining
-            headroom for peaks.</p>
+            <p>Each point represents a short section of the track. Sections with high RMS and
+            little room above them for peaks indicate a dense signal. The overall shape is more
+            useful than any single dot.</p>
 
             <h3>Short-term crest factor</h3>
-            <p>Tracks crest factor over time, making it easier to see whether
-            louder sections retain or lose peak-to-average contrast.</p>
+            <p>Tracks peak-to-average contrast over time. It helps show whether louder sections
+            retain strong peaks or become increasingly dense.</p>
 
             <h3>EBU R128 short-term loudness</h3>
-            <p>Shows short-term loudness over time together with short-term PLR,
-            which makes changes in loudness and peak margin visible across the track.</p>
+            <p>Shows how perceived loudness changes through the track, together with Short-Term
+            PLR. This is useful for seeing musical rises and falls that a single whole-track
+            value cannot show.</p>
+
+            <h3>Where to go next</h3>
+            <p>Use <b>Dynamics Assessment</b> when you want a cautious summary of
+            level-maximization evidence in one file. Use <b>Dynamics Comparison</b> when you
+            have two versions of the same material and want to know whether their measured DR,
+            loudness development and peak structure tell the same story.</p>
             """,
         )
-
     @classmethod
     def dynamics_assessment_html(cls):
         return cls.page(
             "Dynamics Assessment",
             """
-            <p><b>Dynamics Assessment</b> is the Windows port's explainable
-            interpretation layer for a single analyzed track. It summarizes
-            several MasVis measurements into a <b>Level Maximization Evidence</b>
-            score from 0 to 100.</p>
+            <p><b>Dynamics Assessment</b> asks a simple question: <i>how strongly does this
+            waveform contain measurable signatures commonly associated with pushing a master
+            toward higher average loudness?</i></p>
 
-            <p>The score is <b>not a probability</b>. A value of 85/100 does not
-            mean there is an 85% statistical chance of a "bad" master. It means
-            that several measurable signatures associated with strong
-            level-maximization/limiting point in the same direction.</p>
+            <p>It combines several measurements into a <b>Level Maximization Evidence</b> score
+            from 0 to 100. The score is <b>not a probability and not a sound-quality grade</b>.
+            For example, 85/100 does not mean an 85% chance of a "bad master". It means that
+            several measurable indicators point strongly in the same direction.</p>
 
             <h3>Score bands</h3>
             <ul>
@@ -2326,144 +2458,142 @@ class HelpDialog(QDialog):
             </ul>
 
             <h3>What contributes to the score?</h3>
-            <p>The first score definition is deterministic and transparent.
-            Its maximum contributions are:</p>
+            <p>You do not need to memorize the weights, but they are shown here so the score is
+            transparent rather than a black box:</p>
             <ul>
-              <li><b>Allpass crest-factor recovery - 35 points.</b> A large recovery can indicate crest-factor loss. Its score contribution is reduced when whole-track PLR remains very generous, because phase/peak structure can also produce a large response.</li>
-              <li><b>Peak-to-Loudness Ratio (PLR) - 25 points.</b> Low PLR means little peak margin relative to integrated loudness.</li>
-              <li><b>Short-term density - 15 points.</b> Uses short-term PLR across the programme and requires corroboration from whole-track PLR.</li>
-              <li><b>Loud-section crest factor - 15 points.</b> Examines crest factor in the loudest one-second sections, where strong limiting is often easiest to expose.</li>
-              <li><b>Integrated loudness - 10 points.</b> Very high loudness strengthens other evidence, but deliberately cannot dominate the score by itself.</li>
+              <li><b>Allpass crest-factor recovery - up to 35 points.</b> Large recovery can indicate that peak/crest structure has been strongly constrained.</li>
+              <li><b>Peak-to-Loudness Ratio (PLR) - up to 25 points.</b> Low PLR means little peak margin relative to overall loudness.</li>
+              <li><b>Short-term density - up to 15 points.</b> Looks at how dense the signal remains across short sections of the track.</li>
+              <li><b>Loud-section crest factor - up to 15 points.</b> Checks peak-to-average contrast in the loudest one-second sections.</li>
+              <li><b>Integrated loudness - up to 10 points.</b> Very high loudness can strengthen other evidence, but cannot dominate the result by itself.</li>
             </ul>
 
-            <p><b>DR and LRA are shown as context but do not directly add points.</b>
-            This is intentional: high TT-style DR is not automatically proof of
-            greater musical dynamics, and a low value is not by itself proof of
-            destructive mastering.</p>
+            <p><b>DR and LRA are context only and do not directly add points.</b> This is
+            deliberate: a high TT-style DR value is not automatically proof of more musical
+            dynamics, and a low value alone does not prove destructive mastering.</p>
 
-            <h3>Evidence and counter-evidence</h3>
-            <p>The assessment window lists the measurements that support the
-            score and the measurements that argue against a strong
-            level-maximization interpretation. This is why two tracks with a
-            similar total score can still receive different explanations.</p>
+            <h3>How to read the result window</h3>
+            <p><b>Evidence</b> lists measurements that push the score upward.
+            <b>Counter-evidence</b> lists measurements that make a strong level-maximization
+            interpretation less convincing. Two files can therefore have similar scores for
+            different reasons.</p>
 
-            <h3>Measurement confidence</h3>
-            <p>Confidence describes whether the programme is long enough for
-            distribution-based measurements to be useful. It is not statistical
-            confidence in the score model. Very short tracks and exploratory
-            multichannel cases receive additional caution text.</p>
+            <p><b>Measurement confidence</b> mainly tells you whether the track is long enough
+            for distribution-based measurements to be useful. It is not statistical confidence
+            that the mastering history has been identified.</p>
 
             <h3>Important limitations</h3>
             <ul>
-              <li>The assessment describes the <b>current waveform</b>; it cannot reconstruct its mastering history.</li>
-              <li>A low score on a vinyl rip or other captured/processed source does not prove that the source master was uncompressed.</li>
-              <li>Different media, EQ, filtering and phase changes can regenerate peaks and change DR/crest measurements without restoring lost musical dynamics.</li>
-              <li>The score is not an audio-quality rating and does not judge artistic intent or genre.</li>
-              <li>Questions about whether one edition genuinely has more musical dynamics require a direct comparison of the two versions; the single-file assessment cannot answer that by itself.</li>
+              <li>The assessment describes the <b>current waveform</b>; it cannot reconstruct the original mastering process.</li>
+              <li>A vinyl rip or other analog/captured source can change peaks, phase and EQ after mastering.</li>
+              <li>Different media, filtering and phase changes can alter DR/crest measurements without restoring lost loudness dynamics.</li>
+              <li>The score does not judge artistic intent, genre or whether you will prefer the sound.</li>
+              <li>To compare two editions directly, use <b>Dynamics Comparison</b>.</li>
             </ul>
             """,
         )
-
     @classmethod
     def dynamics_comparison_html(cls):
         return cls.page(
             "Dynamics Comparison",
             """
-            <p><b>Dynamics Comparison</b> examines two analyzed versions of the
-            same musical material. It is designed to answer a question that a
-            DR value alone cannot: does the version with the higher measured DR
-            also show meaningfully greater <i>loudness dynamics</i> on the aligned Short-Term timescale?</p>
+            <p><b>Dynamics Comparison</b> is for two versions of substantially the same musical
+            material. Its goal is to separate three things that are easy to mix together:
+            <b>measured DR</b>, <b>loudness dynamics over time</b>, and
+            <b>peak/crest structure</b>.</p>
 
-            <p>The comparison always keeps the two ideas separate. The exact
-            MasVis/TT-style DR values are shown for both files and the file with
-            the higher measured DR is identified explicitly. That result is then
-            compared with an independent analysis of the aligned loudness
-            development.</p>
+            <p><b>The simple question is:</b> <i>if two versions of the same music measure
+            differently, what is really different - mainly their level, their loudness dynamics
+            over time, their peak/crest structure, or some combination of those?</i></p>
 
-            <h3>Alignment and level matching</h3>
-            <p>The two files are aligned from compact 100 ms EBU R128 loudness
-            trajectories. A small linear timing drift is allowed so captures
-            such as vinyl playback can tolerate minor speed differences. After
-            alignment, level matching uses the median loudness offset; peaks are
-            never normalized to make the versions look alike.</p>
+            <h3>What the program does</h3>
+            <ol>
+              <li><b>Aligns the files</b> so the same musical moments line up. A small constant
+                  speed drift is allowed for captures such as vinyl playback.</li>
+              <li><b>Matches their typical loudness level</b> so "this one is simply louder"
+                  does not masquerade as a dynamics difference.</li>
+              <li><b>Compares the aligned loudness curves</b> and separately measures changes in
+                  local peak/crest structure.</li>
+            </ol>
 
-            <p>If the files cannot be aligned reliably enough as the same
-            material, the result is <b>Inconclusive</b>. The program deliberately
-            refuses to invent a mastering-dynamics verdict for different edits,
-            wrong songs or otherwise unreliable matches.</p>
+            <p>If the files cannot be aligned reliably enough, the result is
+            <b>Inconclusive</b>. MasVis for Windows deliberately refuses to produce a mastering-
+            dynamics verdict for a wrong song, substantially different edit or unreliable match.</p>
 
             <h3>Loudness Curve Similarity</h3>
-            <p>This is the actual Pearson correlation of the aligned Short-Term
-            EBU R128 loudness trajectories, displayed as a percentage-like
-            similarity such as 99.6%. It is a direct mathematical measurement,
-            not a probability.</p>
+            <p>This is the Pearson correlation of the aligned EBU R128 Short-Term loudness
+            curves, displayed as a percentage. A high value means the two versions tend to get
+            louder and quieter at the same musical moments. It does <b>not</b> mean that their
+            amount of loudness variation or their peak structure is identical.</p>
 
-            <h3>Loudness Dynamics Similarity</h3>
-            <p>The 0-100 <b>Loudness Dynamics Similarity</b> value is an explainable score,
-            not a statistical probability. Version 1 combines:</p>
+            <h3>Loudness Dynamics Similarity (LDS)</h3>
+            <p>LDS is an explainable <b>0-100 point score</b>, not a percentage or probability.
+            Version 1 combines:</p>
             <ul>
-              <li><b>55%</b> aligned Short-Term loudness-trajectory correlation;</li>
-              <li><b>30%</b> similarity of the residual loudness difference after level matching;</li>
+              <li><b>55%</b> similarity of the aligned Short-Term curve shape;</li>
+              <li><b>30%</b> how small the remaining loudness differences are after level matching;</li>
               <li><b>15%</b> similarity of the robust Short-Term loudness span.</li>
             </ul>
 
-            <p><b>Scope:</b> this score describes similarity of the aligned
-            Short-Term loudness development. It is <b>not</b> a claim that the
-            files have identical transient, crest or peak dynamics. Those
-            differences are reported separately as <b>Peak Structure
-            Difference</b>.</p>
+            <p>This is why Loudness Curve Similarity can be extremely high while LDS is lower:
+            two curves can rise and fall together but one version can make those rises and falls
+            noticeably wider or narrower.</p>
 
             <h3>Loudness Dynamics Advantage</h3>
-            <p>The direction can be Version A, Version B, None detected, Mixed or
-            Inconclusive. It deliberately does <b>not</b> use DR or PLR to decide
-            the winner. The primary evidence is the aligned robust Short-Term
-            loudness-span difference, with EBU LRA used as corroboration. This
-            avoids circularly treating a peak-based DR increase as proof of
-            greater loudness dynamics on this timescale.</p>
+            <p>Shows whether Version A or B has the wider aligned Short-Term loudness span, with
+            EBU LRA used as supporting evidence. The result can also be None detected, Mixed or
+            Inconclusive. DR and PLR deliberately do not choose the winner, so a peak-based DR
+            increase is not automatically counted as more loudness dynamics.</p>
 
-            <h3>Peak structure and PLR</h3>
-            <p><b>Peak Structure Difference</b> is shown separately. It measures
-            how much peak and crest behaviour changes after time alignment and
-            loudness-level matching. PLR direction is also shown as peak-headroom
-            context. Neither measurement is automatically "better" or "worse".
-            A value of 100/100 means the model has reached the top of its
-            peak-structure difference scale; it does not mean that 100% of all
-            individual transients are different.</p>
+            <h3>Peak Structure Difference</h3>
+            <p>This separate 0-100 point score describes how strongly local peak and crest
+            behaviour differs after alignment and level matching. It is a <b>difference</b>
+            measure, not a quality score. 100/100 means the defined scale reached its maximum;
+            it does not mean that literally every transient is different.</p>
 
-            <h3>Why "just turned down" is not enough</h3>
-            <p>A pure gain change leaves DR, PLR and crest factor essentially
-            unchanged. Therefore the program reports level difference separately.
-            If Version B is much quieter <i>and</i> has a much higher DR while the
-            aligned Short-Term loudness development stays nearly identical, some additional
-            waveform/peak change must be involved; the DR increase cannot be
-            explained by gain alone.</p>
+            <h3>Level Difference</h3>
+            <p>The typical loudness offset between the two aligned versions is shown separately.
+            Pure gain by itself does not change DR, PLR or crest factor, so a quieter file does
+            not automatically receive credit for having more dynamics.</p>
+
+            <h3>A practical way to read the result</h3>
+            <ol>
+              <li>Check that <b>Alignment</b> is Reliable.</li>
+              <li>Look at the normal <b>DR</b> values and the displayed level difference.</li>
+              <li>Use <b>LDS</b> and <b>Loudness Dynamics Advantage</b> for the broader loudness
+                  development over time.</li>
+              <li>Use <b>Peak Structure Difference</b> and PLR as a separate view of peaks and
+                  peak headroom.</li>
+              <li>Read the conclusion as a summary of those measurements, not as a claim about
+                  which release sounds better.</li>
+            </ol>
 
             <h3>Typical conclusions</h3>
             <ul>
-              <li><b>Primarily a level shift</b> - level differs, while DR, PLR and aligned loudness dynamics remain essentially the same.</li>
-              <li><b>Higher measured DR, but little loudness-dynamics advantage</b> - the DR increase is real, but the aligned Short-Term loudness development is nearly unchanged.</li>
-              <li><b>Higher measured DR is corroborated</b> - the same version also shows a wider aligned Short-Term loudness range.</li>
+              <li><b>Primarily a level shift</b> - level differs while the measured dynamics remain essentially the same.</li>
+              <li><b>Higher measured DR, but little loudness-dynamics advantage</b> - DR differs strongly, while the aligned Short-Term loudness development remains very similar.</li>
+              <li><b>Higher measured DR is corroborated</b> - the higher-DR version also shows a wider aligned Short-Term loudness range.</li>
               <li><b>Measured DR and loudness dynamics disagree</b> - peak-based DR and aligned Short-Term loudness dynamics point in different directions.</li>
-              <li><b>Mixed evidence</b> - the available loudness/peak indicators do not support one simple verdict.</li>
+              <li><b>Mixed evidence</b> - the available measurements do not support one simple direction.</li>
             </ul>
 
             <h3>Important limitations</h3>
             <ul>
-              <li>Use the feature for two versions of substantially the same musical content.</li>
-              <li>The score describes measurable relationships, not subjective sound quality or artistic intent.</li>
-              <li>EQ, filtering, phase changes, analogue playback/capture and other processing can alter peak structure without producing a comparable change in aligned Short-Term loudness dynamics.</li>
-              <li>The comparison does not reconstruct mastering history; it compares the two waveforms that were actually supplied.</li>
+              <li>Use the feature only for two versions of substantially the same musical content.</li>
+              <li>The comparison measures the supplied waveforms; it does not reconstruct mastering history.</li>
+              <li>EQ, filtering, phase changes and analog playback/capture can alter peak structure without a comparable change in Short-Term loudness dynamics.</li>
+              <li>The result is not a subjective sound-quality rating and does not judge artistic intent.</li>
             </ul>
             """,
         )
-
     @classmethod
     def overview_html(cls):
         return cls.page(
             "Overview",
             """
-            <p>Overview mode is intended for quickly comparing many files,
-            such as tracks from an album or multiple editions.</p>
+            <p><b>Overview</b> is a compact way to scan many tracks at once, for example an
+            album or several folders. Each row summarizes one file instead of showing every
+            graph from the full detailed report.</p>
 
             <p>Channel waveforms are superimposed:</p>
             <ul>
@@ -2473,62 +2603,188 @@ class HelpDialog(QDialog):
             </ul>
 
             <p>The information beside each row includes <b>DR</b>, <b>Peak</b>,
-            <b>Crest</b> and integrated loudness.</p>
+            <b>Crest</b> and Integrated Loudness.</p>
 
             <h3>Advanced Open modes</h3>
             <ul>
-              <li><b>Off</b> – create a normal detailed tab for each file.</li>
-              <li><b>All files (flat)</b> – place all selected files in one Overview tab.</li>
-              <li><b>By folder (dir)</b> – create one Overview tab for each containing folder.</li>
+              <li><b>Off</b> - create a normal detailed tab for each file.</li>
+              <li><b>All files (flat)</b> - place all selected files in one Overview tab.</li>
+              <li><b>By folder (dir)</b> - create one Overview tab for each containing folder.</li>
             </ul>
 
-            <p>Overview tabs support the same zoom controls and can also be used
-            by Compare and GIF export.</p>
+            <p>Overview tabs support zoom, Save, Compare and GIF export. Because one Overview
+            tab can represent several audio files, <b>Play</b>, File Information, the DR badge
+            and Dynamics Assessment are available only on individual detailed report tabs.</p>
             """,
         )
-
     @classmethod
     def glossary_html(cls):
         return cls.page(
             "Glossary",
             """
             <h3>DR (Dynamic Range)</h3>
-            <p>The MasVis/TT-style dynamic-range metric. It is most useful when
-            comparing similar digital masters; it should not be treated as a
-            universal score for sound quality.</p>
+            <p>The MasVis/TT-style dynamic-range metric. It mainly describes the
+            relationship between loud RMS blocks and peaks. It is useful when
+            comparing similar digital masters, but it is not a universal measure
+            of musical dynamics or sound quality.</p>
 
-            <h3>LUFS</h3>
+            <h3>LUFS / Integrated Loudness (LUFS-I)</h3>
             <p>Loudness Units relative to Full Scale. Integrated LUFS describes
-            the average perceived loudness of the complete track.</p>
+            the perceived loudness of the complete track according to EBU R128 /
+            ITU-R BS.1770-style measurement.</p>
 
             <h3>LU</h3>
             <p>A relative Loudness Unit. In Advanced Open, LU display is shown
             relative to the -23 LUFS reference used by EBU R128.</p>
 
-            <h3>LRA</h3>
-            <p>Loudness Range. Describes how much the measured loudness varies
-            across the program.</p>
+            <h3>Momentary Loudness</h3>
+            <p>A short-window loudness measurement that follows rapid level
+            changes. Dynamics Comparison uses the aligned Momentary trajectory
+            for timing and level-reference work.</p>
 
-            <h3>PLR</h3>
-            <p>Peak-to-Loudness Ratio. The distance between peak level and
-            integrated loudness.</p>
+            <h3>Short-Term Loudness</h3>
+            <p>A longer-window loudness measurement that follows the broader
+            loudness development of the music. It is the main trajectory used by
+            Loudness Dynamics Similarity and Loudness Dynamics Advantage.</p>
+
+            <h3>LRA (Loudness Range)</h3>
+            <p>Describes how widely loudness varies across the program. It is a
+            separate EBU R128 measurement and is used as supporting evidence in
+            Dynamics Comparison.</p>
+
+            <h3>PLR (Peak-to-Loudness Ratio)</h3>
+            <p>The distance between True Peak and Integrated Loudness. It
+            describes peak headroom relative to overall loudness and is kept
+            separate from Short-Term loudness dynamics.</p>
 
             <h3>Crest factor</h3>
             <p>The difference between peak and RMS level. Higher crest factor
             means peaks rise farther above the average signal level.</p>
 
-            <h3>True Peak</h3>
-            <p>An estimate of the maximum reconstructed waveform peak, including
-            peaks that may occur between stored digital samples.</p>
+            <h3>Sample Peak</h3>
+            <p>The highest stored digital sample value in the file. It can differ
+            from True Peak because reconstructed playback can create a slightly
+            higher peak between samples.</p>
+
+            <h3>True Peak / dBTP</h3>
+            <p>True Peak estimates the maximum reconstructed waveform peak,
+            including peaks that can occur between stored digital samples. dBTP
+            is the unit used for that reconstructed peak level.</p>
+
+            <h3>Headroom</h3>
+            <p>The available level space between the current signal and a peak
+            limit. More headroom gives peaks more room to rise; it is not by
+            itself a measure of musical quality.</p>
+
+            <h3>dBFS</h3>
+            <p>Decibels relative to digital full scale. 0 dBFS is the maximum
+            sample level representable by the digital scale; ordinary sample
+            peaks are normally at or below it.</p>
 
             <h3>RMS</h3>
-            <p>Root Mean Square. A measure related to the average signal power
-            over a period of time.</p>
+            <p>Root Mean Square. A measure related to average signal power over a
+            period of time. MasVis uses RMS measurements in several classic
+            dynamics and crest calculations.</p>
+
+            <h3>Loudness Dynamics Similarity (LDS)</h3>
+            <p>An explainable 0..100 <b>point score</b> for two reliably aligned
+            versions. It combines Short-Term trajectory correlation, residual
+            differences after level matching and the difference in robust
+            Short-Term loudness span. It is not a percentage, probability or
+            sound-quality rating.</p>
+
+            <h3>Loudness Curve Similarity</h3>
+            <p>The actual Pearson correlation of the aligned, level-matched
+            Short-Term loudness trajectories, displayed as a percentage. A high
+            value means the curves tend to rise and fall together; it does not
+            mean their dynamic range or peak structure is identical.</p>
+
+            <h3>Loudness Dynamics Advantage</h3>
+            <p>Indicates whether Version A or B shows the wider aligned Short-Term
+            loudness span, with EBU LRA used as supporting evidence. It does not
+            mean that one version necessarily sounds better.</p>
+
+            <h3>Peak Structure Difference</h3>
+            <p>An explainable 0..100 point score describing how strongly local
+            peak and crest structure differs after time alignment and level
+            matching. 100/100 means the score reached the top of its defined
+            scale; it does not mean literally 100% of all transients differ.</p>
+
+            <h3>Level Difference / Level Matching</h3>
+            <p>Dynamics Comparison estimates the typical loudness offset between
+            aligned versions and removes that offset before judging their
+            loudness-development similarity. A simple gain change therefore
+            does not become a false dynamics advantage.</p>
+
+            <h3>Alignment</h3>
+            <p>The process of matching the same musical moments in two versions
+            before comparing them. MasVis for Windows can also model a small
+            constant playback-speed drift, which is useful for analog or vinyl
+            captures. Unreliable alignment produces an Inconclusive result.</p>
+
+            <h3>Pearson correlation</h3>
+            <p>A mathematical measure of how closely two curves vary together.
+            Dynamics Comparison uses it for Loudness Curve Similarity after
+            alignment and level matching. Correlation describes curve shape, not
+            absolute loudness or subjective quality.</p>
+
+            <h3>Gain / level change</h3>
+            <p>A simple gain change turns the whole signal up or down by the same
+            amount. By itself it changes absolute loudness and peak level, but it
+            does not change DR, PLR or crest factor.</p>
+
+            <h3>Master / mastering</h3>
+            <p>Mastering is the final processing and preparation stage for a
+            release. Different releases of the same recording can use different
+            masters. MasVis can compare the resulting audio, but it cannot prove
+            the exact processing history that created it.</p>
+
+            <h3>Transient</h3>
+            <p>A short, fast-changing sound event such as a drum hit or other
+            attack. Compression, limiting, clipping, filtering and playback
+            chains can all change transient peak shape.</p>
+
+            <h3>EBU R128</h3>
+            <p>A broadcast loudness measurement standard used here for Integrated,
+            Momentary and Short-Term loudness and for Loudness Range (LRA).</p>
+
+            <h3>EQ / phase</h3>
+            <p><b>EQ</b> changes frequency balance. <b>Phase</b> describes timing
+            relationships between frequency components. Either can change waveform
+            and peak shape even when the musical performance itself is unchanged.</p>
+
+            <h3>Dynamic-range compression</h3>
+            <p>Audio processing that reduces level differences between louder and
+            quieter signal portions. This is different from data compression such
+            as FLAC, MP3 or Opus.</p>
+
+            <h3>Limiting</h3>
+            <p>A strong form of dynamics control used to restrain peaks, often so
+            the overall signal can be raised further. Its effect can be visible in
+            crest, PLR, DR and peak-structure measurements.</p>
+
+            <h3>Clipping</h3>
+            <p>Occurs when waveform peaks exceed an available level boundary and
+            are truncated or otherwise constrained. Clipping can alter peak shape
+            and create distortion.</p>
+
+            <h3>Loudness War / Level Maximization</h3>
+            <p>Terms commonly used for mastering practices aimed at increasing
+            average playback loudness, often with compression, limiting or
+            clipping. A louder master is not automatically less dynamic; the
+            relevant question is what processing changed besides simple gain.</p>
 
             <h3>Allpass filter</h3>
             <p>A filter that changes phase relationships without intentionally
             changing the frequency magnitude response. MasVis uses this behavior
             to examine peak structure.</p>
+
+            <h3>Vinyl / needledrop</h3>
+            <p>A digital capture of vinyl passes through the cutting/playback
+            chain, cartridge, phono stage and analog-to-digital conversion. Those
+            processes can change EQ, phase and reconstructed peaks, so a higher
+            TT-style DR value from a vinyl capture alone does not prove that its
+            source master had greater musical loudness dynamics.</p>
 
             <h3>Checksum (energy)</h3>
             <p>The MasVis report includes an energy-based checksum that helps
@@ -4060,7 +4316,7 @@ class DynamicsComparisonDialog(QDialog):
         similarity_text.setStyleSheet("font-size: 14px; font-weight: 700;")
 
         advantage_text = QLabel(
-            f"Loudness Dynamics Advantage: {self.musical_advantage_text()}"
+            f"Loudness Dynamics Advantage: {self.loudness_advantage_text()}"
         )
         advantage_text.setObjectName("assessmentConfidence")
         advantage_text.setTextInteractionFlags(
@@ -4102,7 +4358,7 @@ class DynamicsComparisonDialog(QDialog):
         rows = [
             ("Loudness Dynamics Similarity", self.dynamics_similarity_text()),
             ("Loudness Curve Similarity", self.curve_similarity_text()),
-            ("Loudness Dynamics Advantage", self.musical_advantage_text()),
+            ("Loudness Dynamics Advantage", self.loudness_advantage_text()),
             ("Level Difference", self.level_difference_text()),
             ("Peak Structure Difference", self.peak_structure_text()),
             ("Alignment", str(result.get("alignment_status", "Unknown"))),
@@ -4238,7 +4494,7 @@ class DynamicsComparisonDialog(QDialog):
             return "Unavailable"
         return f"{float(value):.2f}%"
 
-    def musical_advantage_text(self):
+    def loudness_advantage_text(self):
         data = self.interpretation.get("musical_dynamics_advantage") or {}
         direction = str(data.get("direction", "Inconclusive"))
         strength = str(data.get("strength", ""))
@@ -4272,7 +4528,7 @@ class DynamicsComparisonDialog(QDialog):
     def details_html(self):
         ia = self.version_a.get("metrics") or {}
         ib = self.version_b.get("metrics") or {}
-        musical = self.interpretation.get("musical_dynamics_advantage") or {}
+        loudness_dynamics = self.interpretation.get("musical_dynamics_advantage") or {}
         peaks = self.interpretation.get("peak_structure_difference") or {}
         headroom = self.interpretation.get("peak_headroom") or {}
         short = self.result.get("short_term_loudness") or {}
@@ -4304,7 +4560,7 @@ class DynamicsComparisonDialog(QDialog):
         sim_components = similarity.get("components") or {}
         peak_raw = self.result.get("peak_crest") or {}
 
-        reasoning = list(musical.get("reasoning") or [])
+        reasoning = list(loudness_dynamics.get("reasoning") or [])
         if not reasoning:
             reasoning = ["No additional loudness-dynamics reasoning is available."]
 
@@ -4324,7 +4580,7 @@ class DynamicsComparisonDialog(QDialog):
             + "<h3>Aligned comparison details</h3>"
             + "<table cellspacing='3' cellpadding='4' width='100%'>"
             + f"<tr><td><b>Short-Term span delta (B-A)</b></td><td>{e(self.fmt(short.get('span_delta_b_minus_a_db'), ' dB'))}</td></tr>"
-            + f"<tr><td><b>Combined loudness-dynamics delta (B-A)</b></td><td>{e(self.fmt(musical.get('combined_delta_db'), ' dB'))}</td></tr>"
+            + f"<tr><td><b>Combined loudness-dynamics delta (B-A)</b></td><td>{e(self.fmt(loudness_dynamics.get('combined_delta_db'), ' dB'))}</td></tr>"
             + f"<tr><td><b>Residual p90 after level match</b></td><td>{e(self.fmt(short.get('residual_p90_abs_db'), ' dB'))}</td></tr>"
             + f"<tr><td><b>PLR delta (B-A)</b></td><td>{e(self.fmt(headroom.get('plr_delta_b_minus_a_lu'), ' LU'))}</td></tr>"
             + f"<tr><td><b>Higher PLR</b></td><td>{e(headroom.get('higher_plr', 'Unavailable'))}</td></tr>"
@@ -4344,7 +4600,7 @@ class DynamicsComparisonDialog(QDialog):
 
     def copy_text(self):
         measured = self.interpretation.get("measured_dr") or {}
-        musical = self.interpretation.get("musical_dynamics_advantage") or {}
+        loudness_dynamics = self.interpretation.get("musical_dynamics_advantage") or {}
         peaks = self.interpretation.get("peak_structure_difference") or {}
         conclusion = self.interpretation.get("conclusion") or {}
         lines = [
@@ -4356,7 +4612,7 @@ class DynamicsComparisonDialog(QDialog):
             f"Higher measured DR: {measured.get('higher_measured_dr', 'Unavailable')}",
             f"Loudness Dynamics Similarity: {self.dynamics_similarity_text()}",
             f"Loudness Curve Similarity: {self.curve_similarity_text()}",
-            f"Loudness Dynamics Advantage: {self.musical_advantage_text()}",
+            f"Loudness Dynamics Advantage: {self.loudness_advantage_text()}",
             f"Level Difference: {self.level_difference_text()}",
             f"Peak Structure Difference: {self.peak_structure_text()}",
             f"Alignment: {self.result.get('alignment_status', 'Unknown')}",
@@ -4364,9 +4620,9 @@ class DynamicsComparisonDialog(QDialog):
             f"Conclusion: {conclusion.get('title', '')}",
             str(conclusion.get("summary", "")),
             "",
-            "Musical-dynamics reasoning:",
+            "Loudness-dynamics reasoning:",
         ]
-        lines.extend(f"- {item}" for item in musical.get("reasoning", []))
+        lines.extend(f"- {item}" for item in loudness_dynamics.get("reasoning", []))
         lines.extend([
             "",
             "Notes:",
@@ -4456,11 +4712,12 @@ class DynamicsComparisonProgressDialog(QDialog):
 class AdvancedOpenDialog(QDialog):
     """Windows-native Advanced Open surface with MasVisGtk semantics."""
 
-    def __init__(self, dark, parent=None):
+    def __init__(self, dark, initial_directory=None, parent=None):
         super().__init__(parent)
 
         self.dark = dark
         self.path_items = {}
+        self.last_directory = _existing_directory(initial_directory)
 
         self.setWindowTitle("Advanced Open")
         self.setWindowModality(Qt.WindowModality.WindowModal)
@@ -4646,9 +4903,12 @@ class AdvancedOpenDialog(QDialog):
         paths, _ = QFileDialog.getOpenFileNames(
             self,
             "Add Files",
-            "",
+            str(self.last_directory),
             AUDIO_FILTER,
         )
+
+        if paths:
+            self.last_directory = Path(paths[0]).parent
 
         for path in paths:
             self.add_path(Path(path))
@@ -4657,10 +4917,11 @@ class AdvancedOpenDialog(QDialog):
         path = QFileDialog.getExistingDirectory(
             self,
             "Add Folder",
-            "",
+            str(self.last_directory),
         )
 
         if path:
+            self.last_directory = Path(path)
             self.add_path(Path(path))
 
     def add_path(self, path):
@@ -4739,12 +5000,17 @@ class AdvancedOpenDialog(QDialog):
             "r128_unit": self.loudness_combo.currentData(),
             "recursive": self.recursive_check.isChecked(),
             "overview_mode": self.overview_combo.currentData(),
+            "last_directory": str(self.last_directory),
         }
 
 
 # ============================================================
 # Worker
 # ============================================================
+
+
+class AnalysisCancelled(Exception):
+    """Internal cooperative-cancellation marker for the analysis worker."""
 
 
 class AnalysisWorker(QObject):
@@ -4779,11 +5045,27 @@ class AnalysisWorker(QObject):
         self.overview_groups = {}
 
     def request_cancel(self):
+        # threading.Event.set() is intentionally the only operation here.  It
+        # is safe to call directly from the GUI thread even though this QObject
+        # lives in the worker thread.  A queued Qt call would not run while
+        # run() is busy doing the analysis itself.
         self.cancel_event.set()
+
+    def raise_if_cancelled(self):
+        if self.cancel_event.is_set():
+            raise AnalysisCancelled()
 
     def masvis_callback(self, event, tid, desc=None, secs=None):
         if event != "start":
             return
+
+        # MasVis calls this callback at the start of every major analysis and
+        # render step.  Cancellation is raised only between analysis steps.
+        # Once Matplotlib rendering has started, let that render complete so
+        # upstream figure cleanup can run normally; run() checks the flag again
+        # immediately afterward.
+        if tid is None or tid < Steps.draw_plot:
+            self.raise_if_cancelled()
 
         if desc:
             self.status.emit(desc)
@@ -4821,15 +5103,13 @@ class AnalysisWorker(QObject):
 
             try:
                 self.status.emit("Decoding audio...")
-                track = load_audio(path)
+                track = load_audio(path, cancel_event=self.cancel_event)
 
                 track["metadata"]["bps"] = int(
                     track["metadata"]["bps"] or 0
                 )
 
-                if self.cancel_event.is_set():
-                    cancelled = True
-                    break
+                self.raise_if_cancelled()
 
                 self.status.emit("Analyzing audio...")
 
@@ -4837,6 +5117,7 @@ class AnalysisWorker(QObject):
                     track,
                     callback=self.masvis_callback,
                 )
+                self.raise_if_cancelled()
 
                 for key in (
                     "crest_total_db",
@@ -4851,6 +5132,7 @@ class AnalysisWorker(QObject):
                     track,
                     analysis,
                 ).to_dict()
+                self.raise_if_cancelled()
 
                 self.status.emit("Rendering report...")
 
@@ -4884,6 +5166,8 @@ class AnalysisWorker(QObject):
                         self.r128_unit,
                         report_font=self.report_font,
                     )
+
+                self.raise_if_cancelled()
 
                 result = {
                     "path": path,
@@ -4935,6 +5219,9 @@ class AnalysisWorker(QObject):
                 )
                 self.progress.emit(file_progress)
 
+            except (AnalysisCancelled, AudioLoadCancelled):
+                cancelled = True
+                break
             except Exception as exc:
                 self.item_failed.emit(
                     str(path),
@@ -5031,8 +5318,8 @@ class ProcessingDialog(QDialog):
         self.cancel_button = QPushButton("Cancel")
         self.cancel_button.setFixedWidth(92)
         self.cancel_button.setToolTip(
-            "Stops before the next file. "
-            "The current MasVis calculation may need to finish first."
+            "Requests cancellation at the next safe analysis checkpoint. "
+            "The current calculation step may need to finish first."
         )
 
         button_row = QHBoxLayout()
@@ -5054,7 +5341,7 @@ class ProcessingDialog(QDialog):
     def request_cancel_visual(self):
         self.cancel_button.setEnabled(False)
         self.cancel_button.setText("Cancelling...")
-        self.status_label.setText("Finishing current operation...")
+        self.status_label.setText("Cancelling at the next safe checkpoint...")
 
     def showEvent(self, event):
         super().showEvent(event)
@@ -5828,9 +6115,7 @@ class CompareSelectionDialog(QDialog):
         self.accept()
 
     def export_gif(self):
-        selected = (
-            self.checked_entries()
-        )
+        selected = self.checked_entries()
 
         if len(selected) < 2:
             QMessageBox.information(
@@ -5840,33 +6125,56 @@ class CompareSelectionDialog(QDialog):
             )
             return
 
-        default_path = (
-            Path.home()
-            / "MasVis Comparison.gif"
+        default_path = _existing_directory(
+            getattr(self.parent(), "preferences", {}).get("gif_directory")
+            if hasattr(self.parent(), "preferences") else None
+        ) / "MasVis Comparison.gif"
+        initial_quality = next(
+            (
+                name
+                for name, width in GIF_RESOLUTION_WIDTHS.items()
+                if width == self.gif_frame_width
+            ),
+            "High",
         )
+        initial_duration = max(1, int(round(self.gif_duration_ms / 1000.0)))
 
-        output_path, _ = QFileDialog.getSaveFileName(
+        dialog, quality_combo, duration_spin = _gif_save_dialog(
             self,
-            "Export Animated GIF",
-            str(default_path),
-            "Animated GIF (*.gif)",
+            default_path,
+            initial_quality,
+            initial_duration,
         )
 
-        if not output_path:
+        if dialog.exec() != QDialog.DialogCode.Accepted:
             return
 
-        try:
-            QApplication.setOverrideCursor(
-                Qt.CursorShape.WaitCursor
-            )
+        selected_files = dialog.selectedFiles()
+        if not selected_files:
+            return
 
-            saved_path = (
-                export_entries_to_gif(
-                    selected,
-                    output_path,
-                    frame_width=self.gif_frame_width,
-                    duration_ms=self.gif_duration_ms,
-                )
+        output_path = selected_files[0]
+        gif_resolution = quality_combo.currentData() or "High"
+        gif_duration_seconds = duration_spin.value()
+        self.gif_frame_width = GIF_RESOLUTION_WIDTHS.get(gif_resolution, 810)
+        self.gif_duration_ms = int(gif_duration_seconds) * 1000
+
+        # Persist only as last-used export defaults. They are intentionally no
+        # longer part of the Preferences dialog.
+        main_window = self.parent()
+        if hasattr(main_window, "preferences") and hasattr(main_window, "save_preferences"):
+            main_window.preferences["gif_resolution"] = gif_resolution
+            main_window.preferences["gif_duration"] = gif_duration_seconds
+            main_window.preferences["gif_directory"] = str(Path(output_path).parent)
+            main_window.save_preferences()
+
+        try:
+            QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+            export_entries_to_gif(
+                selected,
+                output_path,
+                frame_width=self.gif_frame_width,
+                duration_ms=self.gif_duration_ms,
             )
 
         except Exception as exc:
@@ -5880,18 +6188,6 @@ class CompareSelectionDialog(QDialog):
         finally:
             QApplication.restoreOverrideCursor()
 
-        QMessageBox.information(
-            self,
-            "GIF Export",
-            (
-                "Animated GIF saved:\n\n"
-                f"{saved_path}\n\n"
-                f"Frames: {len(selected)}\n"
-                f"Frame width: {self.gif_frame_width} px\n"
-                f"Frame duration: "
-                f"{self.gif_duration_ms / 1000:.1f} s"
-            ),
-        )
 
 
 class ComparisonWindow(QMainWindow):
@@ -5900,6 +6196,7 @@ class ComparisonWindow(QMainWindow):
         entries,
         comparison_number,
         plot_width=COMPARISON_PLOT_WIDTH,
+        on_plot_width_changed=None,
         parent=None,
     ):
         super().__init__(
@@ -5911,9 +6208,10 @@ class ComparisonWindow(QMainWindow):
         )
         self.report_items = []
 
-        self.base_plot_width = max(606, min(int(plot_width), 1080))
+        self.base_plot_width = max(COMPARISON_MIN_PLOT_WIDTH, min(int(plot_width), 1080))
         self.current_plot_width = self.base_plot_width
         self.maximum_sharp_width = self.base_plot_width
+        self.on_plot_width_changed = on_plot_width_changed
 
         self.setWindowTitle(
             f"Comparison #{comparison_number}"
@@ -6143,7 +6441,7 @@ class ComparisonWindow(QMainWindow):
             "1:1"
         )
         self.zoom_original_button.setToolTip(
-            "Restore configured comparison width"
+            "Restore the width this comparison opened with"
         )
         self.zoom_original_button.clicked.connect(
             self.original_size
@@ -6312,6 +6610,13 @@ class ComparisonWindow(QMainWindow):
         )
 
         self.current_plot_width = width
+
+        if self.on_plot_width_changed is not None:
+            try:
+                self.on_plot_width_changed(width)
+            except Exception:
+                pass
+
         max_height = 0
 
         for item in self.report_items:
@@ -6591,17 +6896,30 @@ class MainWindow(QMainWindow):
             "save_format": self.settings.value(
                 "save_format", "PNG", type=str
             ),
-            "export_quality": self.settings.value(
-                "export_quality", "High", type=str
+            "export_resolution": self.settings.value(
+                "export_resolution",
+                self.settings.value("export_quality", "High", type=str),
+                type=str,
             ),
             "comparison_width": int(
                 self.settings.value("comparison_width", 606)
             ),
-            "gif_quality": self.settings.value(
-                "gif_quality", "High", type=str
+            "gif_resolution": self.settings.value(
+                "gif_resolution",
+                self.settings.value("gif_quality", "High", type=str),
+                type=str,
             ),
             "gif_duration": int(
                 self.settings.value("gif_duration", 3)
+            ),
+            "open_directory": self.settings.value(
+                "open_directory", str(Path.home()), type=str
+            ),
+            "save_directory": self.settings.value(
+                "save_directory", str(Path.home()), type=str
+            ),
+            "gif_directory": self.settings.value(
+                "gif_directory", str(Path.home()), type=str
             ),
         }
 
@@ -6673,7 +6991,10 @@ class MainWindow(QMainWindow):
         if dialog.exec() != QDialog.DialogCode.Accepted:
             return
 
-        self.preferences = dialog.configuration()
+        # Preferences owns only persistent application/report settings.
+        # Export choices and Compare width are remembered from their own UI
+        # and stay available as last-used defaults without cluttering this dialog.
+        self.preferences.update(dialog.configuration())
         self.save_preferences()
         self.apply_app_font()
         self.apply_system_theme()
@@ -6711,6 +7032,13 @@ class MainWindow(QMainWindow):
         self.compare_button.setIcon(
             load_fluent_icon(
                 "compare",
+                self.system_dark,
+            )
+        )
+
+        self.play_button.setIcon(
+            load_fluent_icon(
+                "play",
                 self.system_dark,
             )
         )
@@ -6798,10 +7126,20 @@ class MainWindow(QMainWindow):
         self.save_all_button.clicked.connect(self.save_all)
         self.save_all_button.setEnabled(False)
 
+        self.play_button = self.create_header_icon_button(
+            "Play current file using the default audio player configured in Windows.\n"
+            "MasVis only opens the file in that external app; it does not play audio itself."
+        )
+        self.play_button.clicked.connect(
+            self.play_current_file
+        )
+        self.play_button.setEnabled(False)
+
         header_layout.addWidget(self.open_button)
         header_layout.addWidget(self.advanced_button)
         header_layout.addWidget(self.save_button)
         header_layout.addWidget(self.save_all_button)
+        header_layout.addWidget(self.play_button)
 
         header_layout.addStretch(1)
 
@@ -6889,8 +7227,8 @@ class MainWindow(QMainWindow):
         right_actions.setSpacing(4)
         right_actions.addWidget(self.assessment_button)
         right_actions.addWidget(self.compare_button)
-        right_actions.addWidget(self.preferences_button)
         right_actions.addWidget(self.file_info_button)
+        right_actions.addWidget(self.preferences_button)
         right_actions.addWidget(self.help_button)
         right_actions.addWidget(self.about_button)
         header_layout.addLayout(right_actions)
@@ -6956,7 +7294,7 @@ class MainWindow(QMainWindow):
 
         self.zoom_original_button = QPushButton("1:1")
         self.zoom_original_button.setToolTip(
-            "Restore original MasVisGtk dimensions"
+            "Restore original report dimensions"
         )
         self.zoom_original_button.clicked.connect(
             self.zoom_original
@@ -7153,6 +7491,65 @@ class MainWindow(QMainWindow):
 
         return None
 
+    def play_current_file(self):
+        """Open the current analyzed file with Windows' configured default app."""
+        report = self.current_report()
+        if report is None:
+            return
+
+        path = Path(report.result["path"])
+
+        if not path.is_file():
+            QMessageBox.warning(
+                self,
+                "Audio file not found",
+                (
+                    "The analyzed audio file is no longer available at its original location.\n\n"
+                    f"{path}"
+                ),
+            )
+            return
+
+        try:
+            if hasattr(os, "startfile"):
+                # On Windows, startfile delegates the Open action to the shell,
+                # which means the user's configured default application handles
+                # the audio file. MasVis itself never becomes an audio player.
+                os.startfile(str(path))
+                return
+
+            # Development fallback for non-Windows hosts. Production builds are
+            # Windows-only, but keeping this branch makes source-level checks
+            # graceful on other platforms.
+            if QDesktopServices.openUrl(
+                QUrl.fromLocalFile(str(path))
+            ):
+                return
+
+            raise OSError(
+                "No default application accepted the file."
+            )
+        except OSError as exc:
+            if getattr(exc, "winerror", None) == 1155:
+                QMessageBox.information(
+                    self,
+                    "No default audio player",
+                    (
+                        "Windows has no default app associated with this audio file type.\n\n"
+                        "Choose a default audio player in Windows Settings, then try Play again."
+                    ),
+                )
+                return
+
+            box = QMessageBox(self)
+            box.setIcon(QMessageBox.Icon.Critical)
+            box.setWindowTitle("Could not open audio file")
+            box.setText(
+                "The current audio file could not be opened in the system's default application."
+            )
+            box.setInformativeText(str(exc))
+            box.exec()
+
     def current_export_view(self):
         widget = self.tabs.currentWidget()
 
@@ -7166,14 +7563,19 @@ class MainWindow(QMainWindow):
     # --------------------------------------------------------
 
     def open_files(self):
+        start_directory = _existing_directory(
+            self.preferences.get("open_directory")
+        )
         file_paths, _ = QFileDialog.getOpenFileNames(
             self,
             "Open Files",
-            "",
+            str(start_directory),
             AUDIO_FILTER,
         )
 
         if file_paths:
+            self.preferences["open_directory"] = str(Path(file_paths[0]).parent)
+            self.save_preferences()
             self.start_analysis(
                 [Path(path) for path in file_paths]
             )
@@ -7192,13 +7594,18 @@ class MainWindow(QMainWindow):
 
         dialog = AdvancedOpenDialog(
             self.system_dark,
-            self,
+            initial_directory=self.preferences.get("open_directory"),
+            parent=self,
         )
 
         if dialog.exec() != QDialog.DialogCode.Accepted:
             return
 
         config = dialog.configuration()
+        self.preferences["open_directory"] = str(
+            _existing_directory(config.get("last_directory"))
+        )
+        self.save_preferences()
 
         files = self.resolve_advanced_inputs(
             config["inputs"],
@@ -7262,6 +7669,19 @@ class MainWindow(QMainWindow):
                     add_file(candidate)
 
         return resolved
+
+    def request_analysis_cancel(self):
+        """Set the worker's thread-safe cancel flag immediately from the GUI."""
+        worker = self.analysis_worker
+        if worker is not None:
+            # Deliberately use a direct Python call here.  Connecting the button
+            # straight to a method on the moved worker QObject creates a queued
+            # cross-thread call, but the worker thread is busy inside run() and
+            # cannot service that queue until the batch is already finished.
+            worker.request_cancel()
+
+        if self.processing_dialog is not None:
+            self.processing_dialog.request_cancel_visual()
 
     def start_analysis(
         self,
@@ -7370,11 +7790,7 @@ class MainWindow(QMainWindow):
         )
 
         self.processing_dialog.cancel_button.clicked.connect(
-            self.analysis_worker.request_cancel
-        )
-
-        self.processing_dialog.cancel_button.clicked.connect(
-            self.processing_dialog.request_cancel_visual
+            self.request_analysis_cancel
         )
 
         self.analysis_thread.finished.connect(
@@ -7504,16 +7920,6 @@ class MainWindow(QMainWindow):
         self.open_button.setEnabled(True)
         self.advanced_button.setEnabled(True)
 
-        if (
-            cancelled
-            and not self.close_after_cancel
-        ):
-            QMessageBox.information(
-                self,
-                "Processing cancelled",
-                "No further files will be analyzed.",
-            )
-
         if self.close_after_cancel:
             QTimer.singleShot(0, self.close)
 
@@ -7542,6 +7948,7 @@ class MainWindow(QMainWindow):
             self.assessment_button.setEnabled(False)
             self.save_button.setEnabled(False)
             self.save_all_button.setEnabled(False)
+            self.play_button.setEnabled(False)
             self.file_info_button.setEnabled(False)
             self.compare_button.setEnabled(False)
         else:
@@ -7584,6 +7991,9 @@ class MainWindow(QMainWindow):
             self.dr_button.setVisible(False)
             self.assessment_button.setEnabled(False)
             self.save_button.setEnabled(True)
+            # An Overview can contain several files, so there is no single
+            # unambiguous playback target for the Play action.
+            self.play_button.setEnabled(False)
             self.file_info_button.setEnabled(False)
 
             self.zoom_indicator.setText(
@@ -7601,6 +8011,7 @@ class MainWindow(QMainWindow):
             self.assessment_button.setEnabled(False)
             self.zoom_frame.setVisible(False)
             self.save_button.setEnabled(False)
+            self.play_button.setEnabled(False)
             self.file_info_button.setEnabled(False)
             return
 
@@ -7641,6 +8052,7 @@ class MainWindow(QMainWindow):
         )
         self.assessment_button.setEnabled(has_assessment)
         self.save_button.setEnabled(True)
+        self.play_button.setEnabled(True)
         self.file_info_button.setEnabled(True)
 
         self.zoom_indicator.setText(
@@ -7831,15 +8243,15 @@ class MainWindow(QMainWindow):
             )
             return
 
-        gif_quality = self.preferences.get("gif_quality", "High")
+        gif_resolution = self.preferences.get("gif_resolution", "High")
         dialog = CompareSelectionDialog(
             entries,
             gif_duration_ms=(
                 int(self.preferences.get("gif_duration", 3))
                 * 1000
             ),
-            gif_frame_width=GIF_QUALITY_WIDTHS.get(
-                gif_quality,
+            gif_frame_width=GIF_RESOLUTION_WIDTHS.get(
+                gif_resolution,
                 810,
             ),
             parent=self,
@@ -7870,6 +8282,7 @@ class MainWindow(QMainWindow):
             plot_width=int(
                 self.preferences.get("comparison_width", 606)
             ),
+            on_plot_width_changed=self.remember_comparison_width,
             parent=None,
         )
 
@@ -7885,6 +8298,14 @@ class MainWindow(QMainWindow):
         window.show()
         window.raise_()
         window.activateWindow()
+
+    def remember_comparison_width(self, width):
+        width = max(
+            COMPARISON_MIN_PLOT_WIDTH,
+            min(int(width), 1080),
+        )
+        self.preferences["comparison_width"] = width
+        self.save_preferences()
 
     def release_comparison_window(
         self,
@@ -7907,11 +8328,7 @@ class MainWindow(QMainWindow):
         if view is None:
             return
 
-        default_format = self.preferences.get(
-            "save_format",
-            "PNG",
-        )
-
+        default_format = self.preferences.get("save_format", "PNG")
         if default_format not in SAVE_FORMATS:
             default_format = "PNG"
 
@@ -7922,51 +8339,56 @@ class MainWindow(QMainWindow):
                 "default_save_name",
                 view.result["path"].stem + " - MasVis.png",
             )
-            default_path = (
-                view.result["path"].parent
-                / (Path(base_name).stem + info["extension"])
-            )
         else:
             base_name = view.result.get(
                 "default_save_name",
                 "Overview - MasVis.png",
             )
-            default_path = (
-                Path.home()
-                / (Path(base_name).stem + info["extension"])
-            )
 
-        filter_string = ";;".join(
-            value["filter"]
-            for value in SAVE_FORMATS.values()
+        default_directory = _existing_directory(
+            self.preferences.get("save_directory")
+        )
+        default_path = (
+            default_directory
+            / (Path(base_name).stem + info["extension"])
         )
 
-        output_path, selected_filter = QFileDialog.getSaveFileName(
+        dialog, quality_combo = _report_save_dialog(
             self,
             "Save Current Tab",
-            str(default_path),
-            filter_string,
-            info["filter"],
+            default_path,
+            default_format,
+            self.preferences.get("export_resolution", "High"),
         )
 
-        if not output_path:
+        if dialog.exec() != QDialog.DialogCode.Accepted:
             return
 
+        selected_files = dialog.selectedFiles()
+        if not selected_files:
+            return
+
+        output_path = selected_files[0]
         save_format = image_format_from_path(
             output_path,
-            selected_filter,
+            dialog.selectedNameFilter(),
             default_format,
         )
+        export_resolution = quality_combo.currentData() or "High"
+        self.preferences["save_directory"] = str(Path(output_path).parent)
+
+        # Keep the last choices as convenience defaults without exposing them
+        # as global Preferences; every save can still choose them explicitly.
+        self.preferences["save_format"] = save_format
+        self.preferences["export_resolution"] = export_resolution
+        self.save_preferences()
 
         try:
             save_report_image(
                 view.png_data,
                 output_path,
                 save_format=save_format,
-                export_quality=self.preferences.get(
-                    "export_quality",
-                    "High",
-                ),
+                export_resolution=export_resolution,
             )
         except Exception as exc:
             QMessageBox.critical(
@@ -7979,31 +8401,38 @@ class MainWindow(QMainWindow):
         if self.tabs.count() == 0:
             return
 
-        directory = QFileDialog.getExistingDirectory(
-            self,
-            "Save All Tabs",
-            "",
+        default_directory = _existing_directory(
+            self.preferences.get("save_directory")
         )
 
-        if not directory:
+        default_format = self.preferences.get("save_format", "PNG")
+        default_quality = self.preferences.get("export_resolution", "High")
+
+        dialog, format_combo, quality_combo = _report_save_all_dialog(
+            self,
+            default_directory,
+            default_format,
+            default_quality,
+        )
+
+        if dialog.exec() != QDialog.DialogCode.Accepted:
             return
 
-        directory = Path(directory)
-        saved = 0
+        selected = dialog.selectedFiles()
+        if not selected:
+            return
 
-        save_format = self.preferences.get(
-            "save_format",
-            "PNG",
-        )
-
+        directory = Path(selected[0])
+        self.preferences["save_directory"] = str(directory)
+        save_format = format_combo.currentText()
         if save_format not in SAVE_FORMATS:
             save_format = "PNG"
-
+        export_resolution = quality_combo.currentData() or "High"
         extension = SAVE_FORMATS[save_format]["extension"]
-        export_quality = self.preferences.get(
-            "export_quality",
-            "High",
-        )
+
+        self.preferences["save_format"] = save_format
+        self.preferences["export_resolution"] = export_resolution
+        self.save_preferences()
 
         try:
             for index in range(self.tabs.count()):
@@ -8054,9 +8483,8 @@ class MainWindow(QMainWindow):
                     view.png_data,
                     output_path,
                     save_format=save_format,
-                    export_quality=export_quality,
+                    export_resolution=export_resolution,
                 )
-                saved += 1
 
         except Exception as exc:
             QMessageBox.critical(
@@ -8065,12 +8493,6 @@ class MainWindow(QMainWindow):
                 str(exc),
             )
             return
-
-        QMessageBox.information(
-            self,
-            "Save All Tabs",
-            f"Saved {saved} report(s).",
-        )
 
     # --------------------------------------------------------
     # Dynamics Comparison

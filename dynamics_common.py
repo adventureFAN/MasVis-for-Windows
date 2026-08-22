@@ -66,6 +66,21 @@ def _run_text(command: list[str]) -> str:
     return result.stdout
 
 
+def _run_dual_text(command: list[str]) -> tuple[str, str]:
+    """Run FFmpeg when two filter branches intentionally emit metadata separately."""
+    result = subprocess.run(
+        command,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        check=True,
+        **subprocess_window_kwargs(),
+    )
+    return result.stdout, result.stderr
+
+
 def probe_basic(path: Path) -> dict[str, Any]:
     text = _run_text([
         ffprobe_executable(), "-v", "error", "-of", "json", "-show_format",
@@ -86,20 +101,9 @@ def probe_basic(path: Path) -> dict[str, Any]:
     }
 
 
-def extract_ebu_series(path: Path) -> tuple[np.ndarray, np.ndarray, np.ndarray, dict[str, float]]:
-    """Return fixed-hop (time, momentary LUFS, short-term LUFS) via FFmpeg.
-
-    ebur128 metadata frames are emitted every 100 ms.  Keeping the standardized
-    K-weighted loudness trajectory outside Python's full-resolution audio path
-    is both memory-light and close to the quantity we ultimately want to
-    compare.
-    """
-    text = _run_text([
-        ffmpeg_executable(), "-hide_banner", "-v", "error", "-i", str(path),
-        "-af", "ebur128=metadata=1:peak=true,ametadata=print:file=-",
-        "-f", "null", "-",
-    ])
-
+def _parse_ebu_text(
+    text: str, path: Path
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, dict[str, float]]:
     times: list[float] = []
     momentary: list[float] = []
     short_term: list[float] = []
@@ -151,25 +155,16 @@ def extract_ebu_series(path: Path) -> tuple[np.ndarray, np.ndarray, np.ndarray, 
             "integrated_lufs": float(last_i),
             "lra_lu": float(last_lra),
             "true_peak_dbtp": float(true_peak_dbtp),
-            "plr_lu": float(true_peak_dbtp - last_i) if np.isfinite(true_peak_dbtp) and np.isfinite(last_i) else float("nan"),
+            "plr_lu": float(true_peak_dbtp - last_i)
+            if np.isfinite(true_peak_dbtp) and np.isfinite(last_i)
+            else float("nan"),
         },
     )
 
 
-def extract_peak_rms_series(path: Path) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """Return 100 ms Overall Peak/RMS series using FFmpeg astats.
-
-    Audio is resampled to 48 kHz only inside FFmpeg, then framed into exactly
-    4800-sample blocks.  Python receives only metadata text, not PCM buffers.
-    """
-    text = _run_text([
-        ffmpeg_executable(), "-hide_banner", "-v", "error", "-i", str(path),
-        "-af",
-        "aresample=48000,asetnsamples=n=4800:p=0,"
-        "astats=metadata=1:reset=1,ametadata=print:file=-",
-        "-f", "null", "-",
-    ])
-
+def _parse_peak_rms_text(
+    text: str, path: Path
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     times: list[float] = []
     peak: list[float] = []
     rms: list[float] = []
@@ -206,11 +201,64 @@ def extract_peak_rms_series(path: Path) -> tuple[np.ndarray, np.ndarray, np.ndar
     )
 
 
-def extract_audio_series(path: Path) -> AudioSeries:
-    et, momentary, short_term, ebu = extract_ebu_series(path)
-    at, peak, rms = extract_peak_rms_series(path)
+def extract_ebu_series(path: Path) -> tuple[np.ndarray, np.ndarray, np.ndarray, dict[str, float]]:
+    """Return fixed-hop (time, momentary LUFS, short-term LUFS) via FFmpeg.
 
-    # Both FFmpeg chains are designed for 100 ms frames.  Small endpoint
+    ebur128 metadata frames are emitted every 100 ms. Keeping the standardized
+    K-weighted loudness trajectory outside Python's full-resolution audio path
+    is both memory-light and close to the quantity we ultimately want to
+    compare.
+    """
+    text = _run_text([
+        ffmpeg_executable(), "-hide_banner", "-v", "error", "-i", str(path),
+        "-af", "ebur128=metadata=1:peak=true,ametadata=print:file=-",
+        "-f", "null", "-",
+    ])
+    return _parse_ebu_text(text, path)
+
+
+def extract_peak_rms_series(path: Path) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Return 100 ms Overall Peak/RMS series using FFmpeg astats.
+
+    Audio is resampled to 48 kHz only inside FFmpeg, then framed into exactly
+    4800-sample blocks. Python receives only metadata text, not PCM buffers.
+    """
+    text = _run_text([
+        ffmpeg_executable(), "-hide_banner", "-v", "error", "-i", str(path),
+        "-af",
+        "aresample=48000,asetnsamples=n=4800:p=0,"
+        "astats=metadata=1:reset=1,ametadata=print:file=-",
+        "-f", "null", "-",
+    ])
+    return _parse_peak_rms_text(text, path)
+
+
+def extract_audio_series(path: Path) -> AudioSeries:
+    """Extract both comparison trajectories with one decoded FFmpeg input pass.
+
+    The EBU R128 and astats branches still use the exact same filters as the
+    original two-pass implementation. ``asplit`` only shares the decoded input;
+    each branch writes its metadata to a separate pipe so parsing stays isolated.
+    """
+    filter_graph = (
+        "asplit=2[ebu][stats];"
+        "[ebu]ebur128=metadata=1:peak=true,"
+        "ametadata=print:file='pipe\\:1'[ebu_out];"
+        "[stats]aresample=48000,asetnsamples=n=4800:p=0,"
+        "astats=metadata=1:reset=1,"
+        "ametadata=print:file='pipe\\:2'[stats_out]"
+    )
+    ebu_text, stats_text = _run_dual_text([
+        ffmpeg_executable(), "-hide_banner", "-v", "error", "-i", str(path),
+        "-filter_complex", filter_graph,
+        "-map", "[ebu_out]", "-map", "[stats_out]",
+        "-f", "null", "-",
+    ])
+
+    et, momentary, short_term, ebu = _parse_ebu_text(ebu_text, path)
+    at, peak, rms = _parse_peak_rms_text(stats_text, path)
+
+    # Both FFmpeg branches are designed for 100 ms frames. Small endpoint
     # differences are harmless; interpolate astats onto the EBU timeline.
     peak_i = np.interp(et, at, peak, left=np.nan, right=np.nan)
     rms_i = np.interp(et, at, rms, left=np.nan, right=np.nan)
@@ -220,7 +268,6 @@ def extract_audio_series(path: Path) -> AudioSeries:
         lra_lu=float(ebu["lra_lu"]),
         true_peak_dbtp=float(ebu["true_peak_dbtp"]),
     )
-
 
 def measure_masvis_dr(path: Path) -> dict[str, Any]:
     """Measure the existing MasVis/TT DR value without retaining full PCM.

@@ -402,8 +402,10 @@ def dynamic_range(data, fs, ns, nc):
         dr_channels = list(dr_ch.ravel()) # make into list
         dr_channels = list([(lambda x: round(float(x), 2))(x) for x in dr_channels]) # round channels
         dr = round(dr_ch.mean(), 1)
-    except:
-        return 0 # crash prevention
+    except Exception:
+        # analyze() always unpacks two values from dynamic_range().  Preserve
+        # the upstream sentinel while keeping the return shape consistent.
+        return 0, None
 
     if dr < 0:
         return 0, None
